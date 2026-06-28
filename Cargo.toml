@@ -9,6 +9,7 @@ members = [
     "contracts/cctp-ingress-adapter",
     "contracts/encumbrance-registry",
     "contracts/entitlement-claim-verifier",
+    "contracts/mock-proof-verifier",
     "contracts/participant-registry",
     "contracts/order-commit-pool",
     "contracts/private-match-verifier",

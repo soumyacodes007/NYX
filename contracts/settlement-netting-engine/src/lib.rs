@@ -1,14 +1,38 @@
 #![no_std]
 
-use compliance_control::ComplianceControlClient;
-use order_commit_pool::OrderCommitPoolClient;
-use participant_registry::ParticipantRegistryClient;
-use proof_gateway::ProofGatewayClient;
 use soroban_sdk::{
-    contract, contracterror, contractevent, contractimpl, contracttype, Address, Bytes, BytesN,
-    Env,
+    contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
+    Bytes, BytesN, Env,
 };
 use zkdtcc_types::{ParticipantRole, ParticipantStatus, ProofReceipt, ProofType, SettlementBatchRecord};
+
+#[contractclient(name = "ParticipantRegistryClient")]
+pub trait ParticipantRegistryContract {
+    fn is_wallet_registered(env: Env, wallet: Address) -> bool;
+    fn wallet_owner(env: Env, wallet: Address) -> BytesN<32>;
+    fn get_participant(env: Env, participant_id_hash: BytesN<32>) -> zkdtcc_types::ParticipantRecord;
+}
+
+#[contractclient(name = "ProofGatewayClient")]
+pub trait ProofGatewayContract {
+    fn has_receipt(env: Env, receipt_id: BytesN<32>) -> bool;
+    fn get_receipt(env: Env, receipt_id: BytesN<32>) -> ProofReceipt;
+    fn is_receipt_usable(env: Env, receipt_id: BytesN<32>) -> bool;
+}
+
+#[contractclient(name = "ComplianceControlClient")]
+pub trait ComplianceControlContract {
+    fn is_globally_paused(env: Env) -> bool;
+    fn is_participant_frozen(env: Env, participant_id_hash: BytesN<32>) -> bool;
+}
+
+#[contractclient(name = "OrderCommitPoolClient")]
+pub trait OrderCommitPoolContract {
+    fn has_execution(env: Env, execution_id: BytesN<32>) -> bool;
+    fn get_execution(env: Env, execution_id: BytesN<32>) -> zkdtcc_types::PrivateMatchExecution;
+    fn has_order(env: Env, order_id: BytesN<32>) -> bool;
+    fn get_order(env: Env, order_id: BytesN<32>) -> zkdtcc_types::OrderCommitmentRecord;
+}
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
 const INSTANCE_BUMP_TO: u32 = 518_400;

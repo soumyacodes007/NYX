@@ -10,14 +10,13 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 soroban-sdk = { workspace = true }
 zkdtcc-types = { workspace = true }
-compliance-control = { workspace = true }
-participant-registry = { workspace = true }
-proof-gateway = { workspace = true }
 
 [dev-dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }
-compliance-control = { workspace = true }
 asset-registry = { workspace = true }
 collateral-policy = { workspace = true }
+compliance-control = { workspace = true }
+participant-registry = { workspace = true }
 private-match-verifier = { workspace = true }
+proof-gateway = { workspace = true }
 serde_json = "1.0"

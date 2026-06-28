@@ -1,0 +1,921 @@
+{
+  "namespace": "demo0628b",
+  "network": "testnet",
+  "deployedAt": "2026-06-28T23:09:17.606Z",
+  "basedOnPhase0Manifest": "/mnt/c/Users/soumy/Desktop/zk-dtcc/deployments/testnet-phase0-demo0628b.json",
+  "admin": {
+    "name": "rosca-admin",
+    "address": "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT"
+  },
+  "phase0": {
+    "contracts": {
+      "complianceControl": {
+        "alias": "zkdtcc-demo0628b-compliance-control",
+        "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/compliance_control.wasm",
+        "wasmHash": "46e74acf3656eb7d5fc3c2a124f664819bf9102c29a773d588767df4dfb0a270",
+        "contractId": "CB4PXMLNQ62C22IHTEYE4LTOYDUTINM2B7P7D2RGZ3EKUCBD2JGBDCDX"
+      },
+      "assetRegistry": {
+        "alias": "zkdtcc-demo0628b-asset-registry",
+        "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/asset_registry.wasm",
+        "wasmHash": "4317c8de7a0436796c1e8d3cdaed0f552ee83413fdb066ebecf0dd290a26d030",
+        "contractId": "CADQ3BGERPKSRR4OR7VIDHNCDP6YGHAAIE5NIMDYHM22JL2RO5YHU2B6"
+      },
+      "participantRegistry": {
+        "alias": "zkdtcc-demo0628b-participant-registry",
+        "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/participant_registry.wasm",
+        "wasmHash": "acef13b1e5f9fa84430c993cecc84a3920a021a679f13a7e9dffba60854ffb17",
+        "contractId": "CD4EED23HWOJ6JGBFSWUGMWFA65GKG5D6HQJMB4A2P37OZXQ3Y2QRBMN"
+      },
+      "legalStateRegistry": {
+        "alias": "zkdtcc-demo0628b-legal-state-registry",
+        "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/legal_state_registry.wasm",
+        "wasmHash": "9936da84a6b7439b7660747ff5c86e7e5d5b9d08f42145279c0989113680ab6c",
+        "contractId": "CATQ2K7A6RKCWUDAY33NDX6KNQCK5HUAS6NS4CXZ7K4EU2MIDJINFIM5"
+      }
+    },
+    "assets": {
+      "usdc": {
+        "displaySymbol": "USDC",
+        "onChainCode": "USDC",
+        "displayName": "Circle Testnet USDC",
+        "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+        "issuer": "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+        "sacContractId": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+        "flags": {
+          "auth_required": false,
+          "auth_revocable": true,
+          "auth_immutable": false,
+          "auth_clawback_enabled": false
+        },
+        "metadataHash": "fa1f2fb1ed20631c1a47995150b5f08e3ff03f8c4b46c14e1d3a5c7e7bc0a3d5",
+        "issuerPolicyHash": "e4fe9c9837202c6e1e1eb704cccb9fd09b825793f4fb6f3c9ee81fc6eb30e838",
+        "jurisdictionPolicyHash": "5e5e0199159c7ceac7af9984163cd42e8b9674e16d84259748c7c15f3a51a90d",
+        "transferClassHash": "74b7bc4f8b2270ca5e2e61a3a1cfe635963fc9ebda1c268580bab947322e810f",
+        "assetPermissionsHash": "952c3d33a208fe92a2e8ce7b9cb2ef18ec376f74cdd687ce5730a0cad9b7cc37"
+      },
+      "demo": [
+        {
+          "key": "dtcust10y_ent",
+          "displaySymbol": "DTCUST10Y-ENT",
+          "onChainCode": "DTCUST10YENT",
+          "displayName": "DTC Custodied 10Y Treasury Entitlement",
+          "description": "Mock DTC-tokenized 10-year U.S. Treasury note entitlement for the institutional demo path.",
+          "underlying": "10-Year U.S. Treasury Note",
+          "actionType": "coupon",
+          "totalSupplyUnits": "1000000.0000000",
+          "alphaUnits": "100000.0000000",
+          "betaUnits": "50000.0000000",
+          "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "distributor": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+          "sacContractId": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+          "metadataHash": "e7fba47c82f41bd1c0c1b380831582ce294fbe6c6fc793524b592d043b497f38",
+          "issuerPolicyHash": "2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78",
+          "transferClassHash": "9c93d5f2f0c42e4a4872277c1065ea255149eb6f8de28c3420b92e6e71042fdd",
+          "jurisdictionPolicyHash": "a47f85d3820572d978a6ef586f07002eb41cc3cb7aa441a4a9a80d6a64083bdd",
+          "assetPermissionsHash": "523061683a7f4fc3d1f863031825ae9be7008580045cd233de9969fca3d1c648",
+          "balances": {
+            "treasuryUnits": "850000.0000000",
+            "alphaUnits": "100000.0000000",
+            "betaUnits": "50000.0000000"
+          },
+          "metadata": {
+            "displaySymbol": "DTCUST10Y-ENT",
+            "onChainCode": "DTCUST10YENT",
+            "displayName": "DTC Custodied 10Y Treasury Entitlement",
+            "description": "Mock DTC-tokenized 10-year U.S. Treasury note entitlement for the institutional demo path.",
+            "underlying": "10-Year U.S. Treasury Note",
+            "sourceOfTruth": "mock DTC entitlement for Stellar testnet demo",
+            "issuerAccount": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+            "distributorAccount": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+            "network": "testnet",
+            "decimals": 7
+          },
+          "issuerPolicy": {
+            "registeredWalletsOnly": true,
+            "issuerAuthorized": true,
+            "revocable": true,
+            "clawbackEnabled": true,
+            "reversibleTransferAuthority": "issuer / DTC admin",
+            "lifecycle": [
+              "settlement",
+              "corporate_actions"
+            ],
+            "network": "testnet"
+          }
+        },
+        {
+          "key": "dtcspy_ent",
+          "displaySymbol": "DTCSPY-ENT",
+          "onChainCode": "DTCSPYENT",
+          "displayName": "DTC Custodied S&P 500 ETF Entitlement",
+          "description": "Mock DTC-tokenized broad-market ETF entitlement for the simplified demo path.",
+          "underlying": "S&P 500 ETF entitlement",
+          "actionType": "dividend",
+          "totalSupplyUnits": "250000.0000000",
+          "alphaUnits": "35000.0000000",
+          "betaUnits": "15000.0000000",
+          "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "distributor": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+          "sacContractId": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+          "metadataHash": "c2576bcc0088d62e52e1d1c4fc89003b6fb8a7af5772173fc37d22a176e9a8b9",
+          "issuerPolicyHash": "2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78",
+          "transferClassHash": "60f863cffb5dd57a37349eec5d3a8d894468333e8dc25f3053a8ebad2c0b3dea",
+          "jurisdictionPolicyHash": "a47f85d3820572d978a6ef586f07002eb41cc3cb7aa441a4a9a80d6a64083bdd",
+          "assetPermissionsHash": "0cbe9c71d98bef38b372c9c5dcfed7f6dd4db4e07e8da76cc35b7df55fc57861",
+          "balances": {
+            "treasuryUnits": "200000.0000000",
+            "alphaUnits": "35000.0000000",
+            "betaUnits": "15000.0000000"
+          },
+          "metadata": {
+            "displaySymbol": "DTCSPY-ENT",
+            "onChainCode": "DTCSPYENT",
+            "displayName": "DTC Custodied S&P 500 ETF Entitlement",
+            "description": "Mock DTC-tokenized broad-market ETF entitlement for the simplified demo path.",
+            "underlying": "S&P 500 ETF entitlement",
+            "sourceOfTruth": "mock DTC entitlement for Stellar testnet demo",
+            "issuerAccount": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+            "distributorAccount": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+            "network": "testnet",
+            "decimals": 7
+          },
+          "issuerPolicy": {
+            "registeredWalletsOnly": true,
+            "issuerAuthorized": true,
+            "revocable": true,
+            "clawbackEnabled": true,
+            "reversibleTransferAuthority": "issuer / DTC admin",
+            "lifecycle": [
+              "settlement",
+              "corporate_actions"
+            ],
+            "network": "testnet"
+          }
+        }
+      ]
+    },
+    "wallets": {
+      "deployer": {
+        "name": "rosca-admin",
+        "address": "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT"
+      },
+      "issuer": {
+        "name": "zkdtcc-demo0628b-issuer",
+        "address": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q"
+      },
+      "treasury": {
+        "name": "zkdtcc-demo0628b-treasury",
+        "address": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6"
+      },
+      "alpha": {
+        "name": "zkdtcc-demo0628b-alpha",
+        "address": "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV"
+      },
+      "beta": {
+        "name": "zkdtcc-demo0628b-beta",
+        "address": "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV"
+      },
+      "matcher": {
+        "name": "zkdtcc-demo0628b-matcher",
+        "address": "GC3QPVTXDOHU2XSNRPRK6QOMFXYZ6IXLSU2WOFMBNYE5C3SZKI3JD6KU"
+      },
+      "settler": {
+        "name": "zkdtcc-demo0628b-settler",
+        "address": "GCQK4S2QOTH2ZWRLON2FCDQ4GSFR7GL5ED2Z5OLAXH4BY4RZHBDFPO7F"
+      },
+      "compliance": {
+        "name": "zkdtcc-demo0628b-compliance",
+        "address": "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76"
+      }
+    }
+  },
+  "cctp": {
+    "stellarDomain": 27,
+    "tokenMessengerMinter": "CDNG7HXAPBWICI2E3AUBP3YZWZELJLYSB6F5CC7WLDTLTHVM74SLRTHP",
+    "messageTransmitter": "CBJ6MTCKKZG73PMDZCJMSFRD7DQEMI4FKDH7CGDSV4W6FHCRBCQAVVJY",
+    "forwarderContract": "CA66Q2WFBND6V4UEB7RD4SAXSVIWMD6RA4X3U32ELVFGXV5PJK4T4VSZ",
+    "forwarderPayloadHex": "3de86ac50b47eaf2840fe23e48179551660fd1072fba6f445d4a6bd7af4ab93e"
+  },
+  "attestor": {
+    "name": "zkdtcc-demo0628b-attestor",
+    "address": "GD2HPERKJRDFQFDHWZSR7QCDVTQWABQOCDJUKG5KUAMBBABHIQOEI2TT",
+    "attestorId": "f974e6d0bc7a3a5c3e7a9157a88a7b3b090433abc20e9c5a40454a43b858bf65",
+    "publicKeyHex": "f477922a4c46581467b6651fc043ace160060e10d3451baaa018108027441c44"
+  },
+  "config": {
+    "collateralPolicy": {
+      "requiredMargin": "1000000",
+      "currentEpoch": 3334484,
+      "assetPolicies": [
+        {
+          "key": "usdc",
+          "asset": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+          "decimals": 7,
+          "haircutBps": 0,
+          "price": "1000000",
+          "priceEpoch": 3334484,
+          "enabled": true
+        },
+        {
+          "key": "dtcust10y_ent",
+          "asset": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+          "decimals": 7,
+          "haircutBps": 8000,
+          "price": "125000",
+          "priceEpoch": 3334484,
+          "enabled": true
+        },
+        {
+          "key": "dtcspy_ent",
+          "asset": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+          "decimals": 7,
+          "haircutBps": 7500,
+          "price": "525000",
+          "priceEpoch": 3334484,
+          "enabled": true
+        }
+      ]
+    },
+    "proofGateway": {
+      "validFromLedger": 3334484,
+      "validUntilLedger": 4834484,
+      "verifiers": {
+        "collateralSufficiency": {
+          "verifierId": "c29383e1e06f46ebb87ec8bc259cb09a68141f1f537044cb86b38cb3f9b274bf",
+          "proofType": 2,
+          "mode": "statement-hash-echo",
+          "policyCutoffHash": "17eb9863d836ae8f3846ed45015c28ba3494585024452a310928c07384187ec5"
+        },
+        "unencumberedLot": {
+          "verifierId": "52dbfa289ff128becae2a9eca832a3ad7d6913e437f9e6018c248e407fc14a88",
+          "proofType": 3,
+          "mode": "circom-groth16",
+          "policyCutoffHash": "0c2e17e5215e06cd038a1e7860c879f051b564ec5e0446f1a90afd4f3f11fefd"
+        },
+        "privateMatch": {
+          "verifierId": "8dd38c8c63fd44e72f6fd263d9e3f3d0687a15b24bde2b968fe2121f3d8acd3b",
+          "proofType": 4,
+          "mode": "circom-groth16",
+          "policyCutoffHash": "e7682ed2ea08255b1e299929f4ffdb951796a8372ed16945ba1b34960bd7f603"
+        },
+        "batchNetting": {
+          "verifierId": "8ffdf338738bc9c8c51e6ff5285c1ec7530dfd0537e0a548c9c4c28d92d84d06",
+          "proofType": 5,
+          "mode": "circom-groth16",
+          "policyCutoffHash": "f52a7d9d4d155e6a1c16cc737720728ca119c9f4614e5d33f0886e7007e7e2c3"
+        },
+        "entitlementClaim": {
+          "verifierId": "a6f4efdc3c04007ee12541a15b100397e1992289310e0da69b98a466cdccd897",
+          "proofType": 6,
+          "mode": "circom-groth16",
+          "policyCutoffHash": "c3ec0740a31882a7a0bf63b354cffbdf0a7cb1c1dd6484c00e7be9b93f2ae676"
+        }
+      }
+    },
+    "cctpForwarderPayloadHex": "3de86ac50b47eaf2840fe23e48179551660fd1072fba6f445d4a6bd7af4ab93e",
+    "matcher": "GC3QPVTXDOHU2XSNRPRK6QOMFXYZ6IXLSU2WOFMBNYE5C3SZKI3JD6KU",
+    "settler": "GCQK4S2QOTH2ZWRLON2FCDQ4GSFR7GL5ED2Z5OLAXH4BY4RZHBDFPO7F",
+    "operator": "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+    "attestor": {
+      "name": "zkdtcc-demo0628b-attestor",
+      "address": "GD2HPERKJRDFQFDHWZSR7QCDVTQWABQOCDJUKG5KUAMBBABHIQOEI2TT",
+      "attestorId": "f974e6d0bc7a3a5c3e7a9157a88a7b3b090433abc20e9c5a40454a43b858bf65",
+      "publicKeyHex": "f477922a4c46581467b6651fc043ace160060e10d3451baaa018108027441c44"
+    }
+  },
+  "verifiers": {
+    "collateralSufficiency": {
+      "label": "mock-proof-verifier",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/mock_proof_verifier.wasm",
+      "wasmHash": "f993805b9e9e2e1350670c052b16a060c42e38fa679343ccc47ea24513726216",
+      "contractId": "CDAKTBVHO3AABFEF3DHJ6HCB2XBNXQGPNHQKFILUBAEKJJG3EEDFG2R6"
+    },
+    "unencumberedLot": {
+      "label": "unencumbered-lot-verifier",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/unencumbered_lot_verifier.wasm",
+      "wasmHash": "146d33a87536e40f2e2c740fe33bce386444e24c1d53559db8504580ff09da58",
+      "contractId": "CBNTQ7BFW3XMM7W3U5KBW67MINWM3JUUTBZM55UDDAXONLFZ3EWK6K7D"
+    },
+    "privateMatch": {
+      "label": "private-match-verifier",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/private_match_verifier.wasm",
+      "wasmHash": "b7bc31fc70c4f4ab9a67a39230ef9c9cec17381e5ba037a31739561db27ce6cc",
+      "contractId": "CB7C3NFSCWTASFXUXSL4AOPMWO5CJVVGCRXKUKDFN233JSAJVAT2GSJY"
+    },
+    "batchNetting": {
+      "label": "batch-netting-verifier",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/batch_netting_verifier.wasm",
+      "wasmHash": "75a1f23a7aad7387e1f9b632872864feb9db49f7d424055f58399d297c39adae",
+      "contractId": "CAJRVZNIJOV5YIWRE2IV3X6XKJZZSNLMAU255LCKKGDEHLZULHLITKOK"
+    },
+    "entitlementClaim": {
+      "label": "entitlement-claim-verifier",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/entitlement_claim_verifier.wasm",
+      "wasmHash": "635123752fbc95ef32480df00f22371bb302b20a2f9bbf924029309efb55664c",
+      "contractId": "CCBQILYH6BWHXGCOV2ADBXQLVSNXCTC5EQNPGWLQYCDT26X2IX2C2QJV"
+    }
+  },
+  "contracts": {
+    "collateralPolicy": {
+      "label": "collateral-policy",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/collateral_policy.wasm",
+      "wasmHash": "29ed5195b077b4cb9f94168e4b5abd963bc8d26d1b7d1ace835fdb9d5816ce7b",
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL"
+    },
+    "proofGateway": {
+      "label": "proof-gateway",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/proof_gateway.wasm",
+      "wasmHash": "21b2d32976be6e772c37ae16fbc4c260d500c3fe72ffcfd52a568e2bcb3242dd",
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC"
+    },
+    "cctpIngressAdapter": {
+      "label": "cctp-ingress-adapter",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/cctp_ingress_adapter.wasm",
+      "wasmHash": "1c86fe8ed1743c17951877783d4440e0a14c181975712aafbc56312b68e3f595",
+      "contractId": "CB42HRITPIQFPVAZ43MI4RFAGT3JRIDLNTCXNXPHQ65T3VD7L27JO25W"
+    },
+    "encumbranceRegistry": {
+      "label": "encumbrance-registry",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/encumbrance_registry.wasm",
+      "wasmHash": "38262cdb7b0c6c28d8cdd1df6a21a05cfdb98b0a35de6880c7f63f048037896c",
+      "contractId": "CCKXUILQ62YKNXAVDNKOZS2PKJUTQJQDDSJCBF6LCMORD4ZSBRGQYV34"
+    },
+    "orderCommitPool": {
+      "label": "order-commit-pool",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/order_commit_pool.wasm",
+      "wasmHash": "4a22f8bdc0796d8d4109a2991a7a2016a7bc50b0701328af9ff43d3ed3b28c79",
+      "contractId": "CBZNFYTRFZ7EKSIVW7SAZI4LNG5ENTERYUVAMXTQKHY3DB2WHOHYIYUX"
+    },
+    "settlementNettingEngine": {
+      "label": "settlement-netting-engine",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/settlement_netting_engine.wasm",
+      "wasmHash": "1461febfc35524d13e60fa7df850aafaf7c0cd4b87a231222897017d38c13ee8",
+      "contractId": "CCGP6MIPMVF6NAZGSBYOZIXUHKG3P377BZH3O5TRTQQL3EOQCDME7MKK"
+    },
+    "corporateActionsEngine": {
+      "label": "corporate-actions-engine",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/corporate_actions_engine.wasm",
+      "wasmHash": "2674f3e46abc4f9e4c8748e4d9d690c0eca626055f04e38a761c755b67a804e8",
+      "contractId": "CD47MWIGFQC42EXEWLDO2VGO6MQOIFCV5VR7BAEOD4HVEAOVGBOEUEPQ"
+    },
+    "auditDisclosureRegistry": {
+      "label": "audit-disclosure-registry",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/audit_disclosure_registry.wasm",
+      "wasmHash": "a060bc6a9e055a362d6dae679ce3d8abdf90d4af51daccf548843f86098dceea",
+      "contractId": "CC3TBPVFAWBK3HEUFBY5WOHLXGKE3KVDEOZ6T2E4YLD2RORQUAIIK7DK"
+    }
+  },
+  "txLog": [
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "set_operator",
+      "args": [
+        "--admin",
+        "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_operator",
+      "args": [
+        "--admin",
+        "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CB42HRITPIQFPVAZ43MI4RFAGT3JRIDLNTCXNXPHQ65T3VD7L27JO25W",
+      "functionName": "set_operator",
+      "args": [
+        "--admin",
+        "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCKXUILQ62YKNXAVDNKOZS2PKJUTQJQDDSJCBF6LCMORD4ZSBRGQYV34",
+      "functionName": "set_operator",
+      "args": [
+        "--admin",
+        "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CBZNFYTRFZ7EKSIVW7SAZI4LNG5ENTERYUVAMXTQKHY3DB2WHOHYIYUX",
+      "functionName": "set_operator",
+      "args": [
+        "--admin",
+        "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCGP6MIPMVF6NAZGSBYOZIXUHKG3P377BZH3O5TRTQQL3EOQCDME7MKK",
+      "functionName": "set_operator",
+      "args": [
+        "--admin",
+        "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CD47MWIGFQC42EXEWLDO2VGO6MQOIFCV5VR7BAEOD4HVEAOVGBOEUEPQ",
+      "functionName": "set_operator",
+      "args": [
+        "--admin",
+        "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CC3TBPVFAWBK3HEUFBY5WOHLXGKE3KVDEOZ6T2E4YLD2RORQUAIIK7DK",
+      "functionName": "set_operator",
+      "args": [
+        "--admin",
+        "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "upsert_asset_policy",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--asset",
+        "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+        "--decimals",
+        "7",
+        "--haircut_bps",
+        "0",
+        "--price",
+        "1000000",
+        "--price_epoch",
+        "3334484",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "2"
+    },
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "upsert_asset_policy",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--asset",
+        "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+        "--decimals",
+        "7",
+        "--haircut_bps",
+        "8000",
+        "--price",
+        "125000",
+        "--price_epoch",
+        "3334484",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "3"
+    },
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "upsert_asset_policy",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--asset",
+        "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+        "--decimals",
+        "7",
+        "--haircut_bps",
+        "7500",
+        "--price",
+        "525000",
+        "--price_epoch",
+        "3334484",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "4"
+    },
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "set_accepted_verifier",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--proof_type",
+        "2",
+        "--verifier_id",
+        "c29383e1e06f46ebb87ec8bc259cb09a68141f1f537044cb86b38cb3f9b274bf",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "5"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_route",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "c29383e1e06f46ebb87ec8bc259cb09a68141f1f537044cb86b38cb3f9b274bf",
+        "--verifier",
+        "CDAKTBVHO3AABFEF3DHJ6HCB2XBNXQGPNHQKFILUBAEKJJG3EEDFG2R6",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_policy",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "c29383e1e06f46ebb87ec8bc259cb09a68141f1f537044cb86b38cb3f9b274bf",
+        "--enabled",
+        "true",
+        "--valid_from_ledger",
+        "3334484",
+        "--valid_until_ledger",
+        "4834484",
+        "--policy_cutoff_hash",
+        "17eb9863d836ae8f3846ed45015c28ba3494585024452a310928c07384187ec5"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "set_accepted_verifier",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--proof_type",
+        "3",
+        "--verifier_id",
+        "52dbfa289ff128becae2a9eca832a3ad7d6913e437f9e6018c248e407fc14a88",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "6"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_route",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "52dbfa289ff128becae2a9eca832a3ad7d6913e437f9e6018c248e407fc14a88",
+        "--verifier",
+        "CBNTQ7BFW3XMM7W3U5KBW67MINWM3JUUTBZM55UDDAXONLFZ3EWK6K7D",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_policy",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "52dbfa289ff128becae2a9eca832a3ad7d6913e437f9e6018c248e407fc14a88",
+        "--enabled",
+        "true",
+        "--valid_from_ledger",
+        "3334484",
+        "--valid_until_ledger",
+        "4834484",
+        "--policy_cutoff_hash",
+        "0c2e17e5215e06cd038a1e7860c879f051b564ec5e0446f1a90afd4f3f11fefd"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "set_accepted_verifier",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--proof_type",
+        "4",
+        "--verifier_id",
+        "8dd38c8c63fd44e72f6fd263d9e3f3d0687a15b24bde2b968fe2121f3d8acd3b",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "7"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_route",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "8dd38c8c63fd44e72f6fd263d9e3f3d0687a15b24bde2b968fe2121f3d8acd3b",
+        "--verifier",
+        "CB7C3NFSCWTASFXUXSL4AOPMWO5CJVVGCRXKUKDFN233JSAJVAT2GSJY",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_policy",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "8dd38c8c63fd44e72f6fd263d9e3f3d0687a15b24bde2b968fe2121f3d8acd3b",
+        "--enabled",
+        "true",
+        "--valid_from_ledger",
+        "3334484",
+        "--valid_until_ledger",
+        "4834484",
+        "--policy_cutoff_hash",
+        "e7682ed2ea08255b1e299929f4ffdb951796a8372ed16945ba1b34960bd7f603"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "set_accepted_verifier",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--proof_type",
+        "5",
+        "--verifier_id",
+        "8ffdf338738bc9c8c51e6ff5285c1ec7530dfd0537e0a548c9c4c28d92d84d06",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "8"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_route",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "8ffdf338738bc9c8c51e6ff5285c1ec7530dfd0537e0a548c9c4c28d92d84d06",
+        "--verifier",
+        "CAJRVZNIJOV5YIWRE2IV3X6XKJZZSNLMAU255LCKKGDEHLZULHLITKOK",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_policy",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "8ffdf338738bc9c8c51e6ff5285c1ec7530dfd0537e0a548c9c4c28d92d84d06",
+        "--enabled",
+        "true",
+        "--valid_from_ledger",
+        "3334484",
+        "--valid_until_ledger",
+        "4834484",
+        "--policy_cutoff_hash",
+        "f52a7d9d4d155e6a1c16cc737720728ca119c9f4614e5d33f0886e7007e7e2c3"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "functionName": "set_accepted_verifier",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--proof_type",
+        "6",
+        "--verifier_id",
+        "a6f4efdc3c04007ee12541a15b100397e1992289310e0da69b98a466cdccd897",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "9"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_route",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "a6f4efdc3c04007ee12541a15b100397e1992289310e0da69b98a466cdccd897",
+        "--verifier",
+        "CCBQILYH6BWHXGCOV2ADBXQLVSNXCTC5EQNPGWLQYCDT26X2IX2C2QJV",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "functionName": "set_verifier_policy",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--verifier_id",
+        "a6f4efdc3c04007ee12541a15b100397e1992289310e0da69b98a466cdccd897",
+        "--enabled",
+        "true",
+        "--valid_from_ledger",
+        "3334484",
+        "--valid_until_ledger",
+        "4834484",
+        "--policy_cutoff_hash",
+        "c3ec0740a31882a7a0bf63b354cffbdf0a7cb1c1dd6484c00e7be9b93f2ae676"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCKXUILQ62YKNXAVDNKOZS2PKJUTQJQDDSJCBF6LCMORD4ZSBRGQYV34",
+      "functionName": "set_attestor",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--attestor_id",
+        "f974e6d0bc7a3a5c3e7a9157a88a7b3b090433abc20e9c5a40454a43b858bf65",
+        "--public_key",
+        "f477922a4c46581467b6651fc043ace160060e10d3451baaa018108027441c44",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CBZNFYTRFZ7EKSIVW7SAZI4LNG5ENTERYUVAMXTQKHY3DB2WHOHYIYUX",
+      "functionName": "set_matcher",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--matcher",
+        "GC3QPVTXDOHU2XSNRPRK6QOMFXYZ6IXLSU2WOFMBNYE5C3SZKI3JD6KU",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    },
+    {
+      "contractId": "CCGP6MIPMVF6NAZGSBYOZIXUHKG3P377BZH3O5TRTQQL3EOQCDME7MKK",
+      "functionName": "set_settler",
+      "args": [
+        "--operator",
+        "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "--settler",
+        "GCQK4S2QOTH2ZWRLON2FCDQ4GSFR7GL5ED2Z5OLAXH4BY4RZHBDFPO7F",
+        "--enabled",
+        "true"
+      ],
+      "txHash": null,
+      "raw": "null"
+    }
+  ],
+  "verification": {
+    "verifiedAt": "2026-06-28T23:09:15.384Z",
+    "latestLedger": 3334484,
+    "policySummary": {
+      "current_epoch": 3334484,
+      "policy_version": 9,
+      "required_margin": "1000000"
+    },
+    "assetPolicies": [
+      {
+        "key": "usdc",
+        "asset": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+        "policy": {
+          "asset": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+          "decimals": 7,
+          "enabled": true,
+          "haircut_bps": 0,
+          "price": "1000000",
+          "price_epoch": 3334484,
+          "updated_ledger": 3334640
+        }
+      },
+      {
+        "key": "dtcust10y_ent",
+        "asset": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+        "policy": {
+          "asset": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+          "decimals": 7,
+          "enabled": true,
+          "haircut_bps": 8000,
+          "price": "125000",
+          "price_epoch": 3334484,
+          "updated_ledger": 3334643
+        }
+      },
+      {
+        "key": "dtcspy_ent",
+        "asset": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+        "policy": {
+          "asset": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+          "decimals": 7,
+          "enabled": true,
+          "haircut_bps": 7500,
+          "price": "525000",
+          "price_epoch": 3334484,
+          "updated_ledger": 3334656
+        }
+      }
+    ],
+    "acceptedVerifiers": {
+      "collateralSufficiency": "true",
+      "unencumberedLot": "true",
+      "privateMatch": "true",
+      "batchNetting": "true",
+      "entitlementClaim": "true"
+    },
+    "attestorRecord": {
+      "attestor_id": "f974e6d0bc7a3a5c3e7a9157a88a7b3b090433abc20e9c5a40454a43b858bf65",
+      "enabled": true,
+      "public_key": "f477922a4c46581467b6651fc043ace160060e10d3451baaa018108027441c44",
+      "updated_ledger": 3334736
+    },
+    "callSmoke": {
+      "statementHashPreview": "19a61f7275a19872648bed883345d2b3da88dd292f7ea49e77f7b481ed5090a5"
+    }
+  }
+}

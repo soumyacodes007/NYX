@@ -1,14 +1,24 @@
 #![no_std]
 
-use collateral_policy::CollateralPolicyClient;
-use participant_registry::ParticipantRegistryClient;
 use soroban_sdk::{
     contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
     Bytes, BytesN, Env,
 };
 use zkdtcc_types::{
-    ProofReceipt, ProofType, ProofVerifierPolicy, ProofVerifierRoute, RevokedProofReceipt,
+    CollateralPolicySummary, ProofReceipt, ProofType, ProofVerifierPolicy, ProofVerifierRoute,
+    RevokedProofReceipt,
 };
+
+#[contractclient(name = "ParticipantRegistryClient")]
+pub trait ParticipantRegistryContract {
+    fn wallet_owner(env: Env, wallet: Address) -> BytesN<32>;
+}
+
+#[contractclient(name = "CollateralPolicyClient")]
+pub trait CollateralPolicyContract {
+    fn get_policy_summary(env: Env) -> CollateralPolicySummary;
+    fn is_verifier_accepted(env: Env, proof_type: ProofType, verifier_id: BytesN<32>) -> bool;
+}
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
 const INSTANCE_BUMP_TO: u32 = 518_400;

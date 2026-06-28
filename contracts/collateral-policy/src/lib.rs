@@ -1,10 +1,15 @@
 #![no_std]
 
-use asset_registry::AssetRegistryClient;
 use soroban_sdk::{
-    contract, contracterror, contractevent, contractimpl, contracttype, Address, BytesN, Env,
+    contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
+    BytesN, Env,
 };
 use zkdtcc_types::{CollateralAssetPolicy, CollateralPolicySummary, ProofType};
+
+#[contractclient(name = "AssetRegistryClient")]
+pub trait AssetRegistryContract {
+    fn is_supported_asset(env: Env, asset: Address) -> bool;
+}
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
 const INSTANCE_BUMP_TO: u32 = 518_400;

@@ -1,15 +1,29 @@
 #![no_std]
 
-use asset_registry::AssetRegistryClient;
-use participant_registry::ParticipantRegistryClient;
-use proof_gateway::ProofGatewayClient;
 use soroban_sdk::{
-    contract, contracterror, contractevent, contractimpl, contracttype, Address, Bytes, BytesN,
-    Env,
+    contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
+    Bytes, BytesN, Env,
 };
 use zkdtcc_types::{
     AvailabilityAttestation, EncumbranceAttestor, EncumbranceLock, ProofReceipt, ProofType,
 };
+
+#[contractclient(name = "AssetRegistryClient")]
+pub trait AssetRegistryContract {
+    fn is_supported_asset(env: Env, asset: Address) -> bool;
+}
+
+#[contractclient(name = "ParticipantRegistryClient")]
+pub trait ParticipantRegistryContract {
+    fn is_wallet_registered(env: Env, wallet: Address) -> bool;
+    fn wallet_owner(env: Env, wallet: Address) -> BytesN<32>;
+}
+
+#[contractclient(name = "ProofGatewayClient")]
+pub trait ProofGatewayContract {
+    fn has_receipt(env: Env, receipt_id: BytesN<32>) -> bool;
+    fn get_receipt(env: Env, receipt_id: BytesN<32>) -> ProofReceipt;
+}
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
 const INSTANCE_BUMP_TO: u32 = 518_400;

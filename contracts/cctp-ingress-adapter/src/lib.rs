@@ -1,13 +1,28 @@
 #![no_std]
 
-use asset_registry::AssetRegistryClient;
-use compliance_control::ComplianceControlClient;
-use participant_registry::ParticipantRegistryClient;
 use soroban_sdk::{
-    contract, contracterror, contractevent, contractimpl, contracttype, Address, Bytes, BytesN,
-    Env, String,
+    contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
+    Bytes, BytesN, Env, String,
 };
 use zkdtcc_types::CctpMintReceipt;
+
+#[contractclient(name = "AssetRegistryClient")]
+pub trait AssetRegistryContract {
+    fn is_supported_asset(env: Env, asset: Address) -> bool;
+}
+
+#[contractclient(name = "ParticipantRegistryClient")]
+pub trait ParticipantRegistryContract {
+    fn is_wallet_registered(env: Env, wallet: Address) -> bool;
+    fn wallet_owner(env: Env, wallet: Address) -> BytesN<32>;
+}
+
+#[contractclient(name = "ComplianceControlClient")]
+pub trait ComplianceControlContract {
+    fn is_globally_paused(env: Env) -> bool;
+    fn is_asset_paused(env: Env, asset: Address) -> bool;
+    fn is_participant_frozen(env: Env, participant_id_hash: BytesN<32>) -> bool;
+}
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
 const INSTANCE_BUMP_TO: u32 = 518_400;

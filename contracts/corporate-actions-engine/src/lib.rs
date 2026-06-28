@@ -1,18 +1,40 @@
 #![no_std]
 
-use asset_registry::AssetRegistryClient;
-use compliance_control::ComplianceControlClient;
-use participant_registry::ParticipantRegistryClient;
-use proof_gateway::ProofGatewayClient;
 use soroban_sdk::{
-    contract, contracterror, contractevent, contractimpl, contracttype, Address, Bytes, BytesN,
-    Env,
+    contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
+    Bytes, BytesN, Env,
 };
 use zkdtcc_types::{
     CorporateActionClaimRecord, CorporateActionClaimStatus, CorporateActionEventRecord,
     CorporateActionStatus, CorporateActionType, ParticipantRole, ParticipantStatus, ProofReceipt,
     ProofType,
 };
+
+#[contractclient(name = "AssetRegistryClient")]
+pub trait AssetRegistryContract {
+    fn is_asset_corp_actions_enabled(env: Env, asset: Address) -> bool;
+}
+
+#[contractclient(name = "ComplianceControlClient")]
+pub trait ComplianceControlContract {
+    fn is_globally_paused(env: Env) -> bool;
+    fn is_participant_frozen(env: Env, participant_id_hash: BytesN<32>) -> bool;
+    fn is_asset_paused(env: Env, asset: Address) -> bool;
+}
+
+#[contractclient(name = "ParticipantRegistryClient")]
+pub trait ParticipantRegistryContract {
+    fn is_wallet_registered(env: Env, wallet: Address) -> bool;
+    fn wallet_owner(env: Env, wallet: Address) -> BytesN<32>;
+    fn get_participant(env: Env, participant_id_hash: BytesN<32>) -> zkdtcc_types::ParticipantRecord;
+}
+
+#[contractclient(name = "ProofGatewayClient")]
+pub trait ProofGatewayContract {
+    fn has_receipt(env: Env, receipt_id: BytesN<32>) -> bool;
+    fn get_receipt(env: Env, receipt_id: BytesN<32>) -> ProofReceipt;
+    fn is_receipt_usable(env: Env, receipt_id: BytesN<32>) -> bool;
+}
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
 const INSTANCE_BUMP_TO: u32 = 518_400;
