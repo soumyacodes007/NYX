@@ -5,8 +5,14 @@ import { spawnSync } from "node:child_process";
 import { buildBatchNettingFixture } from "./batch-netting-input-lib.mjs";
 import { stringifyDeep } from "./unencumbered-input-lib.mjs";
 
-export const buildDir = path.join("circuits", "build");
-export const artifactDir = path.join("circuits", "artifacts", "batch_netting");
+const namespace = process.env.ZKDTCC_CIRCUIT_NAMESPACE;
+
+export const buildDir = namespace
+  ? path.join("circuits", "build", namespace)
+  : path.join("circuits", "build");
+export const artifactDir = namespace
+  ? path.join("circuits", "artifacts", namespace, "batch_netting")
+  : path.join("circuits", "artifacts", "batch_netting");
 export const circuitName = "batch_netting";
 
 export function ensureLocalTool(binName) {
@@ -86,7 +92,20 @@ export async function ensureCircuitBuild() {
   );
 }
 
+function groth16ArtifactsReady() {
+  return (
+    existsSync(path.join(buildDir, `${circuitName}.r1cs`)) &&
+    existsSync(path.join(buildDir, `${circuitName}_js`, `${circuitName}.wasm`)) &&
+    existsSync(path.join(artifactDir, `${circuitName}_final.zkey`)) &&
+    existsSync(path.join(artifactDir, "verification_key.json"))
+  );
+}
+
 export async function ensureGroth16Setup() {
+  if (groth16ArtifactsReady()) {
+    return;
+  }
+
   await ensureCircuitBuild();
   const snarkjs = ensureLocalTool("snarkjs");
 

@@ -344,6 +344,7 @@ fn generate_batch_netting_bundle(
     let suffix = encode_hex(&statement_hash.to_array()[..4]).replace("0x", "");
     let output = Command::new("node")
         .current_dir(repo_root())
+        .env("ZKDTCC_CIRCUIT_NAMESPACE", "phase5-settlement-test")
         .arg("scripts/generate-batch-netting-proof.mjs")
         .arg(encode_hex(&statement_hash.to_array()))
         .arg(format!("settlement-{suffix}"))
@@ -435,9 +436,15 @@ fn build_real_bundle(ctx: &PhaseFiveContext, env: &Env) -> RuntimeBatchBundle {
 fn settles_real_batch_netting_proof() {
     let env = Env::default();
     let ctx = setup_phase_five(&env);
-    let bundle = build_real_bundle(&ctx, &env);
-
     let batch_netting_verifier_id = hash(&env, 43);
+    let collateral_policy = collateral_policy::CollateralPolicyClient::new(&env, &ctx.collateral_policy_id);
+    collateral_policy.set_accepted_verifier(
+        &ctx.operator,
+        &ProofType::BatchNetting,
+        &batch_netting_verifier_id,
+        &true,
+    );
+    let bundle = build_real_bundle(&ctx, &env);
     let verifier_contract = env.register(
         BatchNettingVerifier,
         BatchNettingVerifierArgs::__constructor(&bundle.verification_key),
@@ -621,7 +628,6 @@ fn settles_real_batch_netting_proof() {
         &hash(&env, 73),
     );
 
-    let collateral_policy = collateral_policy::CollateralPolicyClient::new(&env, &ctx.collateral_policy_id);
     let summary = collateral_policy.get_policy_summary();
     let settlement_nonce = hash(&env, 74);
     let settlement_receipt = proof_gateway.verify_and_record(

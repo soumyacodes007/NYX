@@ -72,6 +72,7 @@ fn payload_roundtrip_preserves_statement_hash_binding() {
 fn verifies_real_generated_bundle() {
     let output = Command::new("node")
         .current_dir(repo_root())
+        .env("ZKDTCC_CIRCUIT_NAMESPACE", "phase5-verifier-test")
         .arg("scripts/generate-batch-netting-proof.mjs")
         .arg("0x8899aabbccddeeff00112233445566778899aabbccddeeff0011223344556677")
         .arg("verifier-debug")
