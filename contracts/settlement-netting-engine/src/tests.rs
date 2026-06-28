@@ -629,7 +629,7 @@ fn settles_real_batch_netting_proof() {
     );
 
     let summary = collateral_policy.get_policy_summary();
-    let settlement_nonce = hash(&env, 74);
+    let settlement_nonce = hash(&env, 91);
     let settlement_receipt = proof_gateway.verify_and_record(
         &ctx.settler,
         &ctx.settler_participant_id_hash,

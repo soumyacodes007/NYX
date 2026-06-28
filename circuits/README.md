@@ -1,6 +1,6 @@
-# Phase 3 Circuits
+# Circuits
 
-This directory contains the first actual ZK circuit path for the project.
+This directory contains the active Circom proof paths for the project.
 
 Current circuit:
 
@@ -15,6 +15,12 @@ Current circuit:
   - proves the clear price is inside the crossed spread
   - proves the clear quantity fits inside both committed order quantities
   - derives a hidden execution commitment from both participants, instrument, clear price, clear quantity, and execution salt
+  - carries the `ProofGateway` statement hash as two 128-bit public limbs for verifier binding
+- `batch_netting.circom`
+  - proves two hidden Phase 4 execution commitments belong to the same instrument
+  - proves three participant slots carry the correct net quantity and net cash deltas for the batch
+  - derives deterministic trade nullifiers from each execution commitment and a batch salt
+  - derives a settlement commitment from both execution commitments, the net vector hash, and both trade nullifiers
   - carries the `ProofGateway` statement hash as two 128-bit public limbs for verifier binding
 
 Public inputs:
@@ -35,6 +41,16 @@ Public inputs for `private_match.circom`:
 - `askOrderCommitment`
 - `instrumentIdHash`
 - `executionCommitment`
+- `statementHashHi`
+- `statementHashLo`
+
+Public inputs for `batch_netting.circom`:
+
+- `executionCommitmentA`
+- `executionCommitmentB`
+- `settlementCommitment`
+- `tradeNullifierA`
+- `tradeNullifierB`
 - `statementHashHi`
 - `statementHashLo`
 
@@ -64,6 +80,19 @@ Private witness for `private_match.circom`:
 - `clearQuantity`
 - `executionSalt`
 
+Private witness for `batch_netting.circom`:
+
+- `instrumentIdHash`
+- `tradeBidParticipantIdHash[2]`
+- `tradeAskParticipantIdHash[2]`
+- `tradeClearPrice[2]`
+- `tradeClearQuantity[2]`
+- `tradeExecutionSalt[2]`
+- `slotParticipantIdHash[3]`
+- `slotNetQty[3]`
+- `slotNetCash[3]`
+- `batchSalt`
+
 Local flow:
 
 ```bash
@@ -81,3 +110,11 @@ That command:
 6. verifies the proof
 
 Artifacts are written to `circuits/artifacts/unencumbered_lot/`.
+
+For the Phase 5 proof flow, run:
+
+```bash
+npm run zk:phase5:prove
+```
+
+Artifacts are written to `circuits/artifacts/batch_netting/` unless a test namespace overrides that path.

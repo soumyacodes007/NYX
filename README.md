@@ -1,6 +1,6 @@
 # zk-dtcc
 
-Phase 0 through Phase 3 implementation for the ZK DTCC/Stellar prototype.
+Phase 0 through Phase 5 implementation for the ZK DTCC/Stellar prototype.
 
 This workspace builds the normalization and CCTP ingress layers described in the plan:
 
@@ -14,8 +14,11 @@ This workspace builds the normalization and CCTP ingress layers described in the
 - `OrderCommitPool`: stores private order commitments, enforces cancel/execution nullifier uniqueness, validates proof-backed bilateral matches, and records execution commitments without exposing plaintext order data.
 - `UnencumberedLotVerifier`: a BN254 Groth16 verifier adapter for `ProofType::UnencumberedLot` that checks the gateway statement hash carried in the proof payload and verifies the proof on Soroban.
 - `PrivateMatchVerifier`: a BN254 Groth16 verifier adapter for `ProofType::PrivateMatch` that checks a match proof payload against the gateway statement hash and validates the bilateral match proof on Soroban.
+- `BatchNettingVerifier`: a BN254 Groth16 verifier adapter for `ProofType::BatchNetting` that checks a bounded batch-netting proof payload against the gateway statement hash and validates the Phase 5 netting proof on Soroban.
+- `SettlementNettingEngine`: records proof-backed settlement batches, enforces same-batch/same-instrument execution grouping from the order pool, consumes trade nullifiers, and marks matched executions as settled.
 - `circuits/unencumbered_lot.circom`: a working Circom 2 + Groth16 Phase 3 circuit proving lot inclusion in an attested Poseidon Merkle root, deriving a scope-bound lot nullifier, and carrying the gateway statement hash as public inputs.
 - `circuits/private_match.circom`: a working Circom 2 + Groth16 Phase 4 circuit proving committed bid/ask orders clear on instrument, price, and quantity while binding the resulting execution commitment.
+- `circuits/batch_netting.circom`: a working Circom 2 + Groth16 Phase 5 circuit for a bounded two-execution, three-participant MVP batch that recomputes hidden execution commitments, validates participant net deltas, derives settlement nullifiers, and binds a settlement commitment for on-chain recording.
 
 The design follows the Stellar asset guidance used in the plan:
 
@@ -44,6 +47,12 @@ To run the Phase 4 proof regression suite:
 
 ```bash
 npm run zk:phase4:test
+```
+
+To run the Phase 5 proof regression suite:
+
+```bash
+npm run zk:phase5:test
 ```
 
 To run the Soroban workspace tests, including the real Phase 3 BN254 verifier and `ProofGateway` integration path:
