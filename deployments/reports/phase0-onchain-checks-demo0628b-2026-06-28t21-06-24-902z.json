@@ -1,0 +1,896 @@
+{
+  "manifestPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/deployments/testnet-phase0-demo0628b.json",
+  "namespace": "demo0628b",
+  "network": "testnet",
+  "startedAt": "2026-06-28T21:01:44.123Z",
+  "step1": {
+    "latestLedger": {
+      "sequence": 3333219,
+      "closedAt": "2026-06-28T21:01:44Z",
+      "hash": "c215162526a67b3a61a137c533fcb3e8e5e6792cad9f8f1bfd8fd49dc2099472"
+    },
+    "contracts": {
+      "complianceControl": "CB4PXMLNQ62C22IHTEYE4LTOYDUTINM2B7P7D2RGZ3EKUCBD2JGBDCDX",
+      "assetRegistry": "CADQ3BGERPKSRR4OR7VIDHNCDP6YGHAAIE5NIMDYHM22JL2RO5YHU2B6",
+      "participantRegistry": "CD4EED23HWOJ6JGBFSWUGMWFA65GKG5D6HQJMB4A2P37OZXQ3Y2QRBMN",
+      "legalStateRegistry": "CATQ2K7A6RKCWUDAY33NDX6KNQCK5HUAS6NS4CXZ7K4EU2MIDJINFIM5"
+    },
+    "assetContracts": {
+      "usdc": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+      "demo": [
+        {
+          "displaySymbol": "DTCUST10Y-ENT",
+          "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "sacContractId": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5"
+        },
+        {
+          "displaySymbol": "DTCSPY-ENT",
+          "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "sacContractId": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG"
+        }
+      ]
+    },
+    "walletSnapshots": {
+      "deployer": {
+        "address": "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT",
+        "sequence": "10358249937174643",
+        "lastModifiedLedger": 3333212,
+        "balances": [
+          {
+            "assetString": "native",
+            "balance": "9264.2080379",
+            "limit": null,
+            "authorized": null,
+            "assetType": "native"
+          }
+        ]
+      },
+      "issuer": {
+        "address": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+        "sequence": "14311990671441930",
+        "lastModifiedLedger": 3332409,
+        "balances": [
+          {
+            "assetString": "native",
+            "balance": "49.9999000",
+            "limit": null,
+            "authorized": null,
+            "assetType": "native"
+          }
+        ]
+      },
+      "treasury": {
+        "address": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+        "sequence": "14311999261376519",
+        "lastModifiedLedger": 3332412,
+        "balances": [
+          {
+            "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+            "balance": "200000.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum12"
+          },
+          {
+            "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+            "balance": "850000.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum12"
+          },
+          {
+            "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+            "balance": "20.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum4"
+          },
+          {
+            "assetString": "native",
+            "balance": "49.9999300",
+            "limit": null,
+            "authorized": null,
+            "assetType": "native"
+          }
+        ]
+      },
+      "alpha": {
+        "address": "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV",
+        "sequence": "14312007851311107",
+        "lastModifiedLedger": 3332396,
+        "balances": [
+          {
+            "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+            "balance": "35000.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum12"
+          },
+          {
+            "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+            "balance": "100000.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum12"
+          },
+          {
+            "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+            "balance": "0.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum4"
+          },
+          {
+            "assetString": "native",
+            "balance": "49.9999700",
+            "limit": null,
+            "authorized": null,
+            "assetType": "native"
+          }
+        ]
+      },
+      "beta": {
+        "address": "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV",
+        "sequence": "14312046506016771",
+        "lastModifiedLedger": 3332401,
+        "balances": [
+          {
+            "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+            "balance": "15000.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum12"
+          },
+          {
+            "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+            "balance": "50000.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum12"
+          },
+          {
+            "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+            "balance": "0.0000000",
+            "limit": "922337203685.4775807",
+            "authorized": true,
+            "assetType": "credit_alphanum4"
+          },
+          {
+            "assetString": "native",
+            "balance": "49.9999700",
+            "limit": null,
+            "authorized": null,
+            "assetType": "native"
+          }
+        ]
+      },
+      "matcher": {
+        "address": "GC3QPVTXDOHU2XSNRPRK6QOMFXYZ6IXLSU2WOFMBNYE5C3SZKI3JD6KU",
+        "sequence": "14312102340591616",
+        "lastModifiedLedger": 3332296,
+        "balances": [
+          {
+            "assetString": "native",
+            "balance": "50.0000000",
+            "limit": null,
+            "authorized": null,
+            "assetType": "native"
+          }
+        ]
+      },
+      "settler": {
+        "address": "GCQK4S2QOTH2ZWRLON2FCDQ4GSFR7GL5ED2Z5OLAXH4BY4RZHBDFPO7F",
+        "sequence": "14312115225493504",
+        "lastModifiedLedger": 3332299,
+        "balances": [
+          {
+            "assetString": "native",
+            "balance": "50.0000000",
+            "limit": null,
+            "authorized": null,
+            "assetType": "native"
+          }
+        ]
+      },
+      "compliance": {
+        "address": "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "sequence": "14312123815428096",
+        "lastModifiedLedger": 3332301,
+        "balances": [
+          {
+            "assetString": "native",
+            "balance": "50.0000000",
+            "limit": null,
+            "authorized": null,
+            "assetType": "native"
+          }
+        ]
+      }
+    }
+  },
+  "step2": {
+    "assertions": [
+      {
+        "ok": true,
+        "message": "global pause should be false",
+        "detail": {
+          "globalPause": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet must be registered for treasury",
+        "detail": {
+          "participant": "treasury",
+          "walletRegistered": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet owner hash must match participant for treasury",
+        "detail": {
+          "participant": "treasury",
+          "walletOwner": "54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf",
+          "expected": "54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must be trade-eligible for treasury",
+        "detail": {
+          "participant": "treasury",
+          "tradeEligible": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must not be frozen for treasury",
+        "detail": {
+          "participant": "treasury",
+          "frozen": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet must be registered for alpha",
+        "detail": {
+          "participant": "alpha",
+          "walletRegistered": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet owner hash must match participant for alpha",
+        "detail": {
+          "participant": "alpha",
+          "walletOwner": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+          "expected": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must be trade-eligible for alpha",
+        "detail": {
+          "participant": "alpha",
+          "tradeEligible": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must not be frozen for alpha",
+        "detail": {
+          "participant": "alpha",
+          "frozen": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet must be registered for beta",
+        "detail": {
+          "participant": "beta",
+          "walletRegistered": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet owner hash must match participant for beta",
+        "detail": {
+          "participant": "beta",
+          "walletOwner": "2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0",
+          "expected": "2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must be trade-eligible for beta",
+        "detail": {
+          "participant": "beta",
+          "tradeEligible": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must not be frozen for beta",
+        "detail": {
+          "participant": "beta",
+          "frozen": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet must be registered for matcher",
+        "detail": {
+          "participant": "matcher",
+          "walletRegistered": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet owner hash must match participant for matcher",
+        "detail": {
+          "participant": "matcher",
+          "walletOwner": "09624bcb4928687c97583ba146f176e8b8c883ae28c1b6d693de4983ab12f777",
+          "expected": "09624bcb4928687c97583ba146f176e8b8c883ae28c1b6d693de4983ab12f777"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must be trade-eligible for matcher",
+        "detail": {
+          "participant": "matcher",
+          "tradeEligible": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must not be frozen for matcher",
+        "detail": {
+          "participant": "matcher",
+          "frozen": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet must be registered for settler",
+        "detail": {
+          "participant": "settler",
+          "walletRegistered": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet owner hash must match participant for settler",
+        "detail": {
+          "participant": "settler",
+          "walletOwner": "291927d6781c180316de95b5a5ac8750355164f10e21a44d08eb2acf9c667080",
+          "expected": "291927d6781c180316de95b5a5ac8750355164f10e21a44d08eb2acf9c667080"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must be trade-eligible for settler",
+        "detail": {
+          "participant": "settler",
+          "tradeEligible": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must not be frozen for settler",
+        "detail": {
+          "participant": "settler",
+          "frozen": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet must be registered for compliance",
+        "detail": {
+          "participant": "compliance",
+          "walletRegistered": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "wallet owner hash must match participant for compliance",
+        "detail": {
+          "participant": "compliance",
+          "walletOwner": "ba237f675005cb8696e29a6d9fbeec0618a04cdb8b830a754e6e9389281ff936",
+          "expected": "ba237f675005cb8696e29a6d9fbeec0618a04cdb8b830a754e6e9389281ff936"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must be trade-eligible for compliance",
+        "detail": {
+          "participant": "compliance",
+          "tradeEligible": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "participant must not be frozen for compliance",
+        "detail": {
+          "participant": "compliance",
+          "frozen": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCUST10Y-ENT must be supported",
+        "detail": {
+          "asset": "DTCUST10Y-ENT",
+          "supported": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCUST10Y-ENT must have settlement enabled",
+        "detail": {
+          "asset": "DTCUST10Y-ENT",
+          "settlementEnabled": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCUST10Y-ENT must not be paused",
+        "detail": {
+          "asset": "DTCUST10Y-ENT",
+          "paused": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCUST10Y-ENT should have corporate actions enabled",
+        "detail": {
+          "asset": "DTCUST10Y-ENT",
+          "corpActionsEnabled": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCSPY-ENT must be supported",
+        "detail": {
+          "asset": "DTCSPY-ENT",
+          "supported": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCSPY-ENT must have settlement enabled",
+        "detail": {
+          "asset": "DTCSPY-ENT",
+          "settlementEnabled": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCSPY-ENT must not be paused",
+        "detail": {
+          "asset": "DTCSPY-ENT",
+          "paused": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCSPY-ENT should have corporate actions enabled",
+        "detail": {
+          "asset": "DTCSPY-ENT",
+          "corpActionsEnabled": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "USDC must be supported",
+        "detail": {
+          "asset": "USDC",
+          "supported": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "USDC must have settlement enabled",
+        "detail": {
+          "asset": "USDC",
+          "settlementEnabled": "true"
+        }
+      },
+      {
+        "ok": true,
+        "message": "USDC must not be paused",
+        "detail": {
+          "asset": "USDC",
+          "paused": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "USDC should not have corporate actions enabled",
+        "detail": {
+          "asset": "USDC",
+          "corpActionsEnabled": "false"
+        }
+      },
+      {
+        "ok": true,
+        "message": "current legal state must match manifest for DTCUST10Y-ENT/treasury",
+        "detail": {
+          "participant": "treasury",
+          "displaySymbol": "DTCUST10Y-ENT",
+          "currentState": "a2891eaf3164c3964a352abeedd48f18847efa67192d9bc170eeb50e13bc706a",
+          "expected": "a2891eaf3164c3964a352abeedd48f18847efa67192d9bc170eeb50e13bc706a"
+        }
+      },
+      {
+        "ok": true,
+        "message": "current legal state must match manifest for DTCUST10Y-ENT/alpha",
+        "detail": {
+          "participant": "alpha",
+          "displaySymbol": "DTCUST10Y-ENT",
+          "currentState": "99048bf49c30de48536b58b2d8f3903f8dd9a3b6d6654f861819cecc852bd54c",
+          "expected": "99048bf49c30de48536b58b2d8f3903f8dd9a3b6d6654f861819cecc852bd54c"
+        }
+      },
+      {
+        "ok": true,
+        "message": "current legal state must match manifest for DTCUST10Y-ENT/beta",
+        "detail": {
+          "participant": "beta",
+          "displaySymbol": "DTCUST10Y-ENT",
+          "currentState": "4e770922e5c34097a9c87eee498c9e9a5c1c2379cefd43246b0a67dca2ad023d",
+          "expected": "4e770922e5c34097a9c87eee498c9e9a5c1c2379cefd43246b0a67dca2ad023d"
+        }
+      },
+      {
+        "ok": true,
+        "message": "current legal state must match manifest for DTCSPY-ENT/treasury",
+        "detail": {
+          "participant": "treasury",
+          "displaySymbol": "DTCSPY-ENT",
+          "currentState": "5c845436f9048546cac60e6fb946fb8e78f08346f758e2973edf13a5e633b455",
+          "expected": "5c845436f9048546cac60e6fb946fb8e78f08346f758e2973edf13a5e633b455"
+        }
+      },
+      {
+        "ok": true,
+        "message": "current legal state must match manifest for DTCSPY-ENT/alpha",
+        "detail": {
+          "participant": "alpha",
+          "displaySymbol": "DTCSPY-ENT",
+          "currentState": "0007536eba9eac30126ad44de120fb58ba5ebde07a2427b2b86910a8b838d7e5",
+          "expected": "0007536eba9eac30126ad44de120fb58ba5ebde07a2427b2b86910a8b838d7e5"
+        }
+      },
+      {
+        "ok": true,
+        "message": "current legal state must match manifest for DTCSPY-ENT/beta",
+        "detail": {
+          "participant": "beta",
+          "displaySymbol": "DTCSPY-ENT",
+          "currentState": "c0e0489912de97c5ca988212af76fc5dcfbd463ded0355b16ef0809a0c09cea1",
+          "expected": "c0e0489912de97c5ca988212af76fc5dcfbd463ded0355b16ef0809a0c09cea1"
+        }
+      }
+    ],
+    "participantChecks": [
+      {
+        "key": "treasury",
+        "walletRegistered": "true",
+        "walletOwner": "54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf",
+        "tradeEligible": "true",
+        "frozen": "false",
+        "rawParticipantRecord": "{\"created_ledger\":3332417,\"credential_expiry_ledger\":4294967295,\"credential_root\":\"8ba7a2493e41c11303482652f3457e0fec2266c8cbd00e30979b5787dc5c22ae\",\"jurisdiction_hash\":\"cca01abc5611cb1c251798ff0065ce5be1af41bacf5f8e94dc7aed19113d7b5d\",\"kyc_status\":1,\"legal_entity_hash\":\"4ff8d1fc162b1a21e0642907db262ac031d7d67d6be67c7b39a3d1fe1e1e8018\",\"permissions_hash\":\"110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062\",\"primary_wallet\":\"GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6\",\"review_case_id\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"role\":5,\"sanctions_status\":1,\"status\":2,\"updated_ledger\":3332419,\"wallet_count\":1}"
+      },
+      {
+        "key": "alpha",
+        "walletRegistered": "true",
+        "walletOwner": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+        "tradeEligible": "true",
+        "frozen": "false",
+        "rawParticipantRecord": "{\"created_ledger\":3332426,\"credential_expiry_ledger\":4294967295,\"credential_root\":\"df539ac8dcea50ac2c3f6d7615a4bd29914a5791abdbb793dfdd3d4614ab50aa\",\"jurisdiction_hash\":\"c88fd39165ab5cd6b6620b17ea78ceb4383589539b964f7e0cb8991fa8219fd8\",\"kyc_status\":1,\"legal_entity_hash\":\"33d47b61af2f92eecd9acc7af06b3afc82da8d04c31af354790534e506e2c0be\",\"permissions_hash\":\"110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062\",\"primary_wallet\":\"GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV\",\"review_case_id\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"role\":1,\"sanctions_status\":1,\"status\":2,\"updated_ledger\":3332429,\"wallet_count\":1}"
+      },
+      {
+        "key": "beta",
+        "walletRegistered": "true",
+        "walletOwner": "2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0",
+        "tradeEligible": "true",
+        "frozen": "false",
+        "rawParticipantRecord": "{\"created_ledger\":3332434,\"credential_expiry_ledger\":4294967295,\"credential_root\":\"e29cdd489feb805db64def59a96f78d61969cedd5a984c17c13074216b08c14c\",\"jurisdiction_hash\":\"cf0de1fb1cf73f98806392af2dd3e99b143481e7a97fd3fa31a5bb6581971b4c\",\"kyc_status\":1,\"legal_entity_hash\":\"813396175e6dc01d3f6582ab9d5106aa608f4efde784540c545775d117996dae\",\"permissions_hash\":\"110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062\",\"primary_wallet\":\"GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV\",\"review_case_id\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"role\":1,\"sanctions_status\":1,\"status\":2,\"updated_ledger\":3332436,\"wallet_count\":1}"
+      },
+      {
+        "key": "matcher",
+        "walletRegistered": "true",
+        "walletOwner": "09624bcb4928687c97583ba146f176e8b8c883ae28c1b6d693de4983ab12f777",
+        "tradeEligible": "true",
+        "frozen": "false",
+        "rawParticipantRecord": "{\"created_ledger\":3332444,\"credential_expiry_ledger\":4294967295,\"credential_root\":\"056fc560e405c6ad18fc5fcbac23e9244f89c5e59877b3b56bd191feaedd31cd\",\"jurisdiction_hash\":\"9efad3215d3411571b31cc0885cecba2679c7fe003e4a2e95b0d71b3b7e28dd1\",\"kyc_status\":1,\"legal_entity_hash\":\"9fd57aaebf53432db2fb25a3fe33491339bb2f3dee6a334e222f9e19b2e95610\",\"permissions_hash\":\"110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062\",\"primary_wallet\":\"GC3QPVTXDOHU2XSNRPRK6QOMFXYZ6IXLSU2WOFMBNYE5C3SZKI3JD6KU\",\"review_case_id\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"role\":3,\"sanctions_status\":1,\"status\":2,\"updated_ledger\":3332446,\"wallet_count\":1}"
+      },
+      {
+        "key": "settler",
+        "walletRegistered": "true",
+        "walletOwner": "291927d6781c180316de95b5a5ac8750355164f10e21a44d08eb2acf9c667080",
+        "tradeEligible": "true",
+        "frozen": "false",
+        "rawParticipantRecord": "{\"created_ledger\":3332459,\"credential_expiry_ledger\":4294967295,\"credential_root\":\"96c1714cd2ea4d790042d4a7af5b5f7e593e1bb9b635d285cb5f809b8877cc5e\",\"jurisdiction_hash\":\"6803e5f2110235d2b8aa73b4b6390608f0f256f91fe04133db7cfa52ff0d3fd8\",\"kyc_status\":1,\"legal_entity_hash\":\"bacfa2d13ab0dd47b1754fc3039353f60b7c9b24cc344472e58d48b8f7d15cfc\",\"permissions_hash\":\"110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062\",\"primary_wallet\":\"GCQK4S2QOTH2ZWRLON2FCDQ4GSFR7GL5ED2Z5OLAXH4BY4RZHBDFPO7F\",\"review_case_id\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"role\":4,\"sanctions_status\":1,\"status\":2,\"updated_ledger\":3332463,\"wallet_count\":1}"
+      },
+      {
+        "key": "compliance",
+        "walletRegistered": "true",
+        "walletOwner": "ba237f675005cb8696e29a6d9fbeec0618a04cdb8b830a754e6e9389281ff936",
+        "tradeEligible": "true",
+        "frozen": "false",
+        "rawParticipantRecord": "{\"created_ledger\":3332466,\"credential_expiry_ledger\":4294967295,\"credential_root\":\"1d67caefa53ebb8484b3ace36e968d7f03ead5376c6a6d2c2215fffb8c5f1f97\",\"jurisdiction_hash\":\"157555a4e8820b138e022e197b4cf8473a51b9913505e78470d68e49bea5123c\",\"kyc_status\":1,\"legal_entity_hash\":\"a57341f3fd1f1445c2e54151c23a6f0bd17ee810575999c6ea8effdc78a0a9ff\",\"permissions_hash\":\"110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062\",\"primary_wallet\":\"GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76\",\"review_case_id\":\"0000000000000000000000000000000000000000000000000000000000000000\",\"role\":2,\"sanctions_status\":1,\"status\":2,\"updated_ledger\":3332473,\"wallet_count\":1}"
+      }
+    ],
+    "assetChecks": [
+      {
+        "displaySymbol": "DTCUST10Y-ENT",
+        "supported": "true",
+        "settlementEnabled": "true",
+        "corpActionsEnabled": "true",
+        "paused": "false",
+        "rawAssetRecord": "{\"asset_class\":1,\"asset_id_hash\":\"7b86d75d78a28e52e4b5188b89f3af3896bc3e79c622e74359612e9e055ff5ad\",\"asset_permissions_hash\":\"523061683a7f4fc3d1f863031825ae9be7008580045cd233de9969fca3d1c648\",\"clawback_enabled\":true,\"corporate_actions_enabled\":true,\"created_ledger\":3332476,\"issuer\":\"GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q\",\"issuer_policy_hash\":\"2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78\",\"jurisdiction_policy_hash\":\"a47f85d3820572d978a6ef586f07002eb41cc3cb7aa441a4a9a80d6a64083bdd\",\"metadata_hash\":\"e7fba47c82f41bd1c0c1b380831582ce294fbe6c6fc793524b592d043b497f38\",\"requires_issuer_auth\":true,\"requires_registered_wallets\":true,\"settlement_enabled\":true,\"status\":2,\"transfer_class_hash\":\"9c93d5f2f0c42e4a4872277c1065ea255149eb6f8de28c3420b92e6e71042fdd\",\"updated_ledger\":3332495,\"uses_sac\":true}"
+      },
+      {
+        "displaySymbol": "DTCSPY-ENT",
+        "supported": "true",
+        "settlementEnabled": "true",
+        "corpActionsEnabled": "true",
+        "paused": "false",
+        "rawAssetRecord": "{\"asset_class\":1,\"asset_id_hash\":\"e164a8973b2bb17481cea6313b1ff7ee2fd131583d8222eb4b86c2142a696707\",\"asset_permissions_hash\":\"0cbe9c71d98bef38b372c9c5dcfed7f6dd4db4e07e8da76cc35b7df55fc57861\",\"clawback_enabled\":true,\"corporate_actions_enabled\":true,\"created_ledger\":3332499,\"issuer\":\"GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q\",\"issuer_policy_hash\":\"2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78\",\"jurisdiction_policy_hash\":\"a47f85d3820572d978a6ef586f07002eb41cc3cb7aa441a4a9a80d6a64083bdd\",\"metadata_hash\":\"c2576bcc0088d62e52e1d1c4fc89003b6fb8a7af5772173fc37d22a176e9a8b9\",\"requires_issuer_auth\":true,\"requires_registered_wallets\":true,\"settlement_enabled\":true,\"status\":2,\"transfer_class_hash\":\"60f863cffb5dd57a37349eec5d3a8d894468333e8dc25f3053a8ebad2c0b3dea\",\"updated_ledger\":3332507,\"uses_sac\":true}"
+      },
+      {
+        "displaySymbol": "USDC",
+        "supported": "true",
+        "settlementEnabled": "true",
+        "corpActionsEnabled": "false",
+        "paused": "false",
+        "rawAssetRecord": "{\"asset_class\":2,\"asset_id_hash\":\"467b2a89c69c3db6aa92d6cd18fbff4c71807c4f06ba80c423676fecb11f4f26\",\"asset_permissions_hash\":\"952c3d33a208fe92a2e8ce7b9cb2ef18ec376f74cdd687ce5730a0cad9b7cc37\",\"clawback_enabled\":false,\"corporate_actions_enabled\":false,\"created_ledger\":3332509,\"issuer\":\"GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5\",\"issuer_policy_hash\":\"e4fe9c9837202c6e1e1eb704cccb9fd09b825793f4fb6f3c9ee81fc6eb30e838\",\"jurisdiction_policy_hash\":\"5e5e0199159c7ceac7af9984163cd42e8b9674e16d84259748c7c15f3a51a90d\",\"metadata_hash\":\"fa1f2fb1ed20631c1a47995150b5f08e3ff03f8c4b46c14e1d3a5c7e7bc0a3d5\",\"requires_issuer_auth\":false,\"requires_registered_wallets\":false,\"settlement_enabled\":true,\"status\":2,\"transfer_class_hash\":\"74b7bc4f8b2270ca5e2e61a3a1cfe635963fc9ebda1c268580bab947322e810f\",\"updated_ledger\":3332520,\"uses_sac\":true}"
+      }
+    ],
+    "legalStateChecks": [
+      {
+        "participantKey": "treasury",
+        "displaySymbol": "DTCUST10Y-ENT",
+        "entitlementIdHash": "180bc43819fcd50f885ba34afc01fad6a2bb443389b4d5fa13f36174cfff34ac",
+        "currentState": "a2891eaf3164c3964a352abeedd48f18847efa67192d9bc170eeb50e13bc706a",
+        "rawStateRecord": "{\"asset\":\"CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5\",\"created_ledger\":3332532,\"entitlement_id_hash\":\"180bc43819fcd50f885ba34afc01fad6a2bb443389b4d5fa13f36174cfff34ac\",\"event_date\":1782677008,\"issuer_policy_hash\":\"2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78\",\"participant_id_hash\":\"54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf\",\"state_commitment\":\"620e37d1aefb3b58611ad049d1ed71e3fb14357a044a9bdef8fbb30028fede5b\",\"status\":1,\"updated_ledger\":3332532,\"wallet\":\"GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6\"}"
+      },
+      {
+        "participantKey": "alpha",
+        "displaySymbol": "DTCUST10Y-ENT",
+        "entitlementIdHash": "3d4d5674d204adee34adf8fb3e9766971179f131c2d85003e03c8519a99ddd3b",
+        "currentState": "99048bf49c30de48536b58b2d8f3903f8dd9a3b6d6654f861819cecc852bd54c",
+        "rawStateRecord": "{\"asset\":\"CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5\",\"created_ledger\":3332535,\"entitlement_id_hash\":\"3d4d5674d204adee34adf8fb3e9766971179f131c2d85003e03c8519a99ddd3b\",\"event_date\":1782677008,\"issuer_policy_hash\":\"2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78\",\"participant_id_hash\":\"9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86\",\"state_commitment\":\"58d6090bfeabd59dc71115bebbee88a49803a8599c5a32ab6df5a6ea5f5e638f\",\"status\":1,\"updated_ledger\":3332535,\"wallet\":\"GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV\"}"
+      },
+      {
+        "participantKey": "beta",
+        "displaySymbol": "DTCUST10Y-ENT",
+        "entitlementIdHash": "854e8d4cefbfd2a4753c3ab852ea2c2477813de49170b463f04ad1b6261393a5",
+        "currentState": "4e770922e5c34097a9c87eee498c9e9a5c1c2379cefd43246b0a67dca2ad023d",
+        "rawStateRecord": "{\"asset\":\"CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5\",\"created_ledger\":3332537,\"entitlement_id_hash\":\"854e8d4cefbfd2a4753c3ab852ea2c2477813de49170b463f04ad1b6261393a5\",\"event_date\":1782677008,\"issuer_policy_hash\":\"2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78\",\"participant_id_hash\":\"2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0\",\"state_commitment\":\"9cfafeca836f19daa9cb9741dbde086700a473e48b2e96ff58782de0aef89087\",\"status\":1,\"updated_ledger\":3332537,\"wallet\":\"GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV\"}"
+      },
+      {
+        "participantKey": "treasury",
+        "displaySymbol": "DTCSPY-ENT",
+        "entitlementIdHash": "796c0ffea138d32cebbf96cd7012c0f924e131af48db2f025a9189b620e24468",
+        "currentState": "5c845436f9048546cac60e6fb946fb8e78f08346f758e2973edf13a5e633b455",
+        "rawStateRecord": "{\"asset\":\"CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG\",\"created_ledger\":3332552,\"entitlement_id_hash\":\"796c0ffea138d32cebbf96cd7012c0f924e131af48db2f025a9189b620e24468\",\"event_date\":1782677008,\"issuer_policy_hash\":\"2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78\",\"participant_id_hash\":\"54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf\",\"state_commitment\":\"7cfc63f6284221cdd540f0695fa8273c4c25ee612c82de26e8191a02e627d79a\",\"status\":1,\"updated_ledger\":3332552,\"wallet\":\"GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6\"}"
+      },
+      {
+        "participantKey": "alpha",
+        "displaySymbol": "DTCSPY-ENT",
+        "entitlementIdHash": "4d734e9e5e83ca0a8b922b0c8048b18bc98f3f281dfa61bbe7c51e10cc457610",
+        "currentState": "0007536eba9eac30126ad44de120fb58ba5ebde07a2427b2b86910a8b838d7e5",
+        "rawStateRecord": "{\"asset\":\"CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG\",\"created_ledger\":3332554,\"entitlement_id_hash\":\"4d734e9e5e83ca0a8b922b0c8048b18bc98f3f281dfa61bbe7c51e10cc457610\",\"event_date\":1782677008,\"issuer_policy_hash\":\"2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78\",\"participant_id_hash\":\"9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86\",\"state_commitment\":\"33c43f88ee248fd4c101c2a2c01366a6dced94f0ff45e230617a3d73eaf4843c\",\"status\":1,\"updated_ledger\":3332554,\"wallet\":\"GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV\"}"
+      },
+      {
+        "participantKey": "beta",
+        "displaySymbol": "DTCSPY-ENT",
+        "entitlementIdHash": "87d40aed736c42c6870cd6dff5d33245f8d193c0dd3288baa1e2a0d53db5f054",
+        "currentState": "c0e0489912de97c5ca988212af76fc5dcfbd463ded0355b16ef0809a0c09cea1",
+        "rawStateRecord": "{\"asset\":\"CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG\",\"created_ledger\":3332562,\"entitlement_id_hash\":\"87d40aed736c42c6870cd6dff5d33245f8d193c0dd3288baa1e2a0d53db5f054\",\"event_date\":1782677008,\"issuer_policy_hash\":\"2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78\",\"participant_id_hash\":\"2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0\",\"state_commitment\":\"3250bab4cff0f7b57100f6433fa72b97b0e717d15e981e8cdd5e18f2fbd2d7cc\",\"status\":1,\"updated_ledger\":3332562,\"wallet\":\"GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV\"}"
+      }
+    ]
+  },
+  "step3": {
+    "probeWallet": {
+      "name": "zkdtcc-demo0628b-probe",
+      "address": "GAUHFEYNEDJLDGUGCHQEN7IAUA6Y2AIKKY74TIHDW3GD23LHCWSK22TX"
+    },
+    "probeBefore": {
+      "address": "GAUHFEYNEDJLDGUGCHQEN7IAUA6Y2AIKKY74TIHDW3GD23LHCWSK22TX",
+      "sequence": "14316036530634755",
+      "lastModifiedLedger": 3333251,
+      "balances": [
+        {
+          "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum12"
+        },
+        {
+          "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum12"
+        },
+        {
+          "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum4"
+        },
+        {
+          "assetString": "native",
+          "balance": "9.9999700",
+          "limit": null,
+          "authorized": null,
+          "assetType": "native"
+        }
+      ]
+    },
+    "probeAfter": {
+      "address": "GAUHFEYNEDJLDGUGCHQEN7IAUA6Y2AIKKY74TIHDW3GD23LHCWSK22TX",
+      "sequence": "14316036530634758",
+      "lastModifiedLedger": 3333274,
+      "balances": [
+        {
+          "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum12"
+        },
+        {
+          "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum12"
+        },
+        {
+          "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum4"
+        },
+        {
+          "assetString": "native",
+          "balance": "9.9999400",
+          "limit": null,
+          "authorized": null,
+          "assetType": "native"
+        }
+      ]
+    },
+    "treasuryBefore": {
+      "address": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+      "sequence": "14311999261376519",
+      "lastModifiedLedger": 3332412,
+      "balances": [
+        {
+          "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "balance": "200000.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum12"
+        },
+        {
+          "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "balance": "850000.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum12"
+        },
+        {
+          "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+          "balance": "20.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum4"
+        },
+        {
+          "assetString": "native",
+          "balance": "49.9999300",
+          "limit": null,
+          "authorized": null,
+          "assetType": "native"
+        }
+      ]
+    },
+    "treasuryAfter": {
+      "address": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+      "sequence": "14311999261376522",
+      "lastModifiedLedger": 3333268,
+      "balances": [
+        {
+          "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "balance": "200000.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum12"
+        },
+        {
+          "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "balance": "850000.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum12"
+        },
+        {
+          "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+          "balance": "20.0000000",
+          "limit": "922337203685.4775807",
+          "authorized": true,
+          "assetType": "credit_alphanum4"
+        },
+        {
+          "assetString": "native",
+          "balance": "49.9999000",
+          "limit": null,
+          "authorized": null,
+          "assetType": "native"
+        }
+      ]
+    },
+    "assertions": [
+      {
+        "ok": true,
+        "message": "USDC probe balance should round-trip back to its starting value",
+        "detail": {
+          "label": "USDC",
+          "probeBeforeBalance": "0.0000000",
+          "probeAfterBalance": "0.0000000"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCUST10Y-ENT probe balance should round-trip back to its starting value",
+        "detail": {
+          "label": "DTCUST10Y-ENT",
+          "probeBeforeBalance": "0.0000000",
+          "probeAfterBalance": "0.0000000"
+        }
+      },
+      {
+        "ok": true,
+        "message": "DTCSPY-ENT probe balance should round-trip back to its starting value",
+        "detail": {
+          "label": "DTCSPY-ENT",
+          "probeBeforeBalance": "0.0000000",
+          "probeAfterBalance": "0.0000000"
+        }
+      }
+    ],
+    "transferTests": [
+      {
+        "label": "USDC",
+        "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+        "amount": "0.5000000",
+        "outboundTxHash": null,
+        "inboundTxHash": null
+      },
+      {
+        "label": "DTCUST10Y-ENT",
+        "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+        "amount": "10.0000000",
+        "outboundTxHash": null,
+        "inboundTxHash": null
+      },
+      {
+        "label": "DTCSPY-ENT",
+        "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+        "amount": "10.0000000",
+        "outboundTxHash": null,
+        "inboundTxHash": null
+      }
+    ],
+    "note": "The unregistered probe wallet was able to receive raw classic-asset transfers once trustlines existed and the issuer authorized them. Registered-wallet enforcement therefore lives at the protocol contract layer, not in the classic asset rail alone."
+  },
+  "completedAt": "2026-06-28T21:06:24.902Z"
+}

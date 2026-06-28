@@ -3,6 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "stellar:phase0:bootstrap": "node scripts/bootstrap-phase0-testnet.mjs",
+    "stellar:phase0:verify": "node scripts/run-phase0-onchain-checks.mjs",
     "zk:phase3:input": "node scripts/generate-unencumbered-input.mjs",
     "zk:phase3:prove": "node scripts/run-unencumbered-phase3-flow.mjs",
     "zk:phase3:test": "node scripts/test-unencumbered-phase3.mjs",

@@ -1,0 +1,533 @@
+{
+  "namespace": "demo0628b",
+  "network": "testnet",
+  "deployedAt": "2026-06-28T20:07:52.355Z",
+  "admin": {
+    "name": "rosca-admin",
+    "address": "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT"
+  },
+  "wallets": {
+    "deployer": {
+      "name": "rosca-admin",
+      "address": "GBKOB7AVLETKGZ4QZF2RIAWFZ7KKG3K5WGMZNQZBWHSDLQUQNUJABLGT"
+    },
+    "issuer": {
+      "name": "zkdtcc-demo0628b-issuer",
+      "address": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q"
+    },
+    "treasury": {
+      "name": "zkdtcc-demo0628b-treasury",
+      "address": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6"
+    },
+    "alpha": {
+      "name": "zkdtcc-demo0628b-alpha",
+      "address": "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV"
+    },
+    "beta": {
+      "name": "zkdtcc-demo0628b-beta",
+      "address": "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV"
+    },
+    "matcher": {
+      "name": "zkdtcc-demo0628b-matcher",
+      "address": "GC3QPVTXDOHU2XSNRPRK6QOMFXYZ6IXLSU2WOFMBNYE5C3SZKI3JD6KU"
+    },
+    "settler": {
+      "name": "zkdtcc-demo0628b-settler",
+      "address": "GCQK4S2QOTH2ZWRLON2FCDQ4GSFR7GL5ED2Z5OLAXH4BY4RZHBDFPO7F"
+    },
+    "compliance": {
+      "name": "zkdtcc-demo0628b-compliance",
+      "address": "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76"
+    }
+  },
+  "contracts": {
+    "complianceControl": {
+      "alias": "zkdtcc-demo0628b-compliance-control",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/compliance_control.wasm",
+      "wasmHash": "46e74acf3656eb7d5fc3c2a124f664819bf9102c29a773d588767df4dfb0a270",
+      "contractId": "CB4PXMLNQ62C22IHTEYE4LTOYDUTINM2B7P7D2RGZ3EKUCBD2JGBDCDX"
+    },
+    "assetRegistry": {
+      "alias": "zkdtcc-demo0628b-asset-registry",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/asset_registry.wasm",
+      "wasmHash": "4317c8de7a0436796c1e8d3cdaed0f552ee83413fdb066ebecf0dd290a26d030",
+      "contractId": "CADQ3BGERPKSRR4OR7VIDHNCDP6YGHAAIE5NIMDYHM22JL2RO5YHU2B6"
+    },
+    "participantRegistry": {
+      "alias": "zkdtcc-demo0628b-participant-registry",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/participant_registry.wasm",
+      "wasmHash": "acef13b1e5f9fa84430c993cecc84a3920a021a679f13a7e9dffba60854ffb17",
+      "contractId": "CD4EED23HWOJ6JGBFSWUGMWFA65GKG5D6HQJMB4A2P37OZXQ3Y2QRBMN"
+    },
+    "legalStateRegistry": {
+      "alias": "zkdtcc-demo0628b-legal-state-registry",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/legal_state_registry.wasm",
+      "wasmHash": "9936da84a6b7439b7660747ff5c86e7e5d5b9d08f42145279c0989113680ab6c",
+      "contractId": "CATQ2K7A6RKCWUDAY33NDX6KNQCK5HUAS6NS4CXZ7K4EU2MIDJINFIM5"
+    }
+  },
+  "assets": {
+    "usdc": {
+      "displaySymbol": "USDC",
+      "onChainCode": "USDC",
+      "displayName": "Circle Testnet USDC",
+      "assetString": "USDC:GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+      "issuer": "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5",
+      "sacContractId": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+      "flags": {
+        "auth_required": false,
+        "auth_revocable": true,
+        "auth_immutable": false,
+        "auth_clawback_enabled": false
+      },
+      "metadataHash": "fa1f2fb1ed20631c1a47995150b5f08e3ff03f8c4b46c14e1d3a5c7e7bc0a3d5",
+      "issuerPolicyHash": "e4fe9c9837202c6e1e1eb704cccb9fd09b825793f4fb6f3c9ee81fc6eb30e838",
+      "jurisdictionPolicyHash": "5e5e0199159c7ceac7af9984163cd42e8b9674e16d84259748c7c15f3a51a90d",
+      "transferClassHash": "74b7bc4f8b2270ca5e2e61a3a1cfe635963fc9ebda1c268580bab947322e810f",
+      "assetPermissionsHash": "952c3d33a208fe92a2e8ce7b9cb2ef18ec376f74cdd687ce5730a0cad9b7cc37"
+    },
+    "demo": [
+      {
+        "key": "dtcust10y_ent",
+        "displaySymbol": "DTCUST10Y-ENT",
+        "onChainCode": "DTCUST10YENT",
+        "displayName": "DTC Custodied 10Y Treasury Entitlement",
+        "description": "Mock DTC-tokenized 10-year U.S. Treasury note entitlement for the institutional demo path.",
+        "underlying": "10-Year U.S. Treasury Note",
+        "actionType": "coupon",
+        "totalSupplyUnits": "1000000.0000000",
+        "alphaUnits": "100000.0000000",
+        "betaUnits": "50000.0000000",
+        "assetString": "DTCUST10YENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+        "issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+        "distributor": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+        "sacContractId": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+        "metadataHash": "e7fba47c82f41bd1c0c1b380831582ce294fbe6c6fc793524b592d043b497f38",
+        "issuerPolicyHash": "2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78",
+        "transferClassHash": "9c93d5f2f0c42e4a4872277c1065ea255149eb6f8de28c3420b92e6e71042fdd",
+        "jurisdictionPolicyHash": "a47f85d3820572d978a6ef586f07002eb41cc3cb7aa441a4a9a80d6a64083bdd",
+        "assetPermissionsHash": "523061683a7f4fc3d1f863031825ae9be7008580045cd233de9969fca3d1c648",
+        "balances": {
+          "treasuryUnits": "850000.0000000",
+          "alphaUnits": "100000.0000000",
+          "betaUnits": "50000.0000000"
+        },
+        "metadata": {
+          "displaySymbol": "DTCUST10Y-ENT",
+          "onChainCode": "DTCUST10YENT",
+          "displayName": "DTC Custodied 10Y Treasury Entitlement",
+          "description": "Mock DTC-tokenized 10-year U.S. Treasury note entitlement for the institutional demo path.",
+          "underlying": "10-Year U.S. Treasury Note",
+          "sourceOfTruth": "mock DTC entitlement for Stellar testnet demo",
+          "issuerAccount": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "distributorAccount": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+          "network": "testnet",
+          "decimals": 7
+        },
+        "issuerPolicy": {
+          "registeredWalletsOnly": true,
+          "issuerAuthorized": true,
+          "revocable": true,
+          "clawbackEnabled": true,
+          "reversibleTransferAuthority": "issuer / DTC admin",
+          "lifecycle": [
+            "settlement",
+            "corporate_actions"
+          ],
+          "network": "testnet"
+        }
+      },
+      {
+        "key": "dtcspy_ent",
+        "displaySymbol": "DTCSPY-ENT",
+        "onChainCode": "DTCSPYENT",
+        "displayName": "DTC Custodied S&P 500 ETF Entitlement",
+        "description": "Mock DTC-tokenized broad-market ETF entitlement for the simplified demo path.",
+        "underlying": "S&P 500 ETF entitlement",
+        "actionType": "dividend",
+        "totalSupplyUnits": "250000.0000000",
+        "alphaUnits": "35000.0000000",
+        "betaUnits": "15000.0000000",
+        "assetString": "DTCSPYENT:GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+        "issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+        "distributor": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+        "sacContractId": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+        "metadataHash": "c2576bcc0088d62e52e1d1c4fc89003b6fb8a7af5772173fc37d22a176e9a8b9",
+        "issuerPolicyHash": "2b29551375b787e2ce985282385947560d48497295e27d03a8dbb73a684f0a78",
+        "transferClassHash": "60f863cffb5dd57a37349eec5d3a8d894468333e8dc25f3053a8ebad2c0b3dea",
+        "jurisdictionPolicyHash": "a47f85d3820572d978a6ef586f07002eb41cc3cb7aa441a4a9a80d6a64083bdd",
+        "assetPermissionsHash": "0cbe9c71d98bef38b372c9c5dcfed7f6dd4db4e07e8da76cc35b7df55fc57861",
+        "balances": {
+          "treasuryUnits": "200000.0000000",
+          "alphaUnits": "35000.0000000",
+          "betaUnits": "15000.0000000"
+        },
+        "metadata": {
+          "displaySymbol": "DTCSPY-ENT",
+          "onChainCode": "DTCSPYENT",
+          "displayName": "DTC Custodied S&P 500 ETF Entitlement",
+          "description": "Mock DTC-tokenized broad-market ETF entitlement for the simplified demo path.",
+          "underlying": "S&P 500 ETF entitlement",
+          "sourceOfTruth": "mock DTC entitlement for Stellar testnet demo",
+          "issuerAccount": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q",
+          "distributorAccount": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+          "network": "testnet",
+          "decimals": 7
+        },
+        "issuerPolicy": {
+          "registeredWalletsOnly": true,
+          "issuerAuthorized": true,
+          "revocable": true,
+          "clawbackEnabled": true,
+          "reversibleTransferAuthority": "issuer / DTC admin",
+          "lifecycle": [
+            "settlement",
+            "corporate_actions"
+          ],
+          "network": "testnet"
+        }
+      }
+    ]
+  },
+  "participants": [
+    {
+      "key": "treasury",
+      "role": 5,
+      "wallet": {
+        "name": "zkdtcc-demo0628b-treasury",
+        "address": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6"
+      },
+      "participantIdHash": "54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf",
+      "credentialRoot": "8ba7a2493e41c11303482652f3457e0fec2266c8cbd00e30979b5787dc5c22ae",
+      "legalEntityHash": "4ff8d1fc162b1a21e0642907db262ac031d7d67d6be67c7b39a3d1fe1e1e8018",
+      "jurisdictionHash": "cca01abc5611cb1c251798ff0065ce5be1af41bacf5f8e94dc7aed19113d7b5d",
+      "permissionsHash": "110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062"
+    },
+    {
+      "key": "alpha",
+      "role": 1,
+      "wallet": {
+        "name": "zkdtcc-demo0628b-alpha",
+        "address": "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV"
+      },
+      "participantIdHash": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+      "credentialRoot": "df539ac8dcea50ac2c3f6d7615a4bd29914a5791abdbb793dfdd3d4614ab50aa",
+      "legalEntityHash": "33d47b61af2f92eecd9acc7af06b3afc82da8d04c31af354790534e506e2c0be",
+      "jurisdictionHash": "c88fd39165ab5cd6b6620b17ea78ceb4383589539b964f7e0cb8991fa8219fd8",
+      "permissionsHash": "110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062"
+    },
+    {
+      "key": "beta",
+      "role": 1,
+      "wallet": {
+        "name": "zkdtcc-demo0628b-beta",
+        "address": "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV"
+      },
+      "participantIdHash": "2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0",
+      "credentialRoot": "e29cdd489feb805db64def59a96f78d61969cedd5a984c17c13074216b08c14c",
+      "legalEntityHash": "813396175e6dc01d3f6582ab9d5106aa608f4efde784540c545775d117996dae",
+      "jurisdictionHash": "cf0de1fb1cf73f98806392af2dd3e99b143481e7a97fd3fa31a5bb6581971b4c",
+      "permissionsHash": "110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062"
+    },
+    {
+      "key": "matcher",
+      "role": 3,
+      "wallet": {
+        "name": "zkdtcc-demo0628b-matcher",
+        "address": "GC3QPVTXDOHU2XSNRPRK6QOMFXYZ6IXLSU2WOFMBNYE5C3SZKI3JD6KU"
+      },
+      "participantIdHash": "09624bcb4928687c97583ba146f176e8b8c883ae28c1b6d693de4983ab12f777",
+      "credentialRoot": "056fc560e405c6ad18fc5fcbac23e9244f89c5e59877b3b56bd191feaedd31cd",
+      "legalEntityHash": "9fd57aaebf53432db2fb25a3fe33491339bb2f3dee6a334e222f9e19b2e95610",
+      "jurisdictionHash": "9efad3215d3411571b31cc0885cecba2679c7fe003e4a2e95b0d71b3b7e28dd1",
+      "permissionsHash": "110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062"
+    },
+    {
+      "key": "settler",
+      "role": 4,
+      "wallet": {
+        "name": "zkdtcc-demo0628b-settler",
+        "address": "GCQK4S2QOTH2ZWRLON2FCDQ4GSFR7GL5ED2Z5OLAXH4BY4RZHBDFPO7F"
+      },
+      "participantIdHash": "291927d6781c180316de95b5a5ac8750355164f10e21a44d08eb2acf9c667080",
+      "credentialRoot": "96c1714cd2ea4d790042d4a7af5b5f7e593e1bb9b635d285cb5f809b8877cc5e",
+      "legalEntityHash": "bacfa2d13ab0dd47b1754fc3039353f60b7c9b24cc344472e58d48b8f7d15cfc",
+      "jurisdictionHash": "6803e5f2110235d2b8aa73b4b6390608f0f256f91fe04133db7cfa52ff0d3fd8",
+      "permissionsHash": "110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062"
+    },
+    {
+      "key": "compliance",
+      "role": 2,
+      "wallet": {
+        "name": "zkdtcc-demo0628b-compliance",
+        "address": "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76"
+      },
+      "participantIdHash": "ba237f675005cb8696e29a6d9fbeec0618a04cdb8b830a754e6e9389281ff936",
+      "credentialRoot": "1d67caefa53ebb8484b3ace36e968d7f03ead5376c6a6d2c2215fffb8c5f1f97",
+      "legalEntityHash": "a57341f3fd1f1445c2e54151c23a6f0bd17ee810575999c6ea8effdc78a0a9ff",
+      "jurisdictionHash": "157555a4e8820b138e022e197b4cf8473a51b9913505e78470d68e49bea5123c",
+      "permissionsHash": "110d8022c6c9ae6692edb2e5a8b1f5f7ee2ea581511c1be2a446901816a1f062"
+    }
+  ],
+  "legalStates": [
+    {
+      "participantKey": "treasury",
+      "participantIdHash": "54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf",
+      "wallet": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+      "displaySymbol": "DTCUST10Y-ENT",
+      "asset": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+      "entitlementIdHash": "180bc43819fcd50f885ba34afc01fad6a2bb443389b4d5fa13f36174cfff34ac",
+      "stateIdHash": "a2891eaf3164c3964a352abeedd48f18847efa67192d9bc170eeb50e13bc706a",
+      "stateCommitment": "620e37d1aefb3b58611ad049d1ed71e3fb14357a044a9bdef8fbb30028fede5b",
+      "quantityUnits": "850000.0000000",
+      "eventDate": 1782677008
+    },
+    {
+      "participantKey": "alpha",
+      "participantIdHash": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+      "wallet": "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV",
+      "displaySymbol": "DTCUST10Y-ENT",
+      "asset": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+      "entitlementIdHash": "3d4d5674d204adee34adf8fb3e9766971179f131c2d85003e03c8519a99ddd3b",
+      "stateIdHash": "99048bf49c30de48536b58b2d8f3903f8dd9a3b6d6654f861819cecc852bd54c",
+      "stateCommitment": "58d6090bfeabd59dc71115bebbee88a49803a8599c5a32ab6df5a6ea5f5e638f",
+      "quantityUnits": "100000.0000000",
+      "eventDate": 1782677008
+    },
+    {
+      "participantKey": "beta",
+      "participantIdHash": "2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0",
+      "wallet": "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV",
+      "displaySymbol": "DTCUST10Y-ENT",
+      "asset": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+      "entitlementIdHash": "854e8d4cefbfd2a4753c3ab852ea2c2477813de49170b463f04ad1b6261393a5",
+      "stateIdHash": "4e770922e5c34097a9c87eee498c9e9a5c1c2379cefd43246b0a67dca2ad023d",
+      "stateCommitment": "9cfafeca836f19daa9cb9741dbde086700a473e48b2e96ff58782de0aef89087",
+      "quantityUnits": "50000.0000000",
+      "eventDate": 1782677008
+    },
+    {
+      "participantKey": "treasury",
+      "participantIdHash": "54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf",
+      "wallet": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+      "displaySymbol": "DTCSPY-ENT",
+      "asset": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+      "entitlementIdHash": "796c0ffea138d32cebbf96cd7012c0f924e131af48db2f025a9189b620e24468",
+      "stateIdHash": "5c845436f9048546cac60e6fb946fb8e78f08346f758e2973edf13a5e633b455",
+      "stateCommitment": "7cfc63f6284221cdd540f0695fa8273c4c25ee612c82de26e8191a02e627d79a",
+      "quantityUnits": "200000.0000000",
+      "eventDate": 1782677008
+    },
+    {
+      "participantKey": "alpha",
+      "participantIdHash": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+      "wallet": "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV",
+      "displaySymbol": "DTCSPY-ENT",
+      "asset": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+      "entitlementIdHash": "4d734e9e5e83ca0a8b922b0c8048b18bc98f3f281dfa61bbe7c51e10cc457610",
+      "stateIdHash": "0007536eba9eac30126ad44de120fb58ba5ebde07a2427b2b86910a8b838d7e5",
+      "stateCommitment": "33c43f88ee248fd4c101c2a2c01366a6dced94f0ff45e230617a3d73eaf4843c",
+      "quantityUnits": "35000.0000000",
+      "eventDate": 1782677008
+    },
+    {
+      "participantKey": "beta",
+      "participantIdHash": "2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0",
+      "wallet": "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV",
+      "displaySymbol": "DTCSPY-ENT",
+      "asset": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+      "entitlementIdHash": "87d40aed736c42c6870cd6dff5d33245f8d193c0dd3288baa1e2a0d53db5f054",
+      "stateIdHash": "c0e0489912de97c5ca988212af76fc5dcfbd463ded0355b16ef0809a0c09cea1",
+      "stateCommitment": "3250bab4cff0f7b57100f6433fa72b97b0e717d15e981e8cdd5e18f2fbd2d7cc",
+      "quantityUnits": "15000.0000000",
+      "eventDate": 1782677008
+    }
+  ],
+  "verification": {
+    "assetRegistryChecks": [
+      {
+        "displaySymbol": "DTCUST10Y-ENT",
+        "sacContractId": "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5",
+        "isSupportedAsset": "true"
+      },
+      {
+        "displaySymbol": "DTCSPY-ENT",
+        "sacContractId": "CD2BG2AWKSTKEORVCSKLEXLQIEWLW7SFPBF7WQL4UHGGFQOPCETITKJG",
+        "isSupportedAsset": "true"
+      },
+      {
+        "displaySymbol": "USDC",
+        "sacContractId": "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA",
+        "isSupportedAsset": "true"
+      }
+    ],
+    "walletOwnerChecks": [
+      {
+        "participantKey": "treasury",
+        "wallet": "GBM2MRBANZSAUCIVHDCZFMGE53DD3LFUWCGQQ7FUG4K2FOD4X4HO4FJ6",
+        "owner": "\"54b2ab5c0ae61ee3cb8f5a7e3b545bc948c614ccfd577c63302baed584325aaf\""
+      },
+      {
+        "participantKey": "alpha",
+        "wallet": "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV",
+        "owner": "\"9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86\""
+      },
+      {
+        "participantKey": "beta",
+        "wallet": "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV",
+        "owner": "\"2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0\""
+      },
+      {
+        "participantKey": "matcher",
+        "wallet": "GC3QPVTXDOHU2XSNRPRK6QOMFXYZ6IXLSU2WOFMBNYE5C3SZKI3JD6KU",
+        "owner": "\"09624bcb4928687c97583ba146f176e8b8c883ae28c1b6d693de4983ab12f777\""
+      },
+      {
+        "participantKey": "settler",
+        "wallet": "GCQK4S2QOTH2ZWRLON2FCDQ4GSFR7GL5ED2Z5OLAXH4BY4RZHBDFPO7F",
+        "owner": "\"291927d6781c180316de95b5a5ac8750355164f10e21a44d08eb2acf9c667080\""
+      },
+      {
+        "participantKey": "compliance",
+        "wallet": "GCBSACZZTC4MG6SNRG4JDHVWTV3IJZR76W7VDUWTYPHFDEXXSJ3T6C76",
+        "owner": "\"ba237f675005cb8696e29a6d9fbeec0618a04cdb8b830a754e6e9389281ff936\""
+      }
+    ],
+    "legalStateChecks": [
+      {
+        "entitlementIdHash": "180bc43819fcd50f885ba34afc01fad6a2bb443389b4d5fa13f36174cfff34ac",
+        "currentStateIdHash": "\"a2891eaf3164c3964a352abeedd48f18847efa67192d9bc170eeb50e13bc706a\""
+      },
+      {
+        "entitlementIdHash": "3d4d5674d204adee34adf8fb3e9766971179f131c2d85003e03c8519a99ddd3b",
+        "currentStateIdHash": "\"99048bf49c30de48536b58b2d8f3903f8dd9a3b6d6654f861819cecc852bd54c\""
+      },
+      {
+        "entitlementIdHash": "854e8d4cefbfd2a4753c3ab852ea2c2477813de49170b463f04ad1b6261393a5",
+        "currentStateIdHash": "\"4e770922e5c34097a9c87eee498c9e9a5c1c2379cefd43246b0a67dca2ad023d\""
+      }
+    ],
+    "horizonBalances": {
+      "zkdtcc-demo0628b-treasury": [
+        {
+          "balance": "200000.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332412,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "is_clawback_enabled": true,
+          "asset_type": "credit_alphanum12",
+          "asset_code": "DTCSPYENT",
+          "asset_issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q"
+        },
+        {
+          "balance": "850000.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332389,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "is_clawback_enabled": true,
+          "asset_type": "credit_alphanum12",
+          "asset_code": "DTCUST10YENT",
+          "asset_issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q"
+        },
+        {
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332357,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "asset_type": "credit_alphanum4",
+          "asset_code": "USDC",
+          "asset_issuer": "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
+        }
+      ],
+      "zkdtcc-demo0628b-alpha": [
+        {
+          "balance": "35000.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332411,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "is_clawback_enabled": true,
+          "asset_type": "credit_alphanum12",
+          "asset_code": "DTCSPYENT",
+          "asset_issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q"
+        },
+        {
+          "balance": "100000.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332388,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "is_clawback_enabled": true,
+          "asset_type": "credit_alphanum12",
+          "asset_code": "DTCUST10YENT",
+          "asset_issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q"
+        },
+        {
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332359,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "asset_type": "credit_alphanum4",
+          "asset_code": "USDC",
+          "asset_issuer": "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
+        }
+      ],
+      "zkdtcc-demo0628b-beta": [
+        {
+          "balance": "15000.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332412,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "is_clawback_enabled": true,
+          "asset_type": "credit_alphanum12",
+          "asset_code": "DTCSPYENT",
+          "asset_issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q"
+        },
+        {
+          "balance": "50000.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332389,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "is_clawback_enabled": true,
+          "asset_type": "credit_alphanum12",
+          "asset_code": "DTCUST10YENT",
+          "asset_issuer": "GD3SHUVHWRZ3IZA4RC5SVHYD4HVAAA4FX3EE3KYTT42FUQO5DS3H5X2Q"
+        },
+        {
+          "balance": "0.0000000",
+          "limit": "922337203685.4775807",
+          "buying_liabilities": "0.0000000",
+          "selling_liabilities": "0.0000000",
+          "last_modified_ledger": 3332363,
+          "is_authorized": true,
+          "is_authorized_to_maintain_liabilities": true,
+          "asset_type": "credit_alphanum4",
+          "asset_code": "USDC",
+          "asset_issuer": "GBBD47IF6LWK7P7MDEVSCWR7DPUWV3NY3DTQEVFL4NAT4AQH3ZLLFLA5"
+        }
+      ]
+    }
+  }
+}
