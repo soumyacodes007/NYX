@@ -1,0 +1,6 @@
+/target
+/node_modules
+/.tools
+/circuits/build
+/circuits/artifacts
+/unencumbered_lot.sym

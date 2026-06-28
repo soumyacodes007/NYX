@@ -1,0 +1,17 @@
+[package]
+name = "cctp-ingress-adapter"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+soroban-sdk = { workspace = true }
+zkdtcc-types = { workspace = true }
+asset-registry = { workspace = true }
+participant-registry = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }

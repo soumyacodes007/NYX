@@ -1,0 +1,20 @@
+{
+  "name": "zk-dtcc-circuits",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "zk:phase3:input": "node scripts/generate-unencumbered-input.mjs",
+    "zk:phase3:prove": "node scripts/run-unencumbered-phase3-flow.mjs",
+    "zk:phase3:test": "node scripts/test-unencumbered-phase3.mjs",
+    "zk:phase3:fixture": "node scripts/generate-unencumbered-proof.mjs",
+    "zk:phase4:input": "node scripts/generate-private-match-input.mjs",
+    "zk:phase4:prove": "node scripts/run-private-match-phase4-flow.mjs",
+    "zk:phase4:test": "node scripts/test-private-match-phase4.mjs",
+    "zk:phase4:fixture": "node scripts/generate-private-match-proof.mjs"
+  },
+  "devDependencies": {
+    "circomlib": "^2.0.5",
+    "circomlibjs": "^0.1.7",
+    "snarkjs": "^0.7.5"
+  }
+}

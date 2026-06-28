@@ -1,0 +1,49 @@
+[workspace]
+members = [
+    "contracts/asset-registry",
+    "contracts/collateral-policy",
+    "contracts/cctp-ingress-adapter",
+    "contracts/encumbrance-registry",
+    "contracts/participant-registry",
+    "contracts/order-commit-pool",
+    "contracts/private-match-verifier",
+    "contracts/proof-gateway",
+    "contracts/unencumbered-lot-verifier",
+    "contracts/legal-state-registry",
+    "crates/zkdtcc-types",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+soroban-sdk = "25.3.1"
+zkdtcc-types = { path = "crates/zkdtcc-types" }
+asset-registry = { path = "contracts/asset-registry" }
+participant-registry = { path = "contracts/participant-registry" }
+collateral-policy = { path = "contracts/collateral-policy" }
+proof-gateway = { path = "contracts/proof-gateway" }
+unencumbered-lot-verifier = { path = "contracts/unencumbered-lot-verifier" }
+order-commit-pool = { path = "contracts/order-commit-pool" }
+private-match-verifier = { path = "contracts/private-match-verifier" }
+
+[profile.release]
+opt-level = "z"
+overflow-checks = true
+debug = 0
+strip = "symbols"
+debug-assertions = false
+panic = "abort"
+codegen-units = 1
+lto = true
+
+[profile.release-with-logs]
+inherits = "release"
+debug-assertions = true
+
+[profile.test]
+opt-level = 0
+debug = true

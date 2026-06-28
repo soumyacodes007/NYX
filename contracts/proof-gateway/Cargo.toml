@@ -1,0 +1,20 @@
+[package]
+name = "proof-gateway"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+soroban-sdk = { workspace = true }
+zkdtcc-types = { workspace = true }
+participant-registry = { workspace = true }
+collateral-policy = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
+asset-registry = { workspace = true }
+unencumbered-lot-verifier = { workspace = true }
+serde_json = "1.0"

@@ -1,0 +1,21 @@
+[package]
+name = "encumbrance-registry"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+soroban-sdk = { workspace = true }
+zkdtcc-types = { workspace = true }
+asset-registry = { workspace = true }
+participant-registry = { workspace = true }
+proof-gateway = { workspace = true }
+
+[dev-dependencies]
+soroban-sdk = { workspace = true, features = ["testutils"] }
+asset-registry = { workspace = true }
+collateral-policy = { workspace = true }
+ed25519-dalek = "2.1.1"
