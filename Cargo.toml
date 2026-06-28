@@ -2,9 +2,11 @@
 members = [
     "contracts/asset-registry",
     "contracts/batch-netting-verifier",
+    "contracts/corporate-actions-engine",
     "contracts/collateral-policy",
     "contracts/cctp-ingress-adapter",
     "contracts/encumbrance-registry",
+    "contracts/entitlement-claim-verifier",
     "contracts/participant-registry",
     "contracts/order-commit-pool",
     "contracts/private-match-verifier",
@@ -33,6 +35,8 @@ order-commit-pool = { path = "contracts/order-commit-pool" }
 private-match-verifier = { path = "contracts/private-match-verifier" }
 batch-netting-verifier = { path = "contracts/batch-netting-verifier" }
 settlement-netting-engine = { path = "contracts/settlement-netting-engine" }
+entitlement-claim-verifier = { path = "contracts/entitlement-claim-verifier" }
+corporate-actions-engine = { path = "contracts/corporate-actions-engine" }
 
 [profile.release]
 opt-level = "z"

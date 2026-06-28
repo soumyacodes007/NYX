@@ -305,6 +305,20 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "773648b94d0e5d620f64f280777445740e61fe701025087ec8b57f45c791888b"
 
 [[package]]
+name = "corporate-actions-engine"
+version = "0.1.0"
+dependencies = [
+ "asset-registry",
+ "collateral-policy",
+ "entitlement-claim-verifier",
+ "participant-registry",
+ "proof-gateway",
+ "serde_json",
+ "soroban-sdk",
+ "zkdtcc-types",
+]
+
+[[package]]
 name = "cpufeatures"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -618,6 +632,14 @@ dependencies = [
  "proof-gateway",
  "soroban-sdk",
  "zkdtcc-types",
+]
+
+[[package]]
+name = "entitlement-claim-verifier"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
+ "soroban-sdk",
 ]
 
 [[package]]

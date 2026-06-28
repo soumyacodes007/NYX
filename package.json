@@ -14,7 +14,11 @@
     "zk:phase5:input": "node scripts/generate-batch-netting-input.mjs",
     "zk:phase5:prove": "node scripts/run-batch-netting-phase5-flow.mjs",
     "zk:phase5:test": "node scripts/test-batch-netting-phase5.mjs",
-    "zk:phase5:fixture": "node scripts/generate-batch-netting-proof.mjs"
+    "zk:phase5:fixture": "node scripts/generate-batch-netting-proof.mjs",
+    "zk:phase6:input": "node scripts/generate-entitlement-claim-input.mjs",
+    "zk:phase6:prove": "node scripts/run-entitlement-claim-phase6-flow.mjs",
+    "zk:phase6:test": "node scripts/test-entitlement-claim-phase6.mjs",
+    "zk:phase6:fixture": "node scripts/generate-entitlement-claim-proof.mjs"
   },
   "devDependencies": {
     "circomlib": "^2.0.5",

@@ -79,6 +79,21 @@ pub enum OrderStatus {
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
+pub enum CorporateActionType {
+    Coupon = 1,
+    Dividend = 2,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum CorporateActionStatus {
+    Active = 1,
+    Closed = 2,
+    Cancelled = 3,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AssetRecord {
     pub asset_id_hash: BytesN<32>,
     pub issuer: Address,
@@ -284,5 +299,44 @@ pub struct SettlementBatchRecord {
     pub execution_b_commitment: BytesN<32>,
     pub trade_nullifier_a: BytesN<32>,
     pub trade_nullifier_b: BytesN<32>,
+    pub recorded_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CorporateActionEventRecord {
+    pub event_id: BytesN<32>,
+    pub asset: Address,
+    pub payout_asset: Address,
+    pub issuer: Address,
+    pub verifier_id: BytesN<32>,
+    pub action_type: CorporateActionType,
+    pub status: CorporateActionStatus,
+    pub event_root: BytesN<32>,
+    pub manifest_hash: BytesN<32>,
+    pub metadata_hash: BytesN<32>,
+    pub record_date: u64,
+    pub ex_date: u64,
+    pub payable_date: u64,
+    pub claim_start_ledger: u32,
+    pub claim_end_ledger: u32,
+    pub payout_rate: i128,
+    pub created_ledger: u32,
+    pub updated_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct CorporateActionClaimRecord {
+    pub claim_id: BytesN<32>,
+    pub event_id: BytesN<32>,
+    pub claimant: Address,
+    pub participant_id_hash: BytesN<32>,
+    pub verifier_id: BytesN<32>,
+    pub proof_receipt_id: BytesN<32>,
+    pub claim_commitment: BytesN<32>,
+    pub claim_nullifier: BytesN<32>,
+    pub disclosed_entitlement_quantity: i128,
+    pub disclosed_claim_amount: i128,
     pub recorded_ledger: u32,
 }
