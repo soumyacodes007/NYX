@@ -31,6 +31,8 @@ The design follows the Stellar asset guidance used in the plan:
 
 Each contract uses constructor-based initialization, explicit auth, typed storage keys, and TTL extension for durable state.
 
+The next compliance hardening step is documented in `docs/compliance-hardening-mvp.md`, covering `ComplianceControl`, `AuditDisclosureRegistry`, verifier governance, richer participant/asset compliance state, and operator-grade audit trails.
+
 For the Phase 3 proof flow, run:
 
 ```bash

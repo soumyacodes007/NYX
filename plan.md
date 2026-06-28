@@ -78,6 +78,13 @@ Confirmed source constraints:
 - Circuit: optional `RevealConsistencyCircuit` proves disclosed plaintext corresponds to prior commitments and settlement roots.
 - Policy: auditors receive scoped reveal packages by participant, batch, asset, or date range; public observers only see commitments/nullifiers/events.
 
+**Phase 7.5: Compliance Hardening MVP**
+- Micro-problems: emergency pause, participant freeze, verifier revocation, policy staleness, per-asset transfer restrictions, manual exceptions, payout reversal, and regulator-visible operator actions.
+- Onchain: add `ComplianceControl` for pause/freeze/override controls, extend `ParticipantRegistry` and `AssetRegistry` with richer compliance state, extend `ProofGateway` with verifier revocation and policy cutoff controls, and extend `AuditDisclosureRegistry` with operator action receipts and scoped access logs.
+- Off-chain: compliance console publishes case references, encrypted exception notes, operator approvals, and disclosure packages tied to immutable onchain action IDs.
+- Circuit: none required for MVP hardening; optional `RevealConsistencyCircuit` from Phase 7 remains the only disclosure proof path.
+- MVP rule: ship operational controls and auditability first; defer full sanctions oracle automation, tax withholding engines, and legal workflow orchestration.
+
 ## Architecture Chart
 
 ```mermaid
@@ -135,6 +142,7 @@ flowchart TD
 | Phase 5 | `SettlementNettingEngine`, `CollateralVault` | `BatchNettingCircuit` | netting solver, batch builder | settlement roots, net deltas, trade nullifiers |
 | Phase 6 | `CorporateActionsEngine` | `EntitlementClaimCircuit` | corporate-action ingest, snapshot generator | event roots, claim nullifiers, payout status |
 | Phase 7 | `AuditDisclosureRegistry` | optional `RevealConsistencyCircuit` | encrypted data room, view-key service | blob hashes, disclosure grants, access receipts |
+| Phase 7.5 | `ComplianceControl`, `AuditDisclosureRegistry`, `ParticipantRegistry`, `AssetRegistry`, `ProofGateway`, `CorporateActionsEngine` | none | compliance console, case manager, disclosure packager | pauses, freezes, permission matrices, verifier cutoffs, operator receipts |
 
 ## Implementation Plan
 
@@ -173,6 +181,11 @@ flowchart TD
   - Add disclosure grants and immutable reveal receipts.
   - Store encrypted records off-chain; onchain stores hashes and access proofs.
 
+- **Milestone 8: Compliance hardening MVP**
+  - Add `ComplianceControl` for global pause, per-asset pause, participant freeze/suspend, emergency transfer override requests, and operator action receipts.
+  - Extend participant and asset registries with compliance-oriented status, permission matrices, and expiry fields needed for real operator workflows.
+  - Add verifier revocation, stale-policy cutoffs, and disclosure-grade operator logs so regulators can reconstruct why an action was accepted or denied.
+
 ## API And Interface Defaults
 
 - `ParticipantRegistry.register(participant_id_hash, stellar_address, role, status, credential_root)`
@@ -182,6 +195,182 @@ flowchart TD
 - `SettlementNettingEngine.settle_batch(batch_root, net_vector_hash, proof_receipt_id, trade_nullifiers)`
 - `CorporateActionsEngine.claim(event_id, entitlement_commitment, claim_nullifier, proof_receipt_id)`
 - `AuditDisclosureRegistry.grant(scope_hash, grantee, encrypted_key_hash, expiry_ledger)`
+- `ComplianceControl.set_global_pause(operator, paused, reason_code, case_id)`
+- `ComplianceControl.set_participant_freeze(operator, participant_id_hash, frozen, reason_code, case_id)`
+- `ComplianceControl.set_asset_pause(operator, asset, paused, reason_code, case_id)`
+- `ParticipantRegistry.set_compliance_state(participant_id_hash, kyc_status, sanctions_status, credential_expiry_ledger, review_case_id)`
+- `AssetRegistry.set_transfer_policy(asset, settlement_enabled, corporate_actions_enabled, jurisdiction_policy_hash, transfer_class_hash)`
+- `ProofGateway.set_verifier_policy(verifier_id, enabled, valid_from_ledger, valid_until_ledger, policy_cutoff_hash)`
+- `AuditDisclosureRegistry.record_access(scope_hash, accessor, purpose_code, case_id, blob_hash)`
+
+## Phase 7.5: Compliance Hardening MVP
+
+### Scope
+
+- Add operator-grade controls without changing the privacy model: commitments and proofs stay private, but every operational override gets a durable, reviewable record.
+- Keep enforcement local to the protocol: do not depend on a live sanctions oracle or external case-management system for correctness in the MVP.
+- Make every high-risk path explainable after the fact: who approved it, under which case ID, against which policy version, and when.
+
+### Contracts
+
+#### `ComplianceControl`
+
+- Purpose: central kill-switch and exception-control plane for the MVP.
+- Storage:
+  - `Admin`
+  - `Operator(Address)`
+  - `GlobalPause`
+  - `AssetPause(Address)`
+  - `ParticipantFreeze(BytesN<32>)`
+  - `EmergencyAction(BytesN<32>)`
+  - `OperatorAction(BytesN<32>)`
+- Core APIs:
+  - `set_global_pause(operator, paused, reason_code, case_id)`
+  - `set_asset_pause(operator, asset, paused, reason_code, case_id)`
+  - `set_participant_freeze(operator, participant_id_hash, frozen, reason_code, case_id)`
+  - `request_emergency_transfer(operator, asset, from_participant_id_hash, to_participant_id_hash, amount, reason_code, case_id)`
+  - `request_emergency_unwind(operator, settlement_id, reason_code, case_id)`
+  - `get_operator_action(action_id)`
+- Enforcement hooks:
+  - `CctpIngressAdapter` checks `GlobalPause`.
+  - `OrderCommitPool` checks `GlobalPause`, `ParticipantFreeze`, and instrument/asset pause status.
+  - `SettlementNettingEngine` checks `GlobalPause`, `AssetPause`, and participant freeze status for the settler and affected accounts.
+  - `CorporateActionsEngine` checks `GlobalPause`, `AssetPause`, and claimant freeze status.
+
+#### `ParticipantRegistry` extensions
+
+- Purpose: move from binary active/inactive to real compliance state.
+- New fields on participant record:
+  - `kyc_status`
+  - `sanctions_status`
+  - `credential_expiry_ledger`
+  - `review_case_id`
+  - `permissions_hash`
+- New APIs:
+  - `set_compliance_state(participant_id_hash, kyc_status, sanctions_status, credential_expiry_ledger, review_case_id)`
+  - `set_permissions_hash(participant_id_hash, permissions_hash)`
+  - `is_participant_trade_eligible(participant_id_hash, asset)`
+- MVP rule:
+  - Trading, settlement, and claim eligibility require `Active` participant status, non-expired credential state, non-blocked sanctions status, and no freeze in `ComplianceControl`.
+
+#### `AssetRegistry` extensions
+
+- Purpose: represent transfer restrictions and lifecycle controls explicitly.
+- New fields on asset record:
+  - `settlement_enabled`
+  - `corporate_actions_enabled`
+  - `transfer_class_hash`
+  - `jurisdiction_policy_hash`
+  - `asset_permissions_hash`
+- New APIs:
+  - `set_transfer_policy(asset, settlement_enabled, corporate_actions_enabled, jurisdiction_policy_hash, transfer_class_hash)`
+  - `set_asset_permissions_hash(asset, asset_permissions_hash)`
+  - `is_asset_settlement_enabled(asset)`
+  - `is_asset_corporate_actions_enabled(asset)`
+- MVP rule:
+  - Asset support alone is not enough; settlement and corporate-action eligibility must be explicitly enabled.
+
+#### `ProofGateway` extensions
+
+- Purpose: make verifier governance and stale-proof control explicit.
+- New storage:
+  - `VerifierPolicy(BytesN<32>)`
+  - `RevokedReceipt(BytesN<32>)`
+- `VerifierPolicy` fields:
+  - `enabled`
+  - `valid_from_ledger`
+  - `valid_until_ledger`
+  - `policy_cutoff_hash`
+  - `updated_ledger`
+- New APIs:
+  - `set_verifier_policy(verifier_id, enabled, valid_from_ledger, valid_until_ledger, policy_cutoff_hash)`
+  - `revoke_receipt(receipt_id, reason_code, case_id)`
+  - `is_receipt_usable(receipt_id)`
+- MVP rule:
+  - A proof receipt can exist historically but still be unusable for new actions after revocation or verifier cutoff.
+
+#### `AuditDisclosureRegistry` extensions
+
+- Purpose: log who got access to what, under what authority, for what purpose.
+- Storage:
+  - `Blob(BytesN<32>)`
+  - `Grant(BytesN<32>)`
+  - `AccessReceipt(BytesN<32>)`
+  - `ViewKeyCommitment(BytesN<32>)`
+  - `OperatorActionLink(BytesN<32>)`
+- Core APIs:
+  - `register_blob(blob_hash, blob_type, owner_scope_hash, metadata_hash)`
+  - `grant(scope_hash, grantee, encrypted_key_hash, expiry_ledger, purpose_code, case_id)`
+  - `revoke_grant(grant_id, case_id)`
+  - `record_access(scope_hash, accessor, purpose_code, case_id, blob_hash)`
+  - `link_operator_action(action_id, scope_hash, blob_hash)`
+- MVP rule:
+  - Every regulator/auditor disclosure must produce an immutable access receipt, even if the off-chain blob transfer fails later.
+
+#### `CorporateActionsEngine` extensions
+
+- Purpose: make claims auditable as operational events, not just proof acceptance.
+- New fields on claim/event record:
+  - `claim_status`
+  - `payment_batch_id`
+  - `reversal_reference`
+  - `withholding_policy_hash`
+- New APIs:
+  - `mark_claim_paid(claim_id, payment_batch_id, case_id)`
+  - `reverse_claim(claim_id, reversal_reference, case_id)`
+  - `set_withholding_policy(event_id, withholding_policy_hash)`
+- MVP rule:
+  - Claim acceptance and claim payment are separate states.
+
+### Minimal Permission Matrix
+
+- `institution trader`: submit order, cancel order, claim corporate action, request disclosure of own records
+- `compliance operator`: freeze participant, pause asset, revoke grant, revoke proof receipt, create operator action receipts
+- `matcher`: record proof-backed match only
+- `settlement operator`: settle proof-backed net batch only
+- `issuer/DTC admin`: register asset policy, corporate action event, payout status
+- `auditor`: receive scoped grants, no operational control
+- `regulator`: receive scoped grants, no operational control by default in MVP
+
+### Off-Chain Services
+
+- `compliance-console`
+  - creates case IDs
+  - submits pause/freeze/revocation actions
+  - stores encrypted operator notes
+- `disclosure-packager`
+  - resolves scope to blob hashes
+  - encrypts reveal package for auditor/regulator
+  - calls `record_access`
+- `policy-publisher`
+  - publishes permission matrix hashes and verifier policy cutoff hashes
+  - signs external policy manifests for operator reference
+
+### Test Plan Additions
+
+- `ComplianceControl`
+  - global pause blocks ingress, order commit, settlement, and claim
+  - participant freeze blocks trade/claim even when old proof receipts still exist
+  - asset pause blocks settlement and corporate-action use separately
+- `ProofGateway`
+  - revoked receipt cannot be reused
+  - disabled verifier policy rejects new actions without deleting history
+- `AuditDisclosureRegistry`
+  - expired grants cannot be used
+  - access receipts are immutable and replay-safe
+- end-to-end
+  - trade succeeds, participant gets frozen, settlement fails
+  - claim succeeds, payout is marked paid, reversal path emits operator receipt
+  - auditor grant is created, access is recorded, grant is revoked, later access fails
+
+### Delivery Order
+
+1. `ComplianceControl`
+2. `ParticipantRegistry` and `AssetRegistry` extensions
+3. `ProofGateway` verifier-policy and receipt-revocation support
+4. `AuditDisclosureRegistry`
+5. `CorporateActionsEngine` payout/reversal states
+6. flow-level hook-up in ingress, order, settlement, and claim contracts
 
 ## Test Plan
 
