@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "contracts/asset-registry",
+    "contracts/batch-netting-verifier",
     "contracts/collateral-policy",
     "contracts/cctp-ingress-adapter",
     "contracts/encumbrance-registry",
@@ -8,6 +9,7 @@ members = [
     "contracts/order-commit-pool",
     "contracts/private-match-verifier",
     "contracts/proof-gateway",
+    "contracts/settlement-netting-engine",
     "contracts/unencumbered-lot-verifier",
     "contracts/legal-state-registry",
     "crates/zkdtcc-types",
@@ -29,6 +31,8 @@ proof-gateway = { path = "contracts/proof-gateway" }
 unencumbered-lot-verifier = { path = "contracts/unencumbered-lot-verifier" }
 order-commit-pool = { path = "contracts/order-commit-pool" }
 private-match-verifier = { path = "contracts/private-match-verifier" }
+batch-netting-verifier = { path = "contracts/batch-netting-verifier" }
+settlement-netting-engine = { path = "contracts/settlement-netting-engine" }
 
 [profile.release]
 opt-level = "z"

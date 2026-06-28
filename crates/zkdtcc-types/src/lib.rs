@@ -266,3 +266,23 @@ pub struct PrivateMatchExecution {
     pub ask_execution_nullifier: BytesN<32>,
     pub recorded_ledger: u32,
 }
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct SettlementBatchRecord {
+    pub settlement_id: BytesN<32>,
+    pub batch_id: BytesN<32>,
+    pub instrument_id_hash: BytesN<32>,
+    pub settler: Address,
+    pub verifier_id: BytesN<32>,
+    pub proof_receipt_id: BytesN<32>,
+    pub settlement_commitment: BytesN<32>,
+    pub net_vector_hash: BytesN<32>,
+    pub execution_a_id: BytesN<32>,
+    pub execution_a_commitment: BytesN<32>,
+    pub execution_b_id: BytesN<32>,
+    pub execution_b_commitment: BytesN<32>,
+    pub trade_nullifier_a: BytesN<32>,
+    pub trade_nullifier_b: BytesN<32>,
+    pub recorded_ledger: u32,
+}

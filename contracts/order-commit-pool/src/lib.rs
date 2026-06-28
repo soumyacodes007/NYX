@@ -453,6 +453,12 @@ impl OrderCommitPool {
             .persistent()
             .has(&DataKey::ExecutionNullifier(execution_nullifier))
     }
+
+    pub fn has_execution(env: Env, execution_id: BytesN<32>) -> bool {
+        env.storage()
+            .persistent()
+            .has(&DataKey::Execution(execution_id))
+    }
 }
 
 fn ensure_participant_binding(

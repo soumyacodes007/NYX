@@ -194,6 +194,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "2af50177e190e07a26ab74f8b1efbfe2ef87da2116221318cb1c2e82baf7de06"
 
 [[package]]
+name = "batch-netting-verifier"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
+ "soroban-sdk",
+]
+
+[[package]]
 name = "block-buffer"
 version = "0.10.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1287,6 +1295,21 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.117",
+]
+
+[[package]]
+name = "settlement-netting-engine"
+version = "0.1.0"
+dependencies = [
+ "asset-registry",
+ "batch-netting-verifier",
+ "collateral-policy",
+ "order-commit-pool",
+ "participant-registry",
+ "proof-gateway",
+ "serde_json",
+ "soroban-sdk",
+ "zkdtcc-types",
 ]
 
 [[package]]

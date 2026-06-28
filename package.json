@@ -10,7 +10,11 @@
     "zk:phase4:input": "node scripts/generate-private-match-input.mjs",
     "zk:phase4:prove": "node scripts/run-private-match-phase4-flow.mjs",
     "zk:phase4:test": "node scripts/test-private-match-phase4.mjs",
-    "zk:phase4:fixture": "node scripts/generate-private-match-proof.mjs"
+    "zk:phase4:fixture": "node scripts/generate-private-match-proof.mjs",
+    "zk:phase5:input": "node scripts/generate-batch-netting-input.mjs",
+    "zk:phase5:prove": "node scripts/run-batch-netting-phase5-flow.mjs",
+    "zk:phase5:test": "node scripts/test-batch-netting-phase5.mjs",
+    "zk:phase5:fixture": "node scripts/generate-batch-netting-proof.mjs"
   },
   "devDependencies": {
     "circomlib": "^2.0.5",
