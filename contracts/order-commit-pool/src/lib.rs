@@ -1,5 +1,6 @@
 #![no_std]
 
+use compliance_control::ComplianceControlClient;
 use participant_registry::ParticipantRegistryClient;
 use proof_gateway::ProofGatewayClient;
 use soroban_sdk::{
@@ -23,6 +24,7 @@ enum DataKey {
     Matcher(Address),
     ParticipantRegistry,
     ProofGateway,
+    ComplianceControl,
     Order(BytesN<32>),
     CancelNullifier(BytesN<32>),
     ExecutionNullifier(BytesN<32>),
@@ -56,6 +58,9 @@ pub enum OrderCommitPoolError {
     ExecutionExists = 21,
     ProofVerifierMismatch = 22,
     ExecutionCommitmentMismatch = 23,
+    ProtocolPaused = 24,
+    ParticipantFrozen = 25,
+    ProofReceiptNotUsable = 26,
 }
 
 #[contractevent(topics = ["operator_set"])]
@@ -100,10 +105,19 @@ pub struct OrderCommitPool;
 
 #[contractimpl]
 impl OrderCommitPool {
-    pub fn __constructor(env: Env, admin: Address, participant_registry: Address, proof_gateway: Address) {
+    pub fn __constructor(
+        env: Env,
+        admin: Address,
+        participant_registry: Address,
+        proof_gateway: Address,
+        compliance_control: Address,
+    ) {
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage().instance().set(&DataKey::ParticipantRegistry, &participant_registry);
         env.storage().instance().set(&DataKey::ProofGateway, &proof_gateway);
+        env.storage()
+            .instance()
+            .set(&DataKey::ComplianceControl, &compliance_control);
         bump_instance(&env);
     }
 
@@ -177,7 +191,9 @@ impl OrderCommitPool {
         expiry_ledger: u32,
     ) -> Result<OrderCommitmentRecord, OrderCommitPoolError> {
         submitter.require_auth();
+        ensure_protocol_live(&env)?;
         ensure_participant_binding(&env, &submitter, &participant_id_hash)?;
+        ensure_participant_not_frozen(&env, &participant_id_hash)?;
         if env.ledger().sequence() > expiry_ledger {
             return Err(OrderCommitPoolError::InvalidExpiry);
         }
@@ -320,10 +336,13 @@ impl OrderCommitPool {
         ask_execution_nullifier: BytesN<32>,
     ) -> Result<PrivateMatchExecution, OrderCommitPoolError> {
         matcher.require_auth();
+        ensure_protocol_live(&env)?;
         ensure_matcher_enabled(&env, &matcher)?;
 
         let mut bid_order = load_order(&env, &bid_order_id)?;
         let mut ask_order = load_order(&env, &ask_order_id)?;
+        ensure_participant_not_frozen(&env, &bid_order.participant_id_hash)?;
+        ensure_participant_not_frozen(&env, &ask_order.participant_id_hash)?;
         ensure_matchable_order(&env, &bid_order)?;
         ensure_matchable_order(&env, &ask_order)?;
         if bid_order.side != OrderSide::Bid || ask_order.side != OrderSide::Ask {
@@ -491,6 +510,11 @@ fn ensure_receipt_binding(
     if &proof_receipt.submitter != submitter {
         return Err(OrderCommitPoolError::ProofSubmitterMismatch);
     }
+    let proof_gateway: Address = env.storage().instance().get(&DataKey::ProofGateway).unwrap();
+    let gateway = ProofGatewayClient::new(env, &proof_gateway);
+    if !gateway.is_receipt_usable(&proof_receipt.receipt_id) {
+        return Err(OrderCommitPoolError::ProofReceiptNotUsable);
+    }
     if env.ledger().sequence() > proof_receipt.expiry_ledger {
         return Err(OrderCommitPoolError::ProofExpired);
     }
@@ -524,6 +548,27 @@ fn load_proof_receipt(env: &Env, proof_receipt_id: &BytesN<32>) -> Result<ProofR
         return Err(OrderCommitPoolError::ProofReceiptNotFound);
     }
     Ok(gateway.get_receipt(proof_receipt_id))
+}
+
+fn ensure_protocol_live(env: &Env) -> Result<(), OrderCommitPoolError> {
+    let compliance_control: Address = env.storage().instance().get(&DataKey::ComplianceControl).unwrap();
+    let compliance = ComplianceControlClient::new(env, &compliance_control);
+    if compliance.is_globally_paused() {
+        return Err(OrderCommitPoolError::ProtocolPaused);
+    }
+    Ok(())
+}
+
+fn ensure_participant_not_frozen(
+    env: &Env,
+    participant_id_hash: &BytesN<32>,
+) -> Result<(), OrderCommitPoolError> {
+    let compliance_control: Address = env.storage().instance().get(&DataKey::ComplianceControl).unwrap();
+    let compliance = ComplianceControlClient::new(env, &compliance_control);
+    if compliance.is_participant_frozen(participant_id_hash) {
+        return Err(OrderCommitPoolError::ParticipantFrozen);
+    }
+    Ok(())
 }
 
 fn load_order(env: &Env, order_id: &BytesN<32>) -> Result<OrderCommitmentRecord, OrderCommitPoolError> {

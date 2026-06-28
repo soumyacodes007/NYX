@@ -10,6 +10,8 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 soroban-sdk = { workspace = true }
 zkdtcc-types = { workspace = true }
+asset-registry = { workspace = true }
+compliance-control = { workspace = true }
 participant-registry = { workspace = true }
 proof-gateway = { workspace = true }
 
@@ -18,4 +20,5 @@ soroban-sdk = { workspace = true, features = ["testutils"] }
 serde_json = "1.0"
 asset-registry = { workspace = true }
 collateral-policy = { workspace = true }
+compliance-control = { workspace = true }
 entitlement-claim-verifier = { workspace = true }

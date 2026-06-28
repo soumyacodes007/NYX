@@ -115,6 +115,11 @@ impl AssetRegistry {
             clawback_enabled,
             metadata_hash,
             issuer_policy_hash,
+            settlement_enabled: true,
+            corporate_actions_enabled: true,
+            transfer_class_hash: zero_hash(&env),
+            jurisdiction_policy_hash: zero_hash(&env),
+            asset_permissions_hash: zero_hash(&env),
             created_ledger: ledger,
             updated_ledger: ledger,
         };
@@ -185,6 +190,54 @@ impl AssetRegistry {
         }
         .publish(&env);
         Ok(())
+    }
+
+    pub fn set_transfer_policy(
+        env: Env,
+        operator: Address,
+        asset: Address,
+        settlement_enabled: bool,
+        corporate_actions_enabled: bool,
+        jurisdiction_policy_hash: BytesN<32>,
+        transfer_class_hash: BytesN<32>,
+    ) -> Result<(), AssetRegistryError> {
+        require_operator_auth(&env, &operator)?;
+        let mut record = load_asset(&env, &asset)?;
+        record.settlement_enabled = settlement_enabled;
+        record.corporate_actions_enabled = corporate_actions_enabled;
+        record.jurisdiction_policy_hash = jurisdiction_policy_hash;
+        record.transfer_class_hash = transfer_class_hash;
+        record.updated_ledger = env.ledger().sequence();
+        save_asset(&env, &asset, &record);
+        Ok(())
+    }
+
+    pub fn set_asset_permissions_hash(
+        env: Env,
+        operator: Address,
+        asset: Address,
+        asset_permissions_hash: BytesN<32>,
+    ) -> Result<(), AssetRegistryError> {
+        require_operator_auth(&env, &operator)?;
+        let mut record = load_asset(&env, &asset)?;
+        record.asset_permissions_hash = asset_permissions_hash;
+        record.updated_ledger = env.ledger().sequence();
+        save_asset(&env, &asset, &record);
+        Ok(())
+    }
+
+    pub fn is_asset_settlement_enabled(env: Env, asset: Address) -> bool {
+        match load_asset(&env, &asset) {
+            Ok(record) => record.status == AssetStatus::Active && record.settlement_enabled,
+            Err(_) => false,
+        }
+    }
+
+    pub fn is_asset_corp_actions_enabled(env: Env, asset: Address) -> bool {
+        match load_asset(&env, &asset) {
+            Ok(record) => record.status == AssetStatus::Active && record.corporate_actions_enabled,
+            Err(_) => false,
+        }
     }
 
     pub fn get_asset(env: Env, asset: Address) -> Result<AssetRecord, AssetRegistryError> {
@@ -258,6 +311,10 @@ fn bump_persistent(env: &Env, key: &DataKey) {
         .extend_ttl(key, PERSISTENT_BUMP_THRESHOLD, PERSISTENT_BUMP_TO);
 }
 
+fn zero_hash(env: &Env) -> BytesN<32> {
+    BytesN::from_array(env, &[0; 32])
+}
+
 #[cfg(test)]
 mod tests {
     extern crate std;
@@ -300,6 +357,8 @@ mod tests {
         let record = client.get_asset(&asset);
         assert_eq!(record.asset_class, AssetClass::UsdcSac);
         assert_eq!(record.status, AssetStatus::Active);
+        assert!(record.settlement_enabled);
+        assert!(record.corporate_actions_enabled);
         assert!(client.is_supported_asset(&asset));
 
         client.set_status(&operator, &asset, &AssetStatus::Suspended);
@@ -353,5 +412,49 @@ mod tests {
         );
 
         assert!(matches!(result, Err(Ok(AssetRegistryError::AssetExists))));
+    }
+
+    #[test]
+    fn updates_transfer_policy() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let operator = Address::generate(&env);
+        let asset = Address::generate(&env);
+        let issuer = Address::generate(&env);
+
+        let contract_id = env.register(AssetRegistry, AssetRegistryArgs::__constructor(&admin));
+        let client = AssetRegistryClient::new(&env, &contract_id);
+        client.set_operator(&admin, &operator, &true);
+        client.register_asset(
+            &operator,
+            &asset,
+            &hash(&env, 30),
+            &issuer,
+            &AssetClass::DtcEntitlement,
+            &true,
+            &true,
+            &true,
+            &false,
+            &hash(&env, 31),
+            &hash(&env, 32),
+        );
+
+        client.set_transfer_policy(
+            &operator,
+            &asset,
+            &false,
+            &true,
+            &hash(&env, 33),
+            &hash(&env, 34),
+        );
+        client.set_asset_permissions_hash(&operator, &asset, &hash(&env, 35));
+        let record = client.get_asset(&asset);
+
+        assert!(!client.is_asset_settlement_enabled(&asset));
+        assert!(client.is_asset_corp_actions_enabled(&asset));
+        assert_eq!(record.asset_permissions_hash, hash(&env, 35));
+        assert_eq!(record.transfer_class_hash, hash(&env, 34));
     }
 }

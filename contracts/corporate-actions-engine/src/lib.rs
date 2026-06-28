@@ -1,5 +1,7 @@
 #![no_std]
 
+use asset_registry::AssetRegistryClient;
+use compliance_control::ComplianceControlClient;
 use participant_registry::ParticipantRegistryClient;
 use proof_gateway::ProofGatewayClient;
 use soroban_sdk::{
@@ -7,8 +9,9 @@ use soroban_sdk::{
     Env,
 };
 use zkdtcc_types::{
-    CorporateActionClaimRecord, CorporateActionEventRecord, CorporateActionStatus,
-    CorporateActionType, ParticipantRole, ParticipantStatus, ProofReceipt, ProofType,
+    CorporateActionClaimRecord, CorporateActionClaimStatus, CorporateActionEventRecord,
+    CorporateActionStatus, CorporateActionType, ParticipantRole, ParticipantStatus, ProofReceipt,
+    ProofType,
 };
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
@@ -25,6 +28,8 @@ enum DataKey {
     Operator(Address),
     ParticipantRegistry,
     ProofGateway,
+    AssetRegistry,
+    ComplianceControl,
     Event(BytesN<32>),
     Claim(BytesN<32>),
     ClaimNullifier(BytesN<32>, BytesN<32>),
@@ -53,6 +58,12 @@ pub enum CorporateActionsEngineError {
     ClaimNullifierUsed = 17,
     ClaimExists = 18,
     InvalidDisclosedAmounts = 19,
+    ProofReceiptNotUsable = 20,
+    AssetActionsDisabled = 21,
+    ProtocolPaused = 22,
+    ParticipantFrozen = 23,
+    AssetPaused = 24,
+    ClaimNotFound = 25,
 }
 
 #[contractevent(topics = ["operator_set"])]
@@ -86,7 +97,14 @@ pub struct CorporateActionsEngine;
 
 #[contractimpl]
 impl CorporateActionsEngine {
-    pub fn __constructor(env: Env, admin: Address, participant_registry: Address, proof_gateway: Address) {
+    pub fn __constructor(
+        env: Env,
+        admin: Address,
+        participant_registry: Address,
+        proof_gateway: Address,
+        asset_registry: Address,
+        compliance_control: Address,
+    ) {
         env.storage().instance().set(&DataKey::Admin, &admin);
         env.storage()
             .instance()
@@ -94,6 +112,12 @@ impl CorporateActionsEngine {
         env.storage()
             .instance()
             .set(&DataKey::ProofGateway, &proof_gateway);
+        env.storage()
+            .instance()
+            .set(&DataKey::AssetRegistry, &asset_registry);
+        env.storage()
+            .instance()
+            .set(&DataKey::ComplianceControl, &compliance_control);
         bump_instance(&env);
     }
 
@@ -156,6 +180,8 @@ impl CorporateActionsEngine {
     ) -> Result<CorporateActionEventRecord, CorporateActionsEngineError> {
         issuer.require_auth();
         ensure_issuer_admin(&env, &issuer)?;
+        ensure_protocol_not_paused(&env)?;
+        ensure_assets_live(&env, &asset, &payout_asset)?;
         if claim_start_ledger >= claim_end_ledger || ex_date > record_date || record_date > payable_date {
             return Err(CorporateActionsEngineError::InvalidEventSchedule);
         }
@@ -182,6 +208,7 @@ impl CorporateActionsEngine {
             claim_start_ledger,
             claim_end_ledger,
             payout_rate,
+            withholding_policy_hash: zero_hash(&env),
             created_ledger: env.ledger().sequence(),
             updated_ledger: env.ledger().sequence(),
         };
@@ -227,11 +254,14 @@ impl CorporateActionsEngine {
     ) -> Result<CorporateActionClaimRecord, CorporateActionsEngineError> {
         claimant.require_auth();
         let participant_id_hash = ensure_trader(&env, &claimant)?;
+        ensure_protocol_not_paused(&env)?;
+        ensure_participant_not_frozen(&env, &participant_id_hash)?;
         if disclosed_entitlement_quantity <= 0 || disclosed_claim_amount <= 0 {
             return Err(CorporateActionsEngineError::InvalidDisclosedAmounts);
         }
 
         let event = load_event(&env, &event_id)?;
+        ensure_assets_live(&env, &event.asset, &event.payout_asset)?;
         if event.status != CorporateActionStatus::Active {
             return Err(CorporateActionsEngineError::EventNotActive);
         }
@@ -278,6 +308,9 @@ impl CorporateActionsEngine {
             claim_nullifier: claim_nullifier.clone(),
             disclosed_entitlement_quantity,
             disclosed_claim_amount,
+            claim_status: CorporateActionClaimStatus::Recorded,
+            payment_batch_id: zero_hash(&env),
+            reversal_reference: zero_hash(&env),
             recorded_ledger: ledger,
         };
 
@@ -293,6 +326,51 @@ impl CorporateActionsEngine {
             claim_nullifier,
         }
         .publish(&env);
+        Ok(claim)
+    }
+
+    pub fn set_withholding_policy(
+        env: Env,
+        operator: Address,
+        event_id: BytesN<32>,
+        withholding_policy_hash: BytesN<32>,
+    ) -> Result<CorporateActionEventRecord, CorporateActionsEngineError> {
+        require_operator_auth(&env, &operator)?;
+        let mut record = load_event(&env, &event_id)?;
+        record.withholding_policy_hash = withholding_policy_hash;
+        record.updated_ledger = env.ledger().sequence();
+        save_event(&env, &record);
+        bump_instance(&env);
+        Ok(record)
+    }
+
+    pub fn mark_claim_paid(
+        env: Env,
+        operator: Address,
+        claim_id: BytesN<32>,
+        payment_batch_id: BytesN<32>,
+    ) -> Result<CorporateActionClaimRecord, CorporateActionsEngineError> {
+        require_operator_auth(&env, &operator)?;
+        let mut claim = load_claim(&env, &claim_id)?;
+        claim.claim_status = CorporateActionClaimStatus::Paid;
+        claim.payment_batch_id = payment_batch_id;
+        save_claim(&env, &claim);
+        bump_instance(&env);
+        Ok(claim)
+    }
+
+    pub fn reverse_claim(
+        env: Env,
+        operator: Address,
+        claim_id: BytesN<32>,
+        reversal_reference: BytesN<32>,
+    ) -> Result<CorporateActionClaimRecord, CorporateActionsEngineError> {
+        require_operator_auth(&env, &operator)?;
+        let mut claim = load_claim(&env, &claim_id)?;
+        claim.claim_status = CorporateActionClaimStatus::Reversed;
+        claim.reversal_reference = reversal_reference;
+        save_claim(&env, &claim);
+        bump_instance(&env);
         Ok(claim)
     }
 
@@ -312,7 +390,7 @@ impl CorporateActionsEngine {
             .storage()
             .persistent()
             .get(&key)
-            .ok_or(CorporateActionsEngineError::EventNotFound)?;
+            .ok_or(CorporateActionsEngineError::ClaimNotFound)?;
         bump_persistent(&env, &key);
         bump_instance(&env);
         Ok(claim)
@@ -414,6 +492,11 @@ fn ensure_claim_receipt(
     if &proof_receipt.portfolio_commitment != claim_commitment {
         return Err(CorporateActionsEngineError::ClaimCommitmentMismatch);
     }
+    let proof_gateway: Address = env.storage().instance().get(&DataKey::ProofGateway).unwrap();
+    let gateway = ProofGatewayClient::new(env, &proof_gateway);
+    if !gateway.is_receipt_usable(&proof_receipt.receipt_id) {
+        return Err(CorporateActionsEngineError::ProofReceiptNotUsable);
+    }
     if env.ledger().sequence() > proof_receipt.expiry_ledger {
         return Err(CorporateActionsEngineError::ProofExpired);
     }
@@ -451,6 +534,79 @@ fn save_event(env: &Env, event: &CorporateActionEventRecord) {
     let key = DataKey::Event(event.event_id.clone());
     env.storage().persistent().set(&key, event);
     bump_persistent(env, &key);
+}
+
+fn load_claim(
+    env: &Env,
+    claim_id: &BytesN<32>,
+) -> Result<CorporateActionClaimRecord, CorporateActionsEngineError> {
+    let key = DataKey::Claim(claim_id.clone());
+    let claim = env
+        .storage()
+        .persistent()
+        .get(&key)
+        .ok_or(CorporateActionsEngineError::ClaimNotFound)?;
+    bump_persistent(env, &key);
+    Ok(claim)
+}
+
+fn save_claim(env: &Env, claim: &CorporateActionClaimRecord) {
+    let key = DataKey::Claim(claim.claim_id.clone());
+    env.storage().persistent().set(&key, claim);
+    bump_persistent(env, &key);
+}
+
+fn ensure_protocol_not_paused(env: &Env) -> Result<(), CorporateActionsEngineError> {
+    let compliance_control: Address = env
+        .storage()
+        .instance()
+        .get(&DataKey::ComplianceControl)
+        .unwrap();
+    let compliance = ComplianceControlClient::new(env, &compliance_control);
+    if compliance.is_globally_paused() {
+        return Err(CorporateActionsEngineError::ProtocolPaused);
+    }
+    Ok(())
+}
+
+fn ensure_participant_not_frozen(
+    env: &Env,
+    participant_id_hash: &BytesN<32>,
+) -> Result<(), CorporateActionsEngineError> {
+    let compliance_control: Address = env
+        .storage()
+        .instance()
+        .get(&DataKey::ComplianceControl)
+        .unwrap();
+    let compliance = ComplianceControlClient::new(env, &compliance_control);
+    if compliance.is_participant_frozen(participant_id_hash) {
+        return Err(CorporateActionsEngineError::ParticipantFrozen);
+    }
+    Ok(())
+}
+
+fn ensure_assets_live(
+    env: &Env,
+    asset: &Address,
+    payout_asset: &Address,
+) -> Result<(), CorporateActionsEngineError> {
+    let compliance_control: Address = env
+        .storage()
+        .instance()
+        .get(&DataKey::ComplianceControl)
+        .unwrap();
+    let compliance = ComplianceControlClient::new(env, &compliance_control);
+    if compliance.is_asset_paused(asset) || compliance.is_asset_paused(payout_asset) {
+        return Err(CorporateActionsEngineError::AssetPaused);
+    }
+    let asset_registry: Address = env.storage().instance().get(&DataKey::AssetRegistry).unwrap();
+    let registry = AssetRegistryClient::new(env, &asset_registry);
+    if !registry.is_asset_corp_actions_enabled(asset)
+        || !registry.is_asset_corp_actions_enabled(payout_asset)
+    {
+        return Err(CorporateActionsEngineError::AssetActionsDisabled);
+    }
+    Ok(())
 }
 
 #[allow(clippy::too_many_arguments)]
@@ -497,6 +653,10 @@ fn append_address(material: &mut Bytes, address: &Address) {
     let address_bytes = address.to_string().to_bytes();
     material.extend_from_slice(&address_bytes.len().to_be_bytes());
     material.append(&address_bytes);
+}
+
+fn zero_hash(env: &Env) -> BytesN<32> {
+    BytesN::from_array(env, &[0; 32])
 }
 
 fn require_admin_auth(env: &Env, admin: &Address) -> Result<(), CorporateActionsEngineError> {

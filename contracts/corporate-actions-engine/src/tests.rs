@@ -3,6 +3,7 @@ extern crate std;
 use super::*;
 use asset_registry::AssetRegistryArgs;
 use collateral_policy::CollateralPolicyArgs;
+use compliance_control::ComplianceControlArgs;
 use entitlement_claim_verifier::{EntitlementClaimVerifier, EntitlementClaimVerifierArgs};
 use participant_registry::ParticipantRegistryArgs;
 use proof_gateway::{ProofGateway, ProofGatewayArgs};
@@ -194,9 +195,22 @@ fn setup_phase_six(env: &Env) -> PhaseSixContext {
     let proof_gateway = proof_gateway::ProofGatewayClient::new(env, &proof_gateway_id);
     proof_gateway.set_operator(&admin, &operator, &true);
 
+    let compliance_control_id = env.register(
+        compliance_control::ComplianceControl,
+        ComplianceControlArgs::__constructor(&admin),
+    );
+    let compliance_control = compliance_control::ComplianceControlClient::new(env, &compliance_control_id);
+    compliance_control.set_operator(&admin, &operator, &true);
+
     let engine_id = env.register(
         CorporateActionsEngine,
-        CorporateActionsEngineArgs::__constructor(&admin, &participant_registry_id, &proof_gateway_id),
+        CorporateActionsEngineArgs::__constructor(
+            &admin,
+            &participant_registry_id,
+            &proof_gateway_id,
+            &asset_registry_id,
+            &compliance_control_id,
+        ),
     );
     let engine = CorporateActionsEngineClient::new(env, &engine_id);
     engine.set_operator(&admin, &operator, &true);

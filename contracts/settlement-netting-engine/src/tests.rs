@@ -4,6 +4,7 @@ use super::*;
 use asset_registry::AssetRegistryArgs;
 use batch_netting_verifier::{BatchNettingVerifier, BatchNettingVerifierArgs};
 use collateral_policy::CollateralPolicyArgs;
+use compliance_control::ComplianceControlArgs;
 use participant_registry::ParticipantRegistryArgs;
 use proof_gateway::{ProofGateway, ProofGatewayArgs};
 use serde_json::{json, Value};
@@ -236,6 +237,12 @@ fn setup_phase_five(env: &Env) -> PhaseFiveContext {
     );
 
     let mock_verifier = env.register(MockVerifier, ());
+    let compliance_control_id = env.register(
+        compliance_control::ComplianceControl,
+        ComplianceControlArgs::__constructor(&admin),
+    );
+    let compliance_control = compliance_control::ComplianceControlClient::new(env, &compliance_control_id);
+    compliance_control.set_operator(&admin, &operator, &true);
     let proof_gateway_id = env.register(
         ProofGateway,
         ProofGatewayArgs::__constructor(&admin, &participant_registry_id, &collateral_policy_id),
@@ -252,6 +259,7 @@ fn setup_phase_five(env: &Env) -> PhaseFiveContext {
             &admin,
             &participant_registry_id,
             &proof_gateway_id,
+            &compliance_control_id,
         ),
     );
     let order_pool = OrderCommitPoolClient::new(env, &order_pool_id);
@@ -264,6 +272,7 @@ fn setup_phase_five(env: &Env) -> PhaseFiveContext {
             &admin,
             &participant_registry_id,
             &proof_gateway_id,
+            &compliance_control_id,
             &order_pool_id,
         ),
     );

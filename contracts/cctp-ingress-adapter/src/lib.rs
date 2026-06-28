@@ -1,6 +1,7 @@
 #![no_std]
 
 use asset_registry::AssetRegistryClient;
+use compliance_control::ComplianceControlClient;
 use participant_registry::ParticipantRegistryClient;
 use soroban_sdk::{
     contract, contracterror, contractevent, contractimpl, contracttype, Address, Bytes, BytesN,
@@ -36,6 +37,7 @@ enum DataKey {
     Operator(Address),
     ParticipantRegistry,
     AssetRegistry,
+    ComplianceControl,
     UsdcAsset,
     ForwarderPayload,
     ExpectedDestinationDomain,
@@ -59,6 +61,9 @@ pub enum CctpIngressError {
     InvalidAmount = 10,
     UnsupportedRecipientType = 11,
     ReceiptNotFound = 12,
+    ProtocolPaused = 13,
+    ParticipantFrozen = 14,
+    AssetPaused = 15,
 }
 
 #[contractevent(topics = ["operator_set"])]
@@ -87,6 +92,7 @@ impl CctpIngressAdapter {
         admin: Address,
         participant_registry: Address,
         asset_registry: Address,
+        compliance_control: Address,
         usdc_asset: Address,
         forwarder_payload: BytesN<32>,
         expected_destination_domain: u32,
@@ -98,6 +104,9 @@ impl CctpIngressAdapter {
         env.storage()
             .instance()
             .set(&DataKey::AssetRegistry, &asset_registry);
+        env.storage()
+            .instance()
+            .set(&DataKey::ComplianceControl, &compliance_control);
         env.storage().instance().set(&DataKey::UsdcAsset, &usdc_asset);
         env.storage()
             .instance()
@@ -138,6 +147,11 @@ impl CctpIngressAdapter {
             .get(&DataKey::ParticipantRegistry)
             .unwrap();
         let asset_registry: Address = env.storage().instance().get(&DataKey::AssetRegistry).unwrap();
+        let compliance_control: Address = env
+            .storage()
+            .instance()
+            .get(&DataKey::ComplianceControl)
+            .unwrap();
         let usdc_asset: Address = env.storage().instance().get(&DataKey::UsdcAsset).unwrap();
         let forwarder_payload: BytesN<32> = env
             .storage()
@@ -150,6 +164,7 @@ impl CctpIngressAdapter {
             .get(&DataKey::ExpectedDestinationDomain)
             .unwrap();
 
+        ensure_protocol_live(&env, &compliance_control, &usdc_asset)?;
         ensure_supported_asset(&env, &asset_registry, &usdc_asset)?;
 
         let parsed = parse_cctp_message(
@@ -160,6 +175,12 @@ impl CctpIngressAdapter {
         )?;
 
         ensure_wallet_registered(&env, &participant_registry, &parsed.forward_recipient)?;
+        ensure_wallet_not_frozen(
+            &env,
+            &participant_registry,
+            &compliance_control,
+            &parsed.forward_recipient,
+        )?;
 
         let nonce_key = DataKey::ReceiptByNonce(parsed.source_domain, parsed.nonce.clone());
         if env.storage().persistent().has(&nonce_key) {
@@ -392,6 +413,36 @@ fn ensure_wallet_registered(
     Ok(())
 }
 
+fn ensure_protocol_live(
+    env: &Env,
+    compliance_control: &Address,
+    usdc_asset: &Address,
+) -> Result<(), CctpIngressError> {
+    let compliance = ComplianceControlClient::new(env, compliance_control);
+    if compliance.is_globally_paused() {
+        return Err(CctpIngressError::ProtocolPaused);
+    }
+    if compliance.is_asset_paused(usdc_asset) {
+        return Err(CctpIngressError::AssetPaused);
+    }
+    Ok(())
+}
+
+fn ensure_wallet_not_frozen(
+    env: &Env,
+    participant_registry: &Address,
+    compliance_control: &Address,
+    wallet: &Address,
+) -> Result<(), CctpIngressError> {
+    let registry = ParticipantRegistryClient::new(env, participant_registry);
+    let participant_id_hash = registry.wallet_owner(wallet);
+    let compliance = ComplianceControlClient::new(env, compliance_control);
+    if compliance.is_participant_frozen(&participant_id_hash) {
+        return Err(CctpIngressError::ParticipantFrozen);
+    }
+    Ok(())
+}
+
 fn require_admin_auth(env: &Env, admin: &Address) -> Result<(), CctpIngressError> {
     admin.require_auth();
     let stored_admin: Address = env.storage().instance().get(&DataKey::Admin).unwrap();
@@ -438,6 +489,7 @@ mod tests {
 
     use super::*;
     use asset_registry::AssetRegistryArgs;
+    use compliance_control::ComplianceControlArgs;
     use participant_registry::ParticipantRegistryArgs;
     use soroban_sdk::{testutils::Address as _, vec, Address, BytesN, Env, IntoVal, Symbol};
     use zkdtcc_types::AssetClass;
@@ -503,6 +555,7 @@ mod tests {
         Address,
         Address,
         Address,
+        Address,
         [u8; 32],
     ) {
         env.mock_all_auths();
@@ -518,9 +571,16 @@ mod tests {
         let asset_registry = asset_registry::AssetRegistryClient::new(env, &asset_registry_id);
         let participant_registry =
             participant_registry::ParticipantRegistryClient::new(env, &participant_registry_id);
+        let compliance_control_id = env.register(
+            compliance_control::ComplianceControl,
+            ComplianceControlArgs::__constructor(&admin),
+        );
+        let compliance_control =
+            compliance_control::ComplianceControlClient::new(env, &compliance_control_id);
 
         asset_registry.set_operator(&admin, &operator, &true);
         participant_registry.set_operator(&admin, &operator, &true);
+        compliance_control.set_operator(&admin, &operator, &true);
 
         let usdc_asset = Address::generate(env);
         let issuer = Address::generate(env);
@@ -557,6 +617,7 @@ mod tests {
             wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             payload,
         )
@@ -571,6 +632,7 @@ mod tests {
             wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             forwarder_payload,
         ) = setup_phase_zero(&env);
@@ -581,6 +643,7 @@ mod tests {
                 &admin,
                 &participant_registry_id,
                 &asset_registry_id,
+                &compliance_control_id,
                 &usdc_asset,
                 &BytesN::from_array(&env, &forwarder_payload),
                 &TEST_DESTINATION_DOMAIN,
@@ -622,6 +685,7 @@ mod tests {
             wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             forwarder_payload,
         ) = setup_phase_zero(&env);
@@ -632,6 +696,7 @@ mod tests {
                 &admin,
                 &participant_registry_id,
                 &asset_registry_id,
+                &compliance_control_id,
                 &usdc_asset,
                 &BytesN::from_array(&env, &forwarder_payload),
                 &TEST_DESTINATION_DOMAIN,
@@ -677,6 +742,7 @@ mod tests {
             wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             forwarder_payload,
         ) = setup_phase_zero(&env);
@@ -687,6 +753,7 @@ mod tests {
                 &admin,
                 &participant_registry_id,
                 &asset_registry_id,
+                &compliance_control_id,
                 &usdc_asset,
                 &BytesN::from_array(&env, &forwarder_payload),
                 &TEST_DESTINATION_DOMAIN,
@@ -728,6 +795,7 @@ mod tests {
             wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             forwarder_payload,
         ) = setup_phase_zero(&env);
@@ -738,6 +806,7 @@ mod tests {
                 &admin,
                 &participant_registry_id,
                 &asset_registry_id,
+                &compliance_control_id,
                 &usdc_asset,
                 &BytesN::from_array(&env, &forwarder_payload),
                 &TEST_DESTINATION_DOMAIN,
@@ -770,6 +839,7 @@ mod tests {
             wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             forwarder_payload,
         ) = setup_phase_zero(&env);
@@ -780,6 +850,7 @@ mod tests {
                 &admin,
                 &participant_registry_id,
                 &asset_registry_id,
+                &compliance_control_id,
                 &usdc_asset,
                 &BytesN::from_array(&env, &forwarder_payload),
                 &TEST_DESTINATION_DOMAIN,
@@ -812,6 +883,7 @@ mod tests {
             _wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             forwarder_payload,
         ) = setup_phase_zero(&env);
@@ -823,6 +895,7 @@ mod tests {
                 &admin,
                 &participant_registry_id,
                 &asset_registry_id,
+                &compliance_control_id,
                 &usdc_asset,
                 &BytesN::from_array(&env, &forwarder_payload),
                 &TEST_DESTINATION_DOMAIN,
@@ -855,6 +928,7 @@ mod tests {
             wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             forwarder_payload,
         ) = setup_phase_zero(&env);
@@ -868,6 +942,7 @@ mod tests {
                 &admin,
                 &participant_registry_id,
                 &asset_registry_id,
+                &compliance_control_id,
                 &usdc_asset,
                 &BytesN::from_array(&env, &forwarder_payload),
                 &TEST_DESTINATION_DOMAIN,
@@ -900,6 +975,7 @@ mod tests {
             wallet,
             asset_registry_id,
             participant_registry_id,
+            compliance_control_id,
             usdc_asset,
             forwarder_payload,
         ) = setup_phase_zero(&env);
@@ -910,6 +986,7 @@ mod tests {
                 &admin,
                 &participant_registry_id,
                 &asset_registry_id,
+                &compliance_control_id,
                 &usdc_asset,
                 &BytesN::from_array(&env, &forwarder_payload),
                 &TEST_DESTINATION_DOMAIN,
@@ -939,6 +1016,7 @@ mod tests {
         let contract_id = env.register(
             CctpIngressAdapter,
             CctpIngressAdapterArgs::__constructor(
+                &Address::generate(&env),
                 &Address::generate(&env),
                 &Address::generate(&env),
                 &Address::generate(&env),

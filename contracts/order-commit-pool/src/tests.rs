@@ -3,6 +3,7 @@ extern crate std;
 use super::*;
 use asset_registry::AssetRegistryArgs;
 use collateral_policy::CollateralPolicyArgs;
+use compliance_control::ComplianceControlArgs;
 use participant_registry::ParticipantRegistryArgs;
 use private_match_verifier::{PrivateMatchVerifier, PrivateMatchVerifierArgs};
 use proof_gateway::{ProofGateway, ProofGatewayArgs};
@@ -189,6 +190,12 @@ fn setup_phase_four(env: &Env) -> PhaseFourContext {
     );
 
     let mock_verifier = env.register(MockVerifier, ());
+    let compliance_control_id = env.register(
+        compliance_control::ComplianceControl,
+        ComplianceControlArgs::__constructor(&admin),
+    );
+    let compliance_control = compliance_control::ComplianceControlClient::new(env, &compliance_control_id);
+    compliance_control.set_operator(&admin, &operator, &true);
     let proof_gateway_id = env.register(
         ProofGateway,
         ProofGatewayArgs::__constructor(&admin, &participant_registry_id, &collateral_policy_id),
@@ -200,7 +207,12 @@ fn setup_phase_four(env: &Env) -> PhaseFourContext {
 
     let order_pool_id = env.register(
         OrderCommitPool,
-        OrderCommitPoolArgs::__constructor(&admin, &participant_registry_id, &proof_gateway_id),
+        OrderCommitPoolArgs::__constructor(
+            &admin,
+            &participant_registry_id,
+            &proof_gateway_id,
+            &compliance_control_id,
+        ),
     );
     let order_pool = OrderCommitPoolClient::new(env, &order_pool_id);
     order_pool.set_operator(&admin, &operator, &true);

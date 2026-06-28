@@ -170,6 +170,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "audit-disclosure-registry"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+ "zkdtcc-types",
+]
+
+[[package]]
 name = "autocfg"
 version = "1.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -249,6 +257,7 @@ name = "cctp-ingress-adapter"
 version = "0.1.0"
 dependencies = [
  "asset-registry",
+ "compliance-control",
  "participant-registry",
  "soroban-sdk",
  "zkdtcc-types",
@@ -293,6 +302,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "compliance-control"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+ "zkdtcc-types",
+]
+
+[[package]]
 name = "const-oid"
 version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -310,6 +327,7 @@ version = "0.1.0"
 dependencies = [
  "asset-registry",
  "collateral-policy",
+ "compliance-control",
  "entitlement-claim-verifier",
  "participant-registry",
  "proof-gateway",
@@ -998,6 +1016,7 @@ version = "0.1.0"
 dependencies = [
  "asset-registry",
  "collateral-policy",
+ "compliance-control",
  "participant-registry",
  "private-match-verifier",
  "proof-gateway",
@@ -1326,6 +1345,7 @@ dependencies = [
  "asset-registry",
  "batch-netting-verifier",
  "collateral-policy",
+ "compliance-control",
  "order-commit-pool",
  "participant-registry",
  "proof-gateway",

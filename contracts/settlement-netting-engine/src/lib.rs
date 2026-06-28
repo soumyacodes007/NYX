@@ -1,5 +1,6 @@
 #![no_std]
 
+use compliance_control::ComplianceControlClient;
 use order_commit_pool::OrderCommitPoolClient;
 use participant_registry::ParticipantRegistryClient;
 use proof_gateway::ProofGatewayClient;
@@ -23,6 +24,7 @@ enum DataKey {
     Settler(Address),
     ParticipantRegistry,
     ProofGateway,
+    ComplianceControl,
     OrderCommitPool,
     TradeNullifier(BytesN<32>),
     SettledExecution(BytesN<32>),
@@ -54,6 +56,9 @@ pub enum SettlementNettingEngineError {
     DuplicateExecution = 19,
     DuplicateTradeNullifier = 20,
     BatchNotFound = 21,
+    ProtocolPaused = 22,
+    ParticipantFrozen = 23,
+    ProofReceiptNotUsable = 24,
 }
 
 #[contractevent(topics = ["operator_set"])]
@@ -85,6 +90,7 @@ impl SettlementNettingEngine {
         admin: Address,
         participant_registry: Address,
         proof_gateway: Address,
+        compliance_control: Address,
         order_commit_pool: Address,
     ) {
         env.storage().instance().set(&DataKey::Admin, &admin);
@@ -94,6 +100,9 @@ impl SettlementNettingEngine {
         env.storage()
             .instance()
             .set(&DataKey::ProofGateway, &proof_gateway);
+        env.storage()
+            .instance()
+            .set(&DataKey::ComplianceControl, &compliance_control);
         env.storage()
             .instance()
             .set(&DataKey::OrderCommitPool, &order_commit_pool);
@@ -165,6 +174,7 @@ impl SettlementNettingEngine {
         trade_nullifier_b: BytesN<32>,
     ) -> Result<SettlementBatchRecord, SettlementNettingEngineError> {
         settler.require_auth();
+        ensure_protocol_live(&env)?;
         ensure_settler_enabled(&env, &settler)?;
 
         if execution_a_id == execution_b_id {
@@ -175,6 +185,7 @@ impl SettlementNettingEngine {
         }
 
         let settler_participant_id_hash = load_settler_participant_id(&env, &settler)?;
+        ensure_participant_not_frozen(&env, &settler_participant_id_hash)?;
         let proof_receipt = load_proof_receipt(&env, &proof_receipt_id)?;
         ensure_batch_receipt(
             &env,
@@ -211,6 +222,10 @@ impl SettlementNettingEngine {
         let a_ask_order = load_order(&order_pool, &execution_a.ask_order_id)?;
         let b_bid_order = load_order(&order_pool, &execution_b.bid_order_id)?;
         let b_ask_order = load_order(&order_pool, &execution_b.ask_order_id)?;
+        ensure_participant_not_frozen(&env, &a_bid_order.participant_id_hash)?;
+        ensure_participant_not_frozen(&env, &a_ask_order.participant_id_hash)?;
+        ensure_participant_not_frozen(&env, &b_bid_order.participant_id_hash)?;
+        ensure_participant_not_frozen(&env, &b_ask_order.participant_id_hash)?;
 
         let batch_id = a_bid_order.batch_id.clone();
         if a_ask_order.batch_id != batch_id
@@ -378,6 +393,11 @@ fn ensure_batch_receipt(
     if &proof_receipt.portfolio_commitment != settlement_commitment {
         return Err(SettlementNettingEngineError::SettlementCommitmentMismatch);
     }
+    let proof_gateway: Address = env.storage().instance().get(&DataKey::ProofGateway).unwrap();
+    let gateway = ProofGatewayClient::new(env, &proof_gateway);
+    if !gateway.is_receipt_usable(&proof_receipt.receipt_id) {
+        return Err(SettlementNettingEngineError::ProofReceiptNotUsable);
+    }
     if env.ledger().sequence() > proof_receipt.expiry_ledger {
         return Err(SettlementNettingEngineError::ProofExpired);
     }
@@ -404,6 +424,27 @@ fn load_proof_receipt(
         return Err(SettlementNettingEngineError::ProofReceiptNotFound);
     }
     Ok(gateway.get_receipt(proof_receipt_id))
+}
+
+fn ensure_protocol_live(env: &Env) -> Result<(), SettlementNettingEngineError> {
+    let compliance_control: Address = env.storage().instance().get(&DataKey::ComplianceControl).unwrap();
+    let compliance = ComplianceControlClient::new(env, &compliance_control);
+    if compliance.is_globally_paused() {
+        return Err(SettlementNettingEngineError::ProtocolPaused);
+    }
+    Ok(())
+}
+
+fn ensure_participant_not_frozen(
+    env: &Env,
+    participant_id_hash: &BytesN<32>,
+) -> Result<(), SettlementNettingEngineError> {
+    let compliance_control: Address = env.storage().instance().get(&DataKey::ComplianceControl).unwrap();
+    let compliance = ComplianceControlClient::new(env, &compliance_control);
+    if compliance.is_participant_frozen(participant_id_hash) {
+        return Err(SettlementNettingEngineError::ParticipantFrozen);
+    }
+    Ok(())
 }
 
 fn load_order(

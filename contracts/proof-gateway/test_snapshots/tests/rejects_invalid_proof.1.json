@@ -519,7 +519,23 @@
                   },
                   {
                     "key": {
+                      "symbol": "asset_permissions_hash"
+                    },
+                    "val": {
+                      "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+                    }
+                  },
+                  {
+                    "key": {
                       "symbol": "clawback_enabled"
+                    },
+                    "val": {
+                      "bool": true
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "corporate_actions_enabled"
                     },
                     "val": {
                       "bool": true
@@ -551,6 +567,14 @@
                   },
                   {
                     "key": {
+                      "symbol": "jurisdiction_policy_hash"
+                    },
+                    "val": {
+                      "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+                    }
+                  },
+                  {
+                    "key": {
                       "symbol": "metadata_hash"
                     },
                     "val": {
@@ -575,10 +599,26 @@
                   },
                   {
                     "key": {
+                      "symbol": "settlement_enabled"
+                    },
+                    "val": {
+                      "bool": true
+                    }
+                  },
+                  {
+                    "key": {
                       "symbol": "status"
                     },
                     "val": {
                       "u32": 2
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "transfer_class_hash"
+                    },
+                    "val": {
+                      "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
                     }
                   },
                   {
@@ -725,6 +765,14 @@
                   },
                   {
                     "key": {
+                      "symbol": "credential_expiry_ledger"
+                    },
+                    "val": {
+                      "u32": 4294967295
+                    }
+                  },
+                  {
+                    "key": {
                       "symbol": "credential_root"
                     },
                     "val": {
@@ -741,10 +789,26 @@
                   },
                   {
                     "key": {
+                      "symbol": "kyc_status"
+                    },
+                    "val": {
+                      "u32": 1
+                    }
+                  },
+                  {
+                    "key": {
                       "symbol": "legal_entity_hash"
                     },
                     "val": {
                       "bytes": "0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c0c"
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "permissions_hash"
+                    },
+                    "val": {
+                      "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
                     }
                   },
                   {
@@ -757,7 +821,23 @@
                   },
                   {
                     "key": {
+                      "symbol": "review_case_id"
+                    },
+                    "val": {
+                      "bytes": "0000000000000000000000000000000000000000000000000000000000000000"
+                    }
+                  },
+                  {
+                    "key": {
                       "symbol": "role"
+                    },
+                    "val": {
+                      "u32": 1
+                    }
+                  },
+                  {
+                    "key": {
+                      "symbol": "sanctions_status"
                     },
                     "val": {
                       "u32": 1

@@ -6,7 +6,9 @@ use soroban_sdk::{
     contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
     Bytes, BytesN, Env,
 };
-use zkdtcc_types::{ProofReceipt, ProofType, ProofVerifierRoute};
+use zkdtcc_types::{
+    ProofReceipt, ProofType, ProofVerifierPolicy, ProofVerifierRoute, RevokedProofReceipt,
+};
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
 const INSTANCE_BUMP_TO: u32 = 518_400;
@@ -27,8 +29,10 @@ enum DataKey {
     ParticipantRegistry,
     CollateralPolicy,
     VerifierRoute(BytesN<32>),
+    VerifierPolicy(BytesN<32>),
     UsedNonce(ProofType, BytesN<32>, BytesN<32>),
     Receipt(BytesN<32>),
+    RevokedReceipt(BytesN<32>),
 }
 
 #[contracterror]
@@ -46,6 +50,8 @@ pub enum ProofGatewayError {
     VerifierRejected = 9,
     NonceUsed = 10,
     ReceiptNotFound = 11,
+    VerifierPolicyInactive = 12,
+    ReceiptRevoked = 13,
 }
 
 #[contractevent(topics = ["operator_set"])]
@@ -61,12 +67,24 @@ pub struct VerifierRouteSetEvent {
     pub enabled: bool,
 }
 
+#[contractevent(topics = ["verifier_policy_set"])]
+pub struct VerifierPolicySetEvent {
+    pub verifier_id: BytesN<32>,
+    pub enabled: bool,
+}
+
 #[contractevent(topics = ["proof_recorded"])]
 pub struct ProofRecordedEvent {
     pub receipt_id: BytesN<32>,
     pub proof_type: ProofType,
     pub participant_id_hash: BytesN<32>,
     pub verifier_id: BytesN<32>,
+}
+
+#[contractevent(topics = ["receipt_revoked"])]
+pub struct ReceiptRevokedEvent {
+    pub receipt_id: BytesN<32>,
+    pub case_id: BytesN<32>,
 }
 
 #[contract]
@@ -126,6 +144,36 @@ impl ProofGateway {
         VerifierRouteSetEvent {
             verifier_id,
             verifier,
+            enabled,
+        }
+        .publish(&env);
+        Ok(())
+    }
+
+    pub fn set_verifier_policy(
+        env: Env,
+        operator: Address,
+        verifier_id: BytesN<32>,
+        enabled: bool,
+        valid_from_ledger: u32,
+        valid_until_ledger: u32,
+        policy_cutoff_hash: BytesN<32>,
+    ) -> Result<(), ProofGatewayError> {
+        require_operator_auth(&env, &operator)?;
+        let policy = ProofVerifierPolicy {
+            verifier_id: verifier_id.clone(),
+            enabled,
+            valid_from_ledger,
+            valid_until_ledger,
+            policy_cutoff_hash,
+            updated_ledger: env.ledger().sequence(),
+        };
+        let key = DataKey::VerifierPolicy(verifier_id.clone());
+        env.storage().persistent().set(&key, &policy);
+        bump_persistent(&env, &key);
+        bump_instance(&env);
+        VerifierPolicySetEvent {
+            verifier_id,
             enabled,
         }
         .publish(&env);
@@ -202,6 +250,7 @@ impl ProofGateway {
         if !route.enabled {
             return Err(ProofGatewayError::UnsupportedVerifier);
         }
+        ensure_verifier_policy_active(&env, &verifier_id)?;
 
         let statement_hash = derive_statement_hash(
             &env,
@@ -267,6 +316,29 @@ impl ProofGateway {
         Ok(receipt)
     }
 
+    pub fn revoke_receipt(
+        env: Env,
+        operator: Address,
+        receipt_id: BytesN<32>,
+        reason_code: BytesN<32>,
+        case_id: BytesN<32>,
+    ) -> Result<RevokedProofReceipt, ProofGatewayError> {
+        require_operator_auth(&env, &operator)?;
+        let _ = Self::get_receipt(env.clone(), receipt_id.clone())?;
+        let revoked = RevokedProofReceipt {
+            receipt_id: receipt_id.clone(),
+            reason_code,
+            case_id: case_id.clone(),
+            revoked_ledger: env.ledger().sequence(),
+        };
+        let key = DataKey::RevokedReceipt(receipt_id.clone());
+        env.storage().persistent().set(&key, &revoked);
+        bump_persistent(&env, &key);
+        bump_instance(&env);
+        ReceiptRevokedEvent { receipt_id, case_id }.publish(&env);
+        Ok(revoked)
+    }
+
     pub fn get_receipt(
         env: Env,
         receipt_id: BytesN<32>,
@@ -290,6 +362,22 @@ impl ProofGateway {
         }
         bump_instance(&env);
         exists
+    }
+
+    pub fn is_receipt_usable(env: Env, receipt_id: BytesN<32>) -> bool {
+        let receipt = match Self::get_receipt(env.clone(), receipt_id.clone()) {
+            Ok(receipt) => receipt,
+            Err(_) => return false,
+        };
+        if env.ledger().sequence() > receipt.expiry_ledger {
+            return false;
+        }
+        let revoked_key = DataKey::RevokedReceipt(receipt_id);
+        if env.storage().persistent().has(&revoked_key) {
+            bump_persistent(&env, &revoked_key);
+            return false;
+        }
+        ensure_verifier_policy_active(&env, &receipt.verifier_id).is_ok()
     }
 }
 
@@ -353,6 +441,23 @@ fn load_verifier_route(
         .ok_or(ProofGatewayError::VerifierRouteNotFound)?;
     bump_persistent(env, &key);
     Ok(route)
+}
+
+fn ensure_verifier_policy_active(
+    env: &Env,
+    verifier_id: &BytesN<32>,
+) -> Result<(), ProofGatewayError> {
+    let key = DataKey::VerifierPolicy(verifier_id.clone());
+    if !env.storage().persistent().has(&key) {
+        return Ok(());
+    }
+    let policy: ProofVerifierPolicy = env.storage().persistent().get(&key).unwrap();
+    bump_persistent(env, &key);
+    let ledger = env.ledger().sequence();
+    if !policy.enabled || ledger < policy.valid_from_ledger || ledger > policy.valid_until_ledger {
+        return Err(ProofGatewayError::VerifierPolicyInactive);
+    }
+    Ok(())
 }
 
 fn derive_statement_hash(
@@ -694,6 +799,61 @@ mod tests {
         assert_eq!(receipt.verifier_id, verifier_id);
         assert_eq!(receipt.statement_hash, statement_hash);
         assert_eq!(client.get_receipt(&receipt.receipt_id), receipt);
+    }
+
+    #[test]
+    fn revokes_receipt_without_erasing_history() {
+        let env = Env::default();
+        let (
+            admin,
+            operator,
+            submitter,
+            participant_registry_id,
+            collateral_policy_id,
+            _asset,
+            participant_id_hash,
+        ) = setup_phase_two(&env);
+        let verifier_id = hash(&env, 21);
+        let verifier_contract = env.register(MockVerifier, ());
+
+        let contract_id = env.register(
+            ProofGateway,
+            ProofGatewayArgs::__constructor(&admin, &participant_registry_id, &collateral_policy_id),
+        );
+        let client = ProofGatewayClient::new(&env, &contract_id);
+        client.set_operator(&admin, &operator, &true);
+        client.set_verifier_route(&operator, &verifier_id, &verifier_contract, &true);
+
+        let statement_hash = client.build_statement_hash(
+            &ProofType::CollateralSufficiency,
+            &participant_id_hash,
+            &submitter,
+            &hash(&env, 60),
+            &500u32,
+            &3u32,
+            &42u64,
+            &hash(&env, 61),
+            &1_000_000i128,
+        );
+        let proof = Bytes::from_array(&env, &statement_hash.to_array());
+        let receipt = client.verify_and_record(
+            &submitter,
+            &participant_id_hash,
+            &ProofType::CollateralSufficiency,
+            &verifier_id,
+            &hash(&env, 61),
+            &hash(&env, 60),
+            &500u32,
+            &3u32,
+            &42u64,
+            &1_000_000i128,
+            &proof,
+        );
+
+        assert!(client.is_receipt_usable(&receipt.receipt_id));
+        client.revoke_receipt(&operator, &receipt.receipt_id, &hash(&env, 62), &hash(&env, 63));
+        assert_eq!(client.get_receipt(&receipt.receipt_id), receipt);
+        assert!(!client.is_receipt_usable(&receipt.receipt_id));
     }
 
     #[test]

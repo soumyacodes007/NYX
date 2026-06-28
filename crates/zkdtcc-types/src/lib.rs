@@ -44,6 +44,23 @@ pub enum ParticipantStatus {
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
+pub enum KycStatus {
+    Approved = 1,
+    Pending = 2,
+    Expired = 3,
+    Rejected = 4,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum SanctionsStatus {
+    Clear = 1,
+    Review = 2,
+    Blocked = 3,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum LegalStateStatus {
     Active = 1,
     Superseded = 2,
@@ -94,6 +111,23 @@ pub enum CorporateActionStatus {
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
+pub enum CorporateActionClaimStatus {
+    Recorded = 1,
+    Paid = 2,
+    Reversed = 3,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum ComplianceActionType {
+    Generic = 1,
+    ForcedTransferRequest = 2,
+    ForcedUnwindRequest = 3,
+    ClaimReversal = 4,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct AssetRecord {
     pub asset_id_hash: BytesN<32>,
     pub issuer: Address,
@@ -105,6 +139,11 @@ pub struct AssetRecord {
     pub clawback_enabled: bool,
     pub metadata_hash: BytesN<32>,
     pub issuer_policy_hash: BytesN<32>,
+    pub settlement_enabled: bool,
+    pub corporate_actions_enabled: bool,
+    pub transfer_class_hash: BytesN<32>,
+    pub jurisdiction_policy_hash: BytesN<32>,
+    pub asset_permissions_hash: BytesN<32>,
     pub created_ledger: u32,
     pub updated_ledger: u32,
 }
@@ -118,6 +157,11 @@ pub struct ParticipantRecord {
     pub credential_root: BytesN<32>,
     pub legal_entity_hash: BytesN<32>,
     pub jurisdiction_hash: BytesN<32>,
+    pub kyc_status: KycStatus,
+    pub sanctions_status: SanctionsStatus,
+    pub credential_expiry_ledger: u32,
+    pub review_case_id: BytesN<32>,
+    pub permissions_hash: BytesN<32>,
     pub wallet_count: u32,
     pub created_ledger: u32,
     pub updated_ledger: u32,
@@ -180,6 +224,17 @@ pub struct ProofVerifierRoute {
     pub verifier_id: BytesN<32>,
     pub verifier: Address,
     pub enabled: bool,
+    pub updated_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ProofVerifierPolicy {
+    pub verifier_id: BytesN<32>,
+    pub enabled: bool,
+    pub valid_from_ledger: u32,
+    pub valid_until_ledger: u32,
+    pub policy_cutoff_hash: BytesN<32>,
     pub updated_ledger: u32,
 }
 
@@ -321,6 +376,7 @@ pub struct CorporateActionEventRecord {
     pub claim_start_ledger: u32,
     pub claim_end_ledger: u32,
     pub payout_rate: i128,
+    pub withholding_policy_hash: BytesN<32>,
     pub created_ledger: u32,
     pub updated_ledger: u32,
 }
@@ -338,5 +394,102 @@ pub struct CorporateActionClaimRecord {
     pub claim_nullifier: BytesN<32>,
     pub disclosed_entitlement_quantity: i128,
     pub disclosed_claim_amount: i128,
+    pub claim_status: CorporateActionClaimStatus,
+    pub payment_batch_id: BytesN<32>,
+    pub reversal_reference: BytesN<32>,
     pub recorded_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct PauseState {
+    pub paused: bool,
+    pub reason_code: BytesN<32>,
+    pub case_id: BytesN<32>,
+    pub updated_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ParticipantFreezeState {
+    pub frozen: bool,
+    pub reason_code: BytesN<32>,
+    pub case_id: BytesN<32>,
+    pub updated_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ComplianceOperatorActionRecord {
+    pub action_id: BytesN<32>,
+    pub action_type: ComplianceActionType,
+    pub operator: Address,
+    pub target_hash: BytesN<32>,
+    pub reason_code: BytesN<32>,
+    pub case_id: BytesN<32>,
+    pub metadata_hash: BytesN<32>,
+    pub created_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct RevokedProofReceipt {
+    pub receipt_id: BytesN<32>,
+    pub reason_code: BytesN<32>,
+    pub case_id: BytesN<32>,
+    pub revoked_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DisclosureBlob {
+    pub blob_hash: BytesN<32>,
+    pub blob_type: u32,
+    pub owner_scope_hash: BytesN<32>,
+    pub metadata_hash: BytesN<32>,
+    pub created_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DisclosureGrant {
+    pub grant_id: BytesN<32>,
+    pub scope_hash: BytesN<32>,
+    pub grantee: Address,
+    pub encrypted_key_hash: BytesN<32>,
+    pub purpose_code: BytesN<32>,
+    pub case_id: BytesN<32>,
+    pub expiry_ledger: u32,
+    pub active: bool,
+    pub created_ledger: u32,
+    pub updated_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct DisclosureAccessReceipt {
+    pub receipt_id: BytesN<32>,
+    pub scope_hash: BytesN<32>,
+    pub accessor: Address,
+    pub purpose_code: BytesN<32>,
+    pub case_id: BytesN<32>,
+    pub blob_hash: BytesN<32>,
+    pub access_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ViewKeyCommitment {
+    pub scope_hash: BytesN<32>,
+    pub commitment_hash: BytesN<32>,
+    pub updated_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct OperatorActionLinkRecord {
+    pub action_id: BytesN<32>,
+    pub scope_hash: BytesN<32>,
+    pub blob_hash: BytesN<32>,
+    pub linked_ledger: u32,
 }

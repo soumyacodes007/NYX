@@ -1,7 +1,9 @@
 [workspace]
 members = [
+    "contracts/audit-disclosure-registry",
     "contracts/asset-registry",
     "contracts/batch-netting-verifier",
+    "contracts/compliance-control",
     "contracts/corporate-actions-engine",
     "contracts/collateral-policy",
     "contracts/cctp-ingress-adapter",
@@ -26,7 +28,9 @@ license = "Apache-2.0"
 [workspace.dependencies]
 soroban-sdk = "25.3.1"
 zkdtcc-types = { path = "crates/zkdtcc-types" }
+audit-disclosure-registry = { path = "contracts/audit-disclosure-registry" }
 asset-registry = { path = "contracts/asset-registry" }
+compliance-control = { path = "contracts/compliance-control" }
 participant-registry = { path = "contracts/participant-registry" }
 collateral-policy = { path = "contracts/collateral-policy" }
 proof-gateway = { path = "contracts/proof-gateway" }

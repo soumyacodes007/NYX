@@ -3,7 +3,9 @@
 use soroban_sdk::{
     contract, contracterror, contractevent, contractimpl, contracttype, Address, BytesN, Env,
 };
-use zkdtcc_types::{ParticipantRecord, ParticipantRole, ParticipantStatus};
+use zkdtcc_types::{
+    KycStatus, ParticipantRecord, ParticipantRole, ParticipantStatus, SanctionsStatus,
+};
 
 const INSTANCE_BUMP_THRESHOLD: u32 = 17_280;
 const INSTANCE_BUMP_TO: u32 = 518_400;
@@ -105,6 +107,11 @@ impl ParticipantRegistry {
             credential_root,
             legal_entity_hash,
             jurisdiction_hash,
+            kyc_status: KycStatus::Approved,
+            sanctions_status: SanctionsStatus::Clear,
+            credential_expiry_ledger: u32::MAX,
+            review_case_id: zero_hash(&env),
+            permissions_hash: zero_hash(&env),
             wallet_count: 1,
             created_ledger: ledger,
             updated_ledger: ledger,
@@ -228,6 +235,56 @@ impl ParticipantRegistry {
         Ok(())
     }
 
+    pub fn set_compliance_state(
+        env: Env,
+        operator: Address,
+        participant_id_hash: BytesN<32>,
+        kyc_status: KycStatus,
+        sanctions_status: SanctionsStatus,
+        credential_expiry_ledger: u32,
+        review_case_id: BytesN<32>,
+    ) -> Result<(), ParticipantRegistryError> {
+        require_operator_auth(&env, &operator)?;
+        let mut record = load_participant(&env, &participant_id_hash)?;
+        record.kyc_status = kyc_status;
+        record.sanctions_status = sanctions_status;
+        record.credential_expiry_ledger = credential_expiry_ledger;
+        record.review_case_id = review_case_id;
+        record.updated_ledger = env.ledger().sequence();
+        save_participant(&env, &participant_id_hash, &record);
+        Ok(())
+    }
+
+    pub fn set_permissions_hash(
+        env: Env,
+        operator: Address,
+        participant_id_hash: BytesN<32>,
+        permissions_hash: BytesN<32>,
+    ) -> Result<(), ParticipantRegistryError> {
+        require_operator_auth(&env, &operator)?;
+        let mut record = load_participant(&env, &participant_id_hash)?;
+        record.permissions_hash = permissions_hash;
+        record.updated_ledger = env.ledger().sequence();
+        save_participant(&env, &participant_id_hash, &record);
+        Ok(())
+    }
+
+    pub fn is_participant_trade_eligible(
+        env: Env,
+        participant_id_hash: BytesN<32>,
+        _asset: Address,
+    ) -> bool {
+        match load_participant(&env, &participant_id_hash) {
+            Ok(record) => {
+                record.status == ParticipantStatus::Active
+                    && record.kyc_status == KycStatus::Approved
+                    && record.sanctions_status == SanctionsStatus::Clear
+                    && env.ledger().sequence() <= record.credential_expiry_ledger
+            }
+            Err(_) => false,
+        }
+    }
+
     pub fn get_participant(
         env: Env,
         participant_id_hash: BytesN<32>,
@@ -324,6 +381,10 @@ fn bump_persistent(env: &Env, key: &DataKey) {
         .extend_ttl(key, PERSISTENT_BUMP_THRESHOLD, PERSISTENT_BUMP_TO);
 }
 
+fn zero_hash(env: &Env) -> BytesN<32> {
+    BytesN::from_array(env, &[0; 32])
+}
+
 #[cfg(test)]
 mod tests {
     extern crate std;
@@ -367,6 +428,8 @@ mod tests {
         let record = client.get_participant(&participant_id);
         assert_eq!(record.primary_wallet, wallet_two);
         assert_eq!(record.wallet_count, 2);
+        assert_eq!(record.kyc_status, KycStatus::Approved);
+        assert_eq!(record.sanctions_status, SanctionsStatus::Clear);
         assert_eq!(client.wallet_owner(&wallet_one), participant_id);
         assert!(client.is_wallet_registered(&wallet_two));
 
@@ -413,5 +476,47 @@ mod tests {
         );
 
         assert!(matches!(result, Err(Ok(ParticipantRegistryError::WalletExists))));
+    }
+
+    #[test]
+    fn updates_compliance_state_and_trade_eligibility() {
+        let env = Env::default();
+        env.mock_all_auths();
+
+        let admin = Address::generate(&env);
+        let operator = Address::generate(&env);
+        let wallet = Address::generate(&env);
+        let asset = Address::generate(&env);
+        let participant_id = hash(&env, 21);
+
+        let contract_id =
+            env.register(ParticipantRegistry, ParticipantRegistryArgs::__constructor(&admin));
+        let client = ParticipantRegistryClient::new(&env, &contract_id);
+        client.set_operator(&admin, &operator, &true);
+        client.register_participant(
+            &operator,
+            &participant_id,
+            &wallet,
+            &ParticipantRole::InstitutionTrader,
+            &hash(&env, 22),
+            &hash(&env, 23),
+            &hash(&env, 24),
+        );
+
+        assert!(client.is_participant_trade_eligible(&participant_id, &asset));
+        client.set_compliance_state(
+            &operator,
+            &participant_id,
+            &KycStatus::Approved,
+            &SanctionsStatus::Blocked,
+            &u32::MAX,
+            &hash(&env, 25),
+        );
+        client.set_permissions_hash(&operator, &participant_id, &hash(&env, 26));
+
+        let record = client.get_participant(&participant_id);
+        assert_eq!(record.permissions_hash, hash(&env, 26));
+        assert_eq!(record.review_case_id, hash(&env, 25));
+        assert!(!client.is_participant_trade_eligible(&participant_id, &asset));
     }
 }
