@@ -22,6 +22,12 @@ Current circuit:
   - derives deterministic trade nullifiers from each execution commitment and a batch salt
   - derives a settlement commitment from both execution commitments, the net vector hash, and both trade nullifiers
   - carries the `ProofGateway` statement hash as two 128-bit public limbs for verifier binding
+- `entitlement_claim.circom`
+  - proves an entitlement leaf belongs to an issuer/DTC corporate-action snapshot root
+  - binds the entitlement to `participantIdHash`, `assetIdHash`, and `eventIdHash`
+  - recomputes the payout as `entitlementQuantity * payoutRate`
+  - derives a hidden claim commitment and an event-specific claim nullifier from private claim salt
+  - carries the `ProofGateway` statement hash as two 128-bit public limbs for verifier binding
 
 Public inputs:
 
@@ -51,6 +57,18 @@ Public inputs for `batch_netting.circom`:
 - `settlementCommitment`
 - `tradeNullifierA`
 - `tradeNullifierB`
+- `statementHashHi`
+- `statementHashLo`
+
+Public inputs for `entitlement_claim.circom`:
+
+- `participantIdHash`
+- `assetIdHash`
+- `eventIdHash`
+- `eventRoot`
+- `claimCommitment`
+- `claimNullifier`
+- `claimAmount`
 - `statementHashHi`
 - `statementHashLo`
 
@@ -93,6 +111,15 @@ Private witness for `batch_netting.circom`:
 - `slotNetCash[3]`
 - `batchSalt`
 
+Private witness for `entitlement_claim.circom`:
+
+- `entitlementQuantity`
+- `payoutRate`
+- `snapshotSalt`
+- `claimSalt`
+- `pathElements[4]`
+- `pathIndices[4]`
+
 Local flow:
 
 ```bash
@@ -118,3 +145,11 @@ npm run zk:phase5:prove
 ```
 
 Artifacts are written to `circuits/artifacts/batch_netting/` unless a test namespace overrides that path.
+
+For the Phase 6 proof flow, run:
+
+```bash
+npm run zk:phase6:prove
+```
+
+Artifacts are written to `circuits/artifacts/entitlement_claim/` unless a test namespace overrides that path.
