@@ -813,7 +813,7 @@ mod tests {
             _asset,
             participant_id_hash,
         ) = setup_phase_two(&env);
-        let verifier_id = hash(&env, 21);
+        let verifier_id = hash(&env, 20);
         let verifier_contract = env.register(MockVerifier, ());
 
         let contract_id = env.register(
