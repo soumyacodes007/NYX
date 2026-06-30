@@ -3,6 +3,10 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "api:dev": "tsx watch src/api/server.ts",
+    "api:start": "node dist/api/server.js",
+    "api:build": "tsc -p tsconfig.api.json",
+    "api:typecheck": "tsc -p tsconfig.api.json --noEmit",
     "stellar:phase0:bootstrap": "node scripts/bootstrap-phase0-testnet.mjs",
     "stellar:phase0:verify": "node scripts/run-phase0-onchain-checks.mjs",
     "stellar:protocol:deploy": "node scripts/deploy-protocol-testnet.mjs",
@@ -25,9 +29,18 @@
     "zk:phase6:test": "node scripts/test-entitlement-claim-phase6.mjs",
     "zk:phase6:fixture": "node scripts/generate-entitlement-claim-proof.mjs"
   },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.0",
     "circomlib": "^2.0.5",
     "circomlibjs": "^0.1.7",
-    "snarkjs": "^0.7.5"
+    "snarkjs": "^0.7.5",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }
