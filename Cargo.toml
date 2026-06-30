@@ -3,6 +3,7 @@ members = [
     "contracts/audit-disclosure-registry",
     "contracts/asset-registry",
     "contracts/batch-netting-verifier",
+    "contracts/collateral-sufficiency-verifier",
     "contracts/compliance-control",
     "contracts/corporate-actions-engine",
     "contracts/collateral-policy",
@@ -39,6 +40,7 @@ unencumbered-lot-verifier = { path = "contracts/unencumbered-lot-verifier" }
 order-commit-pool = { path = "contracts/order-commit-pool" }
 private-match-verifier = { path = "contracts/private-match-verifier" }
 batch-netting-verifier = { path = "contracts/batch-netting-verifier" }
+collateral-sufficiency-verifier = { path = "contracts/collateral-sufficiency-verifier" }
 settlement-netting-engine = { path = "contracts/settlement-netting-engine" }
 entitlement-claim-verifier = { path = "contracts/entitlement-claim-verifier" }
 corporate-actions-engine = { path = "contracts/corporate-actions-engine" }

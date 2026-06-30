@@ -5,6 +5,10 @@ import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import {
+  artifactDir as collateralArtifactDir,
+  ensureGroth16Setup as ensureCollateralSetup,
+} from "./collateral-sufficiency-phase2-lib.mjs";
+import {
   artifactDir as unencumberedArtifactDir,
   ensureGroth16Setup as ensureUnencumberedSetup,
 } from "./unencumbered-phase3-lib.mjs";
@@ -126,20 +130,17 @@ async function main() {
 }
 
 async function ensureVerifierArtifacts() {
-  if (!existsSync(path.join(unencumberedArtifactDir, "verification_key.json"))) {
-    await ensureUnencumberedSetup();
-  }
-  if (!existsSync(path.join(privateMatchArtifactDir, "verification_key.json"))) {
-    await ensurePrivateMatchSetup();
-  }
-  if (!existsSync(path.join(batchNettingArtifactDir, "verification_key.json"))) {
-    await ensureBatchNettingSetup();
-  }
-  if (!existsSync(path.join(entitlementClaimArtifactDir, "verification_key.json"))) {
-    await ensureEntitlementClaimSetup();
-  }
+  await ensureCollateralSetup();
+  await ensureUnencumberedSetup();
+  await ensurePrivateMatchSetup();
+  await ensureBatchNettingSetup();
+  await ensureEntitlementClaimSetup();
 
   return {
+    collateralSufficiency: {
+      verificationKeyHex: encodeVerificationKeyJson(path.join(collateralArtifactDir, "verification_key.json")),
+      source: path.join(collateralArtifactDir, "verification_key.json"),
+    },
     unencumberedLot: {
       verificationKeyHex: encodeVerificationKeyJson(path.join(unencumberedArtifactDir, "verification_key.json")),
       source: path.join(unencumberedArtifactDir, "verification_key.json"),
@@ -163,13 +164,13 @@ function buildProtocolArtifacts() {
   const packages = [
     "audit-disclosure-registry",
     "collateral-policy",
+    "collateral-sufficiency-verifier",
     "cctp-ingress-adapter",
     "encumbrance-registry",
     "proof-gateway",
     "order-commit-pool",
     "settlement-netting-engine",
     "corporate-actions-engine",
-    "mock-proof-verifier",
     "unencumbered-lot-verifier",
     "private-match-verifier",
     "batch-netting-verifier",
@@ -222,7 +223,7 @@ function buildProtocolConfig(currentLedger, attestor) {
     collateralSufficiency: {
       verifierId: hashObject({ namespace, kind: "verifier-id", proofType: "collateral-sufficiency" }),
       proofType: proofType.collateralSufficiency,
-      mode: "statement-hash-echo",
+      mode: "circom-groth16",
       policyCutoffHash: hashObject({ namespace, kind: "policy-cutoff", proofType: "collateral-sufficiency" }),
     },
     unencumberedLot: {
@@ -305,8 +306,12 @@ async function deployProtocolContracts(buildArtifacts, verifierArtifacts, config
   const verifiers = {};
 
   verifiers.collateralSufficiency = await deployWasmContract({
-    label: "mock-proof-verifier",
-    wasmPath: buildArtifacts["mock-proof-verifier"],
+    label: "collateral-sufficiency-verifier",
+    wasmPath: buildArtifacts["collateral-sufficiency-verifier"],
+    constructorArgs: [
+      "--verification_key",
+      verifierArtifacts.collateralSufficiency.verificationKeyHex,
+    ],
   });
   verifiers.unencumberedLot = await deployWasmContract({
     label: "unencumbered-lot-verifier",

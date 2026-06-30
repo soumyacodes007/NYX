@@ -359,6 +359,40 @@ pub struct SettlementBatchRecord {
 
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ExecutionSettlementRecord {
+    pub settlement_id: BytesN<32>,
+    pub execution_id: BytesN<32>,
+    pub instrument_id_hash: BytesN<32>,
+    pub instrument_asset: Address,
+    pub cash_asset: Address,
+    pub buyer: Address,
+    pub seller: Address,
+    pub trade_nullifier: BytesN<32>,
+    pub asset_amount: i128,
+    pub cash_amount: i128,
+    pub settler: Address,
+    pub recorded_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct BatchTransferRecord {
+    pub settlement_id: BytesN<32>,
+    pub instrument_asset: Address,
+    pub cash_asset: Address,
+    pub execution_a_buyer: Address,
+    pub execution_a_seller: Address,
+    pub execution_a_asset_amount: i128,
+    pub execution_a_cash_amount: i128,
+    pub execution_b_buyer: Address,
+    pub execution_b_seller: Address,
+    pub execution_b_asset_amount: i128,
+    pub execution_b_cash_amount: i128,
+    pub recorded_ledger: u32,
+}
+
+#[contracttype]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct CorporateActionEventRecord {
     pub event_id: BytesN<32>,
     pub asset: Address,

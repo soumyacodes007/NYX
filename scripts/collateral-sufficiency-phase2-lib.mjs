@@ -2,12 +2,12 @@ import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
-import { buildPrivateMatchFixture } from "./private-match-input-lib.mjs";
+import { buildCollateralSufficiencyFixture } from "./collateral-sufficiency-input-lib.mjs";
 import { stringifyDeep } from "./unencumbered-input-lib.mjs";
 
 export const buildDir = path.join("circuits", "build");
-export const artifactDir = path.join("circuits", "artifacts", "private_match");
-export const circuitName = "private_match";
+export const artifactDir = path.join("circuits", "artifacts", "collateral_sufficiency");
+export const circuitName = "collateral_sufficiency";
 
 export function ensureLocalTool(binName) {
   if (binName === "circom") {
@@ -114,8 +114,8 @@ export async function ensureGroth16Setup() {
     "contribute",
     path.join(artifactDir, "pot12_0000.ptau"),
     path.join(artifactDir, "pot12_0001.ptau"),
-    "--name=phase4-initial",
-    "-e=zkdtcc-phase4-test-entropy",
+    "--name=phase2-initial",
+    "-e=zkdtcc-phase2-test-entropy",
   ]);
   runOrThrow(snarkjs, [
     "powersoftau",
@@ -136,8 +136,8 @@ export async function ensureGroth16Setup() {
     "contribute",
     path.join(artifactDir, `${circuitName}_0000.zkey`),
     path.join(artifactDir, `${circuitName}_final.zkey`),
-    "--name=phase4-zkey",
-    "-e=zkdtcc-phase4-zkey-entropy",
+    "--name=phase2-zkey",
+    "-e=zkdtcc-phase2-zkey-entropy",
   ]);
   runOrThrow(snarkjs, [
     "zkey",
@@ -157,7 +157,7 @@ function resolveFixtureOptions(optionsOrTransform) {
 
 export async function writeFixtureInput(filename, optionsOrTransform) {
   const { transform, ...fixtureOptions } = resolveFixtureOptions(optionsOrTransform);
-  const fixture = await buildPrivateMatchFixture(fixtureOptions);
+  const fixture = await buildCollateralSufficiencyFixture(fixtureOptions);
   const input = transform ? transform(structuredClone(fixture.input)) : fixture.input;
   const fullPath = path.join(artifactDir, filename);
   await writeFile(fullPath, JSON.stringify(stringifyDeep(input), null, 2));

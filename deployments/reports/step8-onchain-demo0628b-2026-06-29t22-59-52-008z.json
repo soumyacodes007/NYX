@@ -1,0 +1,45 @@
+{
+  "phase0Path": "/mnt/c/Users/soumy/Desktop/zk-dtcc/deployments/testnet-phase0-demo0628b.json",
+  "protocolPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/deployments/testnet-protocol-demo0628b.json",
+  "network": "testnet",
+  "namespace": "demo0628b",
+  "startedAt": "2026-06-29T22:51:46.471Z",
+  "contracts": {
+    "collateralPolicy": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
+    "proofGateway": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
+    "cctpIngressAdapter": "CD5GVM4HKFYNKQZBOOHFD5YJJJP3WSPQLDHQM7OBVDNKP4I5QJHU5D2J",
+    "encumbranceRegistry": "CBWQGD6HQ4KW54IKB7VKYSGUIAHDOHAL6IT3WPQVVI2QRQMPGCBV5OTB",
+    "orderCommitPool": "CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M",
+    "settlementNettingEngine": "CBBMXA7PAPM2EQ4TX3VXUPJTFEU2544RWD4IDUFTIYF6XRXGUPMG7VC2",
+    "corporateActionsEngine": "CCIYXJDIC3HEOLGS7MBCH6XO4I2RBSXDPIZ3R262GHGGEVXNIOPXOEWB",
+    "auditDisclosureRegistry": "CAB2E2P3KUKFNCTBGSFFTUZFUZR2MAF2NYAGVTNLILJB2KPFZNOMZCOQ"
+  },
+  "verifiers": {
+    "collateralSufficiency": "CDDAU27576K52SSTRILXHZEDR6VE2Y3DHTOMNCHSWATINPSYCZ6KRCRI",
+    "unencumberedLot": "CBWVIJ5DJJBIOVUDV2FW3OOYZFVV6JCQGF5I3SCB44U6NBNKMW44E2RJ",
+    "privateMatch": "CAJU4WW6AJBOIDZWM3PITGEFPOONJS7AUDXYC6C3MITQXA45JZLBWPRD",
+    "batchNetting": "CCXFXDFM2V3CNZFW2JWXDSWJOKUPB5QQ4O63EJKXXEZO5K5BITQGCT6Z",
+    "entitlementClaim": "CA33LZIKSRYNCW4RV4W44GHBLQSTHDASKYUECNPSTJ6TENFKHEA4RZ7N"
+  },
+  "steps": {
+    "step8": {
+      "cancelledOrderId": "dcc672e9b308232db7e7fac7a4ccd2401d083ef6b7ae5a3368b7b4db15a89427",
+      "executionId": "156ad507f06cd996a792d819fb5a283ba97e5010540297e6cc9c1e4b3fcda229",
+      "txHashes": {
+        "commitCancelledOrder": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+        "cancelOrder": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+        "commitBid": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+        "commitAsk": "2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0",
+        "matchOrders": "8dd38c8c63fd44e72f6fd263d9e3f3d0687a15b24bde2b968fe2121f3d8acd3b"
+      },
+      "expectedFailures": [
+        {
+          "name": "reused cancel nullifier rejection",
+          "ok": true,
+          "error": "❌ error: transaction simulation failed: HostError: Error(Contract, #6)\n\nEvent log (newest first):\n   0: [Diagnostic Event] contract:CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, topics:[error, Error(Contract, #6)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\"\n   1: [Diagnostic Event] topics:[fn_call, CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, cancel_order], data:[GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV, Bytes(dcc672e9b308232db7e7fac7a4ccd2401d083ef6b7ae5a3368b7b4db15a89427), Bytes(3ed76e22f94820579f101ed0cdd49130dc982060527bc7da71b206f176ed8202)]\n\n\ncontract invoke failed: cancel_order on CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M\n❌ error: transaction simulation failed: HostError: Error(Contract, #6)\n\nEvent log (newest first):\n   0: [Diagnostic Event] contract:CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, topics:[error, Error(Contract, #6)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\"\n   1: [Diagnostic Event] topics:[fn_call, CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, cancel_order], data:[GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV, Bytes(dcc672e9b308232db7e7fac7a4ccd2401d083ef6b7ae5a3368b7b4db15a89427), Bytes(3ed76e22f94820579f101ed0cdd49130dc982060527bc7da71b206f176ed8202)]\n\n\nCommand failed: stellar --no-cache contract invoke --id CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M --source zkdtcc-demo0628b-alpha --network testnet -- cancel_order --submitter GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV --order_id dcc672e9b308232db7e7fac7a4ccd2401d083ef6b7ae5a3368b7b4db15a89427 --cancel_nullifier 3ed76e22f94820579f101ed0cdd49130dc982060527bc7da71b206f176ed8202\n❌ error: transaction simulation failed: HostError: Error(Contract, #6)\n\nEvent log (newest first):\n   0: [Diagnostic Event] contract:CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, topics:[error, Error(Contract, #6)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\"\n   1: [Diagnostic Event] topics:[fn_call, CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, cancel_order], data:[GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV, Bytes(dcc672e9b308232db7e7fac7a4ccd2401d083ef6b7ae5a3368b7b4db15a89427), Bytes(3ed76e22f94820579f101ed0cdd49130dc982060527bc7da71b206f176ed8202)]\n\n"
+        }
+      ]
+    }
+  },
+  "completedAt": "2026-06-29T22:59:52.008Z"
+}

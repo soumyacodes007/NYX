@@ -6,6 +6,8 @@
     "stellar:phase0:bootstrap": "node scripts/bootstrap-phase0-testnet.mjs",
     "stellar:phase0:verify": "node scripts/run-phase0-onchain-checks.mjs",
     "stellar:protocol:deploy": "node scripts/deploy-protocol-testnet.mjs",
+    "zk:phase2:fixture": "node scripts/generate-collateral-sufficiency-proof.mjs",
+    "zk:phase2:test": "node scripts/test-collateral-sufficiency-phase2.mjs",
     "zk:phase3:input": "node scripts/generate-unencumbered-input.mjs",
     "zk:phase3:prove": "node scripts/run-unencumbered-phase3-flow.mjs",
     "zk:phase3:test": "node scripts/test-unencumbered-phase3.mjs",

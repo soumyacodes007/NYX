@@ -31,6 +31,7 @@ struct PhaseFourContext {
     bid_submitter: Address,
     ask_submitter: Address,
     matcher: Address,
+    asset: Address,
     collateral_policy_id: Address,
     proof_gateway_id: Address,
     order_pool_id: Address,
@@ -223,6 +224,7 @@ fn setup_phase_four(env: &Env) -> PhaseFourContext {
         bid_submitter,
         ask_submitter,
         matcher,
+        asset,
         collateral_policy_id,
         proof_gateway_id,
         order_pool_id,
@@ -419,6 +421,7 @@ fn records_private_match_execution_with_real_proof() {
     );
 
     let batch_id = hash(&env, 80);
+    order_pool.set_instrument_asset(&ctx.operator, &bundle.instrument_id_hash, &ctx.asset);
     let bid_order = order_pool.commit_order(
         &ctx.bid_submitter,
         &ctx.bid_participant_id_hash,
@@ -515,10 +518,12 @@ fn cancels_order_and_rejects_reused_cancel_nullifier() {
         500,
     );
 
+    let instrument_id_hash = hash(&env, 54);
+    order_pool.set_instrument_asset(&ctx.operator, &instrument_id_hash, &ctx.asset);
     let order = order_pool.commit_order(
         &ctx.bid_submitter,
         &ctx.bid_participant_id_hash,
-        &hash(&env, 54),
+        &instrument_id_hash,
         &hash(&env, 55),
         &OrderSide::Bid,
         &hash(&env, 56),
@@ -599,10 +604,12 @@ fn rejects_match_with_batch_mismatch() {
         500,
     );
 
+    let instrument_id_hash = hash(&env, 68);
+    order_pool.set_instrument_asset(&ctx.operator, &instrument_id_hash, &ctx.asset);
     let bid_order = order_pool.commit_order(
         &ctx.bid_submitter,
         &ctx.bid_participant_id_hash,
-        &hash(&env, 68),
+        &instrument_id_hash,
         &hash(&env, 69),
         &OrderSide::Bid,
         &hash(&env, 70),
@@ -614,7 +621,7 @@ fn rejects_match_with_batch_mismatch() {
     let ask_order = order_pool.commit_order(
         &ctx.ask_submitter,
         &ctx.ask_participant_id_hash,
-        &hash(&env, 68),
+        &instrument_id_hash,
         &hash(&env, 72),
         &OrderSide::Ask,
         &hash(&env, 73),

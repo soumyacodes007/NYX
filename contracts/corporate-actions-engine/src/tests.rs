@@ -11,9 +11,16 @@ use serde_json::{json, Value};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::Address as _,
+    token::StellarAssetClient,
     Address, Bytes, BytesN, Env, IntoVal, Symbol,
 };
-use std::{format, path::PathBuf, process::Command, string::ToString};
+use std::{
+    format,
+    path::PathBuf,
+    process::Command,
+    string::ToString,
+    sync::{Mutex, OnceLock},
+};
 use zkdtcc_types::{CorporateActionStatus, CorporateActionType, ParticipantRole, ProofType};
 
 #[contract]
@@ -92,16 +99,21 @@ fn bytesn32_from_hex(env: &Env, hex: &str) -> BytesN<32> {
     BytesN::from_array(env, &bytes.try_into().unwrap())
 }
 
+fn proof_lock() -> &'static Mutex<()> {
+    static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+    LOCK.get_or_init(|| Mutex::new(()))
+}
+
 fn setup_phase_six(env: &Env) -> PhaseSixContext {
-    env.mock_all_auths();
+    env.mock_all_auths_allowing_non_root_auth();
 
     let admin = Address::generate(env);
     let operator = Address::generate(env);
     let issuer = Address::generate(env);
     let claimant = Address::generate(env);
     let issuer_account = Address::generate(env);
-    let asset = Address::generate(env);
-    let payout_asset = Address::generate(env);
+    let asset = env.register_stellar_asset_contract_v2(admin.clone()).address();
+    let payout_asset = env.register_stellar_asset_contract_v2(admin.clone()).address();
 
     let asset_registry_id =
         env.register(asset_registry::AssetRegistry, AssetRegistryArgs::__constructor(&admin));
@@ -264,11 +276,12 @@ fn generate_entitlement_claim_bundle(
     env: &Env,
     statement_hash: &BytesN<32>,
     fixture_options: Value,
+    namespace: &str,
 ) -> RuntimeClaimBundle {
     let suffix = encode_hex(&statement_hash.to_array()[..4]).replace("0x", "");
     let output = Command::new("node")
         .current_dir(repo_root())
-        .env("ZKDTCC_CIRCUIT_NAMESPACE", "phase6-engine-test")
+        .env("ZKDTCC_CIRCUIT_NAMESPACE", namespace)
         .arg("scripts/generate-entitlement-claim-proof.mjs")
         .arg(encode_hex(&statement_hash.to_array()))
         .arg(format!("claim-{suffix}"))
@@ -304,13 +317,19 @@ fn generate_entitlement_claim_bundle(
 }
 
 fn build_real_bundle(ctx: &PhaseSixContext, env: &Env) -> RuntimeClaimBundle {
+    let _guard = proof_lock().lock().unwrap();
+    let namespace = "phase6-engine-test";
     let fixture_options = json!({
         "participantIdHashHex": encode_hex(&ctx.claimant_participant_id_hash.to_array()),
         "assetIdHashHex": encode_hex(&hash(env, 21).to_array()),
         "eventIdHashHex": encode_hex(&hash(env, 22).to_array())
     });
-    let provisional_bundle =
-        generate_entitlement_claim_bundle(env, &hash(env, 90), fixture_options.clone());
+    let provisional_bundle = generate_entitlement_claim_bundle(
+        env,
+        &hash(env, 90),
+        fixture_options.clone(),
+        &namespace,
+    );
 
     let proof_gateway = proof_gateway::ProofGatewayClient::new(env, &ctx.proof_gateway_id);
     let collateral_policy = collateral_policy::CollateralPolicyClient::new(env, &ctx.collateral_policy_id);
@@ -327,7 +346,20 @@ fn build_real_bundle(ctx: &PhaseSixContext, env: &Env) -> RuntimeClaimBundle {
         &provisional_bundle.claim_commitment,
         &summary.required_margin,
     );
-    generate_entitlement_claim_bundle(env, &statement_hash, fixture_options)
+    generate_entitlement_claim_bundle(env, &statement_hash, fixture_options, &namespace)
+}
+
+fn mint_and_approve_payout(
+    env: &Env,
+    payout_asset: &Address,
+    owner: &Address,
+    spender: &Address,
+    mint_amount: i128,
+    approval_amount: i128,
+) {
+    let token = StellarAssetClient::new(env, payout_asset);
+    token.mint(owner, &mint_amount);
+    token.approve(owner, spender, &approval_amount, &1_000u32);
 }
 
 #[test]
@@ -497,4 +529,106 @@ fn operator_can_close_event() {
     );
     let closed = engine.set_event_status(&ctx.operator, &event.event_id, &CorporateActionStatus::Closed);
     assert_eq!(closed.status, CorporateActionStatus::Closed);
+}
+
+#[test]
+fn marks_claim_paid_with_real_transfer() {
+    let env = Env::default();
+    let ctx = setup_phase_six(&env);
+    let claim_verifier_id = hash(&env, 60);
+    let collateral_policy =
+        collateral_policy::CollateralPolicyClient::new(&env, &ctx.collateral_policy_id);
+    collateral_policy.set_accepted_verifier(
+        &ctx.operator,
+        &ProofType::EntitlementClaim,
+        &claim_verifier_id,
+        &true,
+    );
+
+    let bundle = build_real_bundle(&ctx, &env);
+    let verifier_contract = env.register(
+        EntitlementClaimVerifier,
+        EntitlementClaimVerifierArgs::__constructor(&bundle.verification_key),
+    );
+    let proof_gateway = proof_gateway::ProofGatewayClient::new(&env, &ctx.proof_gateway_id);
+    proof_gateway.set_verifier_route(
+        &ctx.operator,
+        &claim_verifier_id,
+        &verifier_contract,
+        &true,
+    );
+
+    let engine = CorporateActionsEngineClient::new(&env, &ctx.engine_id);
+    let event = engine.register_event(
+        &ctx.issuer,
+        &bundle.event_id_hash,
+        &claim_verifier_id,
+        &ctx.asset,
+        &ctx.payout_asset,
+        &CorporateActionType::Coupon,
+        &bundle.event_root,
+        &hash(&env, 61),
+        &hash(&env, 62),
+        &1_700_000_000u64,
+        &1_699_000_000u64,
+        &1_701_000_000u64,
+        &0u32,
+        &950u32,
+        &25i128,
+    );
+
+    let receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.claimant,
+        &ctx.claimant_participant_id_hash,
+        &claim_verifier_id,
+        &ProofType::EntitlementClaim,
+        &bundle.claim_commitment,
+        91,
+        900,
+        &bundle.proof_payload,
+    );
+    let claim = engine.claim(
+        &ctx.claimant,
+        &receipt.receipt_id,
+        &event.event_id,
+        &bundle.claim_commitment,
+        &bundle.claim_nullifier,
+        &bundle.entitlement_quantity,
+        &bundle.claim_amount,
+    );
+
+    mint_and_approve_payout(
+        &env,
+        &ctx.payout_asset,
+        &ctx.issuer,
+        &ctx.engine_id,
+        10_000,
+        bundle.claim_amount,
+    );
+
+    let payout_token = StellarAssetClient::new(&env, &ctx.payout_asset);
+    let issuer_before = payout_token.balance(&ctx.issuer);
+    let claimant_before = payout_token.balance(&ctx.claimant);
+
+    let paid = engine.mark_claim_paid_with_transfer(
+        &ctx.operator,
+        &claim.claim_id,
+        &hash(&env, 63),
+        &ctx.issuer,
+    );
+
+    assert_eq!(paid.claim_status, CorporateActionClaimStatus::Paid);
+    assert_eq!(
+        payout_token.balance(&ctx.issuer),
+        issuer_before - bundle.claim_amount
+    );
+    assert_eq!(
+        payout_token.balance(&ctx.claimant),
+        claimant_before + bundle.claim_amount
+    );
+    let stored = engine.get_claim(&claim.claim_id);
+    assert_eq!(stored.claim_status, CorporateActionClaimStatus::Paid);
 }

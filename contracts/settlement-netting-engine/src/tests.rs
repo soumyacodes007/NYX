@@ -5,15 +5,23 @@ use asset_registry::AssetRegistryArgs;
 use batch_netting_verifier::{BatchNettingVerifier, BatchNettingVerifierArgs};
 use collateral_policy::CollateralPolicyArgs;
 use compliance_control::ComplianceControlArgs;
+use order_commit_pool::OrderCommitPoolClient as ExternalOrderCommitPoolClient;
 use participant_registry::ParticipantRegistryArgs;
 use proof_gateway::{ProofGateway, ProofGatewayArgs};
 use serde_json::{json, Value};
 use soroban_sdk::{
     contract, contractimpl,
     testutils::Address as _,
+    token::StellarAssetClient,
     Address, Bytes, BytesN, Env, IntoVal, Symbol,
 };
-use std::{format, path::PathBuf, process::Command, string::ToString};
+use std::{
+    format,
+    path::PathBuf,
+    process::Command,
+    string::ToString,
+    sync::{Mutex, OnceLock},
+};
 use zkdtcc_types::{OrderSide, ParticipantRole, ProofType};
 
 #[contract]
@@ -34,6 +42,8 @@ struct PhaseFiveContext {
     proof_gateway_id: Address,
     order_pool_id: Address,
     settlement_engine_id: Address,
+    instrument_asset: Address,
+    cash_asset: Address,
     participant_a: Address,
     participant_b: Address,
     participant_c: Address,
@@ -107,8 +117,14 @@ fn bytesn32_from_hex(env: &Env, hex: &str) -> BytesN<32> {
     BytesN::from_array(env, &bytes.try_into().unwrap())
 }
 
+fn proof_lock() -> &'static Mutex<()> {
+    static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+    LOCK.get_or_init(|| Mutex::new(()))
+}
+
 fn setup_phase_five(env: &Env) -> PhaseFiveContext {
-    env.mock_all_auths();
+    env.cost_estimate().budget().reset_unlimited();
+    env.mock_all_auths_allowing_non_root_auth();
 
     let admin = Address::generate(env);
     let operator = Address::generate(env);
@@ -118,7 +134,10 @@ fn setup_phase_five(env: &Env) -> PhaseFiveContext {
     let matcher = Address::generate(env);
     let settler = Address::generate(env);
     let issuer = Address::generate(env);
-    let asset = Address::generate(env);
+    let instrument_token = env.register_stellar_asset_contract_v2(admin.clone());
+    let cash_token = env.register_stellar_asset_contract_v2(admin.clone());
+    let instrument_asset = instrument_token.address();
+    let cash_asset = cash_token.address();
 
     let asset_registry_id =
         env.register(asset_registry::AssetRegistry, AssetRegistryArgs::__constructor(&admin));
@@ -126,16 +145,29 @@ fn setup_phase_five(env: &Env) -> PhaseFiveContext {
     asset_registry.set_operator(&admin, &operator, &true);
     asset_registry.register_asset(
         &operator,
-        &asset,
+        &instrument_asset,
         &hash(env, 1),
         &issuer,
-        &zkdtcc_types::AssetClass::UsdcSac,
+        &zkdtcc_types::AssetClass::DtcEntitlement,
         &true,
         &true,
         &true,
         &true,
         &hash(env, 2),
         &hash(env, 3),
+    );
+    asset_registry.register_asset(
+        &operator,
+        &cash_asset,
+        &hash(env, 4),
+        &issuer,
+        &zkdtcc_types::AssetClass::UsdcSac,
+        &true,
+        &true,
+        &true,
+        &true,
+        &hash(env, 5),
+        &hash(env, 6),
     );
 
     let participant_registry_id = env.register(
@@ -206,9 +238,18 @@ fn setup_phase_five(env: &Env) -> PhaseFiveContext {
     collateral_policy.set_operator(&admin, &operator, &true);
     collateral_policy.upsert_asset_policy(
         &operator,
-        &asset,
+        &instrument_asset,
         &7u32,
         &8_500u32,
+        &110_000i128,
+        &77u64,
+        &true,
+    );
+    collateral_policy.upsert_asset_policy(
+        &operator,
+        &cash_asset,
+        &7u32,
+        &10_000u32,
         &110_000i128,
         &77u64,
         &true,
@@ -262,7 +303,7 @@ fn setup_phase_five(env: &Env) -> PhaseFiveContext {
             &compliance_control_id,
         ),
     );
-    let order_pool = OrderCommitPoolClient::new(env, &order_pool_id);
+    let order_pool = ExternalOrderCommitPoolClient::new(env, &order_pool_id);
     order_pool.set_operator(&admin, &operator, &true);
     order_pool.set_matcher(&operator, &matcher, &true);
 
@@ -288,6 +329,8 @@ fn setup_phase_five(env: &Env) -> PhaseFiveContext {
         proof_gateway_id,
         order_pool_id,
         settlement_engine_id,
+        instrument_asset,
+        cash_asset,
         participant_a,
         participant_b,
         participant_c,
@@ -349,11 +392,12 @@ fn generate_batch_netting_bundle(
     env: &Env,
     statement_hash: &BytesN<32>,
     fixture_options: Value,
+    namespace: &str,
 ) -> RuntimeBatchBundle {
     let suffix = encode_hex(&statement_hash.to_array()[..4]).replace("0x", "");
     let output = Command::new("node")
         .current_dir(repo_root())
-        .env("ZKDTCC_CIRCUIT_NAMESPACE", "phase5-settlement-test")
+        .env("ZKDTCC_CIRCUIT_NAMESPACE", namespace)
         .arg("scripts/generate-batch-netting-proof.mjs")
         .arg(encode_hex(&statement_hash.to_array()))
         .arg(format!("settlement-{suffix}"))
@@ -416,12 +460,19 @@ fn generate_batch_netting_bundle(
 }
 
 fn build_real_bundle(ctx: &PhaseFiveContext, env: &Env) -> RuntimeBatchBundle {
+    let _guard = proof_lock().lock().unwrap();
+    let namespace = "phase5-settlement-test";
     let fixture_options = json!({
         "participantAIdHashHex": encode_hex(&ctx.participant_a_id_hash.to_array()),
         "participantBIdHashHex": encode_hex(&ctx.participant_b_id_hash.to_array()),
         "participantCIdHashHex": encode_hex(&ctx.participant_c_id_hash.to_array()),
     });
-    let provisional_bundle = generate_batch_netting_bundle(env, &hash(env, 90), fixture_options.clone());
+    let provisional_bundle = generate_batch_netting_bundle(
+        env,
+        &hash(env, 90),
+        fixture_options.clone(),
+        &namespace,
+    );
 
     let proof_gateway = proof_gateway::ProofGatewayClient::new(env, &ctx.proof_gateway_id);
     let collateral_policy = collateral_policy::CollateralPolicyClient::new(env, &ctx.collateral_policy_id);
@@ -438,7 +489,20 @@ fn build_real_bundle(ctx: &PhaseFiveContext, env: &Env) -> RuntimeBatchBundle {
         &provisional_bundle.settlement_commitment,
         &summary.required_margin,
     );
-    generate_batch_netting_bundle(env, &statement_hash, fixture_options)
+    generate_batch_netting_bundle(env, &statement_hash, fixture_options, &namespace)
+}
+
+fn fund_and_approve_asset(
+    env: &Env,
+    asset: &Address,
+    owner: &Address,
+    spender: &Address,
+    mint_amount: i128,
+    approval_amount: i128,
+) {
+    let token = StellarAssetClient::new(env, asset);
+    token.mint(owner, &mint_amount);
+    token.approve(owner, spender, &approval_amount, &1_000u32);
 }
 
 #[test]
@@ -539,7 +603,12 @@ fn settles_real_batch_netting_proof() {
         700,
     );
 
-    let order_pool = OrderCommitPoolClient::new(&env, &ctx.order_pool_id);
+    let order_pool = ExternalOrderCommitPoolClient::new(&env, &ctx.order_pool_id);
+    order_pool.set_instrument_asset(
+        &ctx.operator,
+        &bundle.instrument_id_hash,
+        &ctx.instrument_asset,
+    );
     let trade_a_bid_order = order_pool.commit_order(
         &ctx.participant_a,
         &ctx.participant_a_id_hash,
@@ -734,4 +803,475 @@ fn rejects_duplicate_execution_ids() {
         result,
         Err(Ok(SettlementNettingEngineError::DuplicateExecution))
     ));
+}
+
+#[test]
+fn settles_execution_dvp_with_real_asset_transfers() {
+    let env = Env::default();
+    let ctx = setup_phase_five(&env);
+    let order_pool = ExternalOrderCommitPoolClient::new(&env, &ctx.order_pool_id);
+    let instrument_id_hash = hash(&env, 110);
+    let batch_id = hash(&env, 111);
+    order_pool.set_instrument_asset(&ctx.operator, &instrument_id_hash, &ctx.instrument_asset);
+
+    let bid_collateral_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_a,
+        &ctx.participant_a_id_hash,
+        &ctx.collateral_verifier_id,
+        &ProofType::CollateralSufficiency,
+        &hash(&env, 112),
+        113,
+        900,
+    );
+    let bid_encumbrance_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_a,
+        &ctx.participant_a_id_hash,
+        &ctx.encumbrance_verifier_id,
+        &ProofType::UnencumberedLot,
+        &hash(&env, 114),
+        115,
+        900,
+    );
+    let ask_collateral_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_b,
+        &ctx.participant_b_id_hash,
+        &ctx.collateral_verifier_id,
+        &ProofType::CollateralSufficiency,
+        &hash(&env, 116),
+        117,
+        900,
+    );
+    let ask_encumbrance_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_b,
+        &ctx.participant_b_id_hash,
+        &ctx.encumbrance_verifier_id,
+        &ProofType::UnencumberedLot,
+        &hash(&env, 118),
+        119,
+        900,
+    );
+    let execution_commitment = hash(&env, 126);
+    let match_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.matcher,
+        &ctx.matcher_participant_id_hash,
+        &ctx.private_match_verifier_id,
+        &ProofType::PrivateMatch,
+        &execution_commitment,
+        121,
+        900,
+    );
+
+    let bid_order = order_pool.commit_order(
+        &ctx.participant_a,
+        &ctx.participant_a_id_hash,
+        &instrument_id_hash,
+        &batch_id,
+        &OrderSide::Bid,
+        &hash(&env, 122),
+        &bid_collateral_receipt.receipt_id,
+        &bid_encumbrance_receipt.receipt_id,
+        &hash(&env, 123),
+        &700u32,
+    );
+    let ask_order = order_pool.commit_order(
+        &ctx.participant_b,
+        &ctx.participant_b_id_hash,
+        &instrument_id_hash,
+        &batch_id,
+        &OrderSide::Ask,
+        &hash(&env, 124),
+        &ask_collateral_receipt.receipt_id,
+        &ask_encumbrance_receipt.receipt_id,
+        &hash(&env, 125),
+        &700u32,
+    );
+    let execution = order_pool.match_orders(
+        &ctx.matcher,
+        &ctx.private_match_verifier_id,
+        &match_receipt.receipt_id,
+        &bid_order.order_id,
+        &ask_order.order_id,
+        &execution_commitment,
+        &hash(&env, 127),
+        &hash(&env, 128),
+        &hash(&env, 129),
+    );
+
+    let settlement_engine = SettlementNettingEngineClient::new(&env, &ctx.settlement_engine_id);
+    fund_and_approve_asset(
+        &env,
+        &ctx.instrument_asset,
+        &ctx.participant_b,
+        &ctx.settlement_engine_id,
+        1_000,
+        50,
+    );
+    fund_and_approve_asset(
+        &env,
+        &ctx.cash_asset,
+        &ctx.participant_a,
+        &ctx.settlement_engine_id,
+        10_000,
+        700,
+    );
+
+    let instrument_token = StellarAssetClient::new(&env, &ctx.instrument_asset);
+    let cash_token = StellarAssetClient::new(&env, &ctx.cash_asset);
+    let buyer_instrument_before = instrument_token.balance(&ctx.participant_a);
+    let seller_instrument_before = instrument_token.balance(&ctx.participant_b);
+    let buyer_cash_before = cash_token.balance(&ctx.participant_a);
+    let seller_cash_before = cash_token.balance(&ctx.participant_b);
+
+    let settled = settlement_engine.settle_execution_dvp(
+        &ctx.settler,
+        &execution.execution_id,
+        &hash(&env, 130),
+        &ctx.cash_asset,
+        &50i128,
+        &700i128,
+    );
+
+    assert_eq!(settled.execution_id, execution.execution_id);
+    assert_eq!(settled.instrument_asset, ctx.instrument_asset);
+    assert_eq!(settled.cash_asset, ctx.cash_asset);
+    assert_eq!(settled.asset_amount, 50);
+    assert_eq!(settled.cash_amount, 700);
+    assert_eq!(
+        instrument_token.balance(&ctx.participant_a),
+        buyer_instrument_before + 50
+    );
+    assert_eq!(
+        instrument_token.balance(&ctx.participant_b),
+        seller_instrument_before - 50
+    );
+    assert_eq!(cash_token.balance(&ctx.participant_a), buyer_cash_before - 700);
+    assert_eq!(cash_token.balance(&ctx.participant_b), seller_cash_before + 700);
+    assert!(settlement_engine.is_execution_settled(&execution.execution_id));
+    let stored = settlement_engine.get_execution_settlement(&execution.execution_id);
+    assert_eq!(stored.settlement_id, settled.settlement_id);
+}
+
+#[test]
+fn settles_batch_with_real_asset_transfers_in_two_steps() {
+    let env = Env::default();
+    let ctx = setup_phase_five(&env);
+    let batch_netting_verifier_id = hash(&env, 131);
+    let collateral_policy =
+        collateral_policy::CollateralPolicyClient::new(&env, &ctx.collateral_policy_id);
+    collateral_policy.set_accepted_verifier(
+        &ctx.operator,
+        &ProofType::BatchNetting,
+        &batch_netting_verifier_id,
+        &true,
+    );
+
+    let bundle = build_real_bundle(&ctx, &env);
+    let verifier_contract = env.register(
+        BatchNettingVerifier,
+        BatchNettingVerifierArgs::__constructor(&bundle.verification_key),
+    );
+    let proof_gateway = proof_gateway::ProofGatewayClient::new(&env, &ctx.proof_gateway_id);
+    proof_gateway.set_verifier_route(
+        &ctx.operator,
+        &batch_netting_verifier_id,
+        &verifier_contract,
+        &true,
+    );
+
+    let order_pool = ExternalOrderCommitPoolClient::new(&env, &ctx.order_pool_id);
+    order_pool.set_instrument_asset(
+        &ctx.operator,
+        &bundle.instrument_id_hash,
+        &ctx.instrument_asset,
+    );
+
+    let a_collateral_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_a,
+        &ctx.participant_a_id_hash,
+        &ctx.collateral_verifier_id,
+        &ProofType::CollateralSufficiency,
+        &hash(&env, 132),
+        133,
+        900,
+    );
+    let a_encumbrance_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_a,
+        &ctx.participant_a_id_hash,
+        &ctx.encumbrance_verifier_id,
+        &ProofType::UnencumberedLot,
+        &hash(&env, 134),
+        135,
+        900,
+    );
+    let b_collateral_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_b,
+        &ctx.participant_b_id_hash,
+        &ctx.collateral_verifier_id,
+        &ProofType::CollateralSufficiency,
+        &hash(&env, 136),
+        137,
+        900,
+    );
+    let b_encumbrance_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_b,
+        &ctx.participant_b_id_hash,
+        &ctx.encumbrance_verifier_id,
+        &ProofType::UnencumberedLot,
+        &hash(&env, 138),
+        139,
+        900,
+    );
+    let c_collateral_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_c,
+        &ctx.participant_c_id_hash,
+        &ctx.collateral_verifier_id,
+        &ProofType::CollateralSufficiency,
+        &hash(&env, 140),
+        141,
+        900,
+    );
+    let c_encumbrance_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.participant_c,
+        &ctx.participant_c_id_hash,
+        &ctx.encumbrance_verifier_id,
+        &ProofType::UnencumberedLot,
+        &hash(&env, 142),
+        143,
+        900,
+    );
+
+    let trade_a_bid_order = order_pool.commit_order(
+        &ctx.participant_a,
+        &ctx.participant_a_id_hash,
+        &bundle.instrument_id_hash,
+        &bundle.batch_id,
+        &OrderSide::Bid,
+        &bundle.a_bid_order_commitment,
+        &a_collateral_receipt.receipt_id,
+        &a_encumbrance_receipt.receipt_id,
+        &hash(&env, 144),
+        &700u32,
+    );
+    let trade_a_ask_order = order_pool.commit_order(
+        &ctx.participant_b,
+        &ctx.participant_b_id_hash,
+        &bundle.instrument_id_hash,
+        &bundle.batch_id,
+        &OrderSide::Ask,
+        &bundle.a_ask_order_commitment,
+        &b_collateral_receipt.receipt_id,
+        &b_encumbrance_receipt.receipt_id,
+        &hash(&env, 145),
+        &900u32,
+    );
+    let trade_b_bid_order = order_pool.commit_order(
+        &ctx.participant_c,
+        &ctx.participant_c_id_hash,
+        &bundle.instrument_id_hash,
+        &bundle.batch_id,
+        &OrderSide::Bid,
+        &bundle.b_bid_order_commitment,
+        &c_collateral_receipt.receipt_id,
+        &c_encumbrance_receipt.receipt_id,
+        &hash(&env, 146),
+        &900u32,
+    );
+    let trade_b_ask_order = order_pool.commit_order(
+        &ctx.participant_a,
+        &ctx.participant_a_id_hash,
+        &bundle.instrument_id_hash,
+        &bundle.batch_id,
+        &OrderSide::Ask,
+        &bundle.b_ask_order_commitment,
+        &a_collateral_receipt.receipt_id,
+        &a_encumbrance_receipt.receipt_id,
+        &hash(&env, 147),
+        &900u32,
+    );
+
+    let trade_a_match_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.matcher,
+        &ctx.matcher_participant_id_hash,
+        &ctx.private_match_verifier_id,
+        &ProofType::PrivateMatch,
+        &bundle.execution_a_commitment,
+        148,
+        900,
+    );
+    let trade_b_match_receipt = create_proof_receipt(
+        &env,
+        &ctx.collateral_policy_id,
+        &ctx.proof_gateway_id,
+        &ctx.matcher,
+        &ctx.matcher_participant_id_hash,
+        &ctx.private_match_verifier_id,
+        &ProofType::PrivateMatch,
+        &bundle.execution_b_commitment,
+        149,
+        900,
+    );
+
+    let execution_a = order_pool.match_orders(
+        &ctx.matcher,
+        &ctx.private_match_verifier_id,
+        &trade_a_match_receipt.receipt_id,
+        &trade_a_bid_order.order_id,
+        &trade_a_ask_order.order_id,
+        &bundle.execution_a_commitment,
+        &hash(&env, 150),
+        &hash(&env, 151),
+        &hash(&env, 152),
+    );
+    let execution_b = order_pool.match_orders(
+        &ctx.matcher,
+        &ctx.private_match_verifier_id,
+        &trade_b_match_receipt.receipt_id,
+        &trade_b_bid_order.order_id,
+        &trade_b_ask_order.order_id,
+        &bundle.execution_b_commitment,
+        &hash(&env, 153),
+        &hash(&env, 154),
+        &hash(&env, 155),
+    );
+
+    let summary = collateral_policy.get_policy_summary();
+    let settlement_nonce = hash(&env, 91);
+    let settlement_receipt = proof_gateway.verify_and_record(
+        &ctx.settler,
+        &ctx.settler_participant_id_hash,
+        &ProofType::BatchNetting,
+        &batch_netting_verifier_id,
+        &bundle.settlement_commitment,
+        &settlement_nonce,
+        &700u32,
+        &summary.policy_version,
+        &summary.current_epoch,
+        &summary.required_margin,
+        &bundle.proof_payload,
+    );
+
+    let settlement_engine = SettlementNettingEngineClient::new(&env, &ctx.settlement_engine_id);
+    fund_and_approve_asset(
+        &env,
+        &ctx.instrument_asset,
+        &ctx.participant_b,
+        &ctx.settlement_engine_id,
+        1_000,
+        60,
+    );
+    fund_and_approve_asset(
+        &env,
+        &ctx.instrument_asset,
+        &ctx.participant_a,
+        &ctx.settlement_engine_id,
+        1_000,
+        40,
+    );
+    fund_and_approve_asset(
+        &env,
+        &ctx.cash_asset,
+        &ctx.participant_a,
+        &ctx.settlement_engine_id,
+        10_000,
+        900,
+    );
+    fund_and_approve_asset(
+        &env,
+        &ctx.cash_asset,
+        &ctx.participant_c,
+        &ctx.settlement_engine_id,
+        10_000,
+        500,
+    );
+
+    let instrument_token = StellarAssetClient::new(&env, &ctx.instrument_asset);
+    let cash_token = StellarAssetClient::new(&env, &ctx.cash_asset);
+    let a_instrument_before = instrument_token.balance(&ctx.participant_a);
+    let b_instrument_before = instrument_token.balance(&ctx.participant_b);
+    let c_instrument_before = instrument_token.balance(&ctx.participant_c);
+    let a_cash_before = cash_token.balance(&ctx.participant_a);
+    let b_cash_before = cash_token.balance(&ctx.participant_b);
+    let c_cash_before = cash_token.balance(&ctx.participant_c);
+
+    let settled = settlement_engine.settle_batch(
+        &ctx.settler,
+        &batch_netting_verifier_id,
+        &settlement_receipt.receipt_id,
+        &bundle.settlement_commitment,
+        &bundle.net_vector_hash,
+        &execution_a.execution_id,
+        &execution_b.execution_id,
+        &bundle.trade_nullifier_a,
+        &bundle.trade_nullifier_b,
+    );
+    let _transfer_record = settlement_engine.apply_batch_transfers(
+        &ctx.settler,
+        &settled.settlement_id,
+        &ctx.cash_asset,
+        &60i128,
+        &900i128,
+        &40i128,
+        &500i128,
+    );
+
+    assert_eq!(
+        instrument_token.balance(&ctx.participant_a),
+        a_instrument_before + 60 - 40
+    );
+    assert_eq!(
+        instrument_token.balance(&ctx.participant_b),
+        b_instrument_before - 60
+    );
+    assert_eq!(
+        instrument_token.balance(&ctx.participant_c),
+        c_instrument_before + 40
+    );
+    assert_eq!(cash_token.balance(&ctx.participant_a), a_cash_before - 900 + 500);
+    assert_eq!(cash_token.balance(&ctx.participant_b), b_cash_before + 900);
+    assert_eq!(cash_token.balance(&ctx.participant_c), c_cash_before - 500);
+
+    let stored_batch = settlement_engine.get_batch(&settled.settlement_id);
+    assert_eq!(stored_batch.settlement_id, settled.settlement_id);
+    let transfer_record = settlement_engine.get_batch_transfer(&settled.settlement_id);
+    assert_eq!(transfer_record.instrument_asset, ctx.instrument_asset);
+    assert_eq!(transfer_record.cash_asset, ctx.cash_asset);
+    assert_eq!(transfer_record.execution_a_asset_amount, 60);
+    assert_eq!(transfer_record.execution_b_asset_amount, 40);
+    assert_eq!(transfer_record.settlement_id, settled.settlement_id);
 }

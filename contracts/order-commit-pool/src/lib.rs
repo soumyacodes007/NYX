@@ -8,6 +8,7 @@ use zkdtcc_types::{OrderCommitmentRecord, OrderSide, OrderStatus, PrivateMatchEx
 
 #[contractclient(name = "ParticipantRegistryClient")]
 pub trait ParticipantRegistryContract {
+    fn is_participant_trade_eligible(env: Env, participant_id_hash: BytesN<32>, asset: Address) -> bool;
     fn wallet_owner(env: Env, wallet: Address) -> BytesN<32>;
 }
 
@@ -21,6 +22,7 @@ pub trait ProofGatewayContract {
 #[contractclient(name = "ComplianceControlClient")]
 pub trait ComplianceControlContract {
     fn is_globally_paused(env: Env) -> bool;
+    fn is_asset_paused(env: Env, asset: Address) -> bool;
     fn is_participant_frozen(env: Env, participant_id_hash: BytesN<32>) -> bool;
 }
 
@@ -40,6 +42,7 @@ enum DataKey {
     ParticipantRegistry,
     ProofGateway,
     ComplianceControl,
+    InstrumentAsset(BytesN<32>),
     Order(BytesN<32>),
     CancelNullifier(BytesN<32>),
     ExecutionNullifier(BytesN<32>),
@@ -76,6 +79,9 @@ pub enum OrderCommitPoolError {
     ProtocolPaused = 24,
     ParticipantFrozen = 25,
     ProofReceiptNotUsable = 26,
+    InstrumentAssetNotFound = 27,
+    AssetPaused = 28,
+    ParticipantIneligible = 29,
 }
 
 #[contractevent(topics = ["operator_set"])]
@@ -88,6 +94,12 @@ pub struct OperatorSetEvent {
 pub struct MatcherSetEvent {
     pub matcher: Address,
     pub enabled: bool,
+}
+
+#[contractevent(topics = ["instrument_asset_set"])]
+pub struct InstrumentAssetSetEvent {
+    pub instrument_id_hash: BytesN<32>,
+    pub asset: Address,
 }
 
 #[contractevent(topics = ["order_committed"])]
@@ -166,6 +178,25 @@ impl OrderCommitPool {
         Ok(())
     }
 
+    pub fn set_instrument_asset(
+        env: Env,
+        operator: Address,
+        instrument_id_hash: BytesN<32>,
+        asset: Address,
+    ) -> Result<(), OrderCommitPoolError> {
+        require_operator_auth(&env, &operator)?;
+        let key = DataKey::InstrumentAsset(instrument_id_hash.clone());
+        env.storage().persistent().set(&key, &asset);
+        bump_persistent(&env, &key);
+        bump_instance(&env);
+        InstrumentAssetSetEvent {
+            instrument_id_hash,
+            asset,
+        }
+        .publish(&env);
+        Ok(())
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub fn build_order_id(
         env: Env,
@@ -209,6 +240,9 @@ impl OrderCommitPool {
         ensure_protocol_live(&env)?;
         ensure_participant_binding(&env, &submitter, &participant_id_hash)?;
         ensure_participant_not_frozen(&env, &participant_id_hash)?;
+        let asset = load_instrument_asset(&env, &instrument_id_hash)?;
+        ensure_asset_live(&env, &asset)?;
+        ensure_participant_trade_eligible(&env, &participant_id_hash, &asset)?;
         if env.ledger().sequence() > expiry_ledger {
             return Err(OrderCommitPoolError::InvalidExpiry);
         }
@@ -369,6 +403,10 @@ impl OrderCommitPool {
         if bid_order.instrument_id_hash != ask_order.instrument_id_hash {
             return Err(OrderCommitPoolError::InstrumentMismatch);
         }
+        let asset = load_instrument_asset(&env, &bid_order.instrument_id_hash)?;
+        ensure_asset_live(&env, &asset)?;
+        ensure_participant_trade_eligible(&env, &bid_order.participant_id_hash, &asset)?;
+        ensure_participant_trade_eligible(&env, &ask_order.participant_id_hash, &asset)?;
         if bid_order.participant_id_hash == ask_order.participant_id_hash {
             return Err(OrderCommitPoolError::SelfTrade);
         }
@@ -493,6 +531,23 @@ impl OrderCommitPool {
             .persistent()
             .has(&DataKey::Execution(execution_id))
     }
+
+    pub fn get_instrument_asset(
+        env: Env,
+        instrument_id_hash: BytesN<32>,
+    ) -> Result<Address, OrderCommitPoolError> {
+        load_instrument_asset(&env, &instrument_id_hash)
+    }
+
+    pub fn has_instrument_asset(env: Env, instrument_id_hash: BytesN<32>) -> bool {
+        let key = DataKey::InstrumentAsset(instrument_id_hash);
+        let exists = env.storage().persistent().has(&key);
+        if exists {
+            bump_persistent(&env, &key);
+        }
+        bump_instance(&env);
+        exists
+    }
 }
 
 fn ensure_participant_binding(
@@ -574,6 +629,15 @@ fn ensure_protocol_live(env: &Env) -> Result<(), OrderCommitPoolError> {
     Ok(())
 }
 
+fn ensure_asset_live(env: &Env, asset: &Address) -> Result<(), OrderCommitPoolError> {
+    let compliance_control: Address = env.storage().instance().get(&DataKey::ComplianceControl).unwrap();
+    let compliance = ComplianceControlClient::new(env, &compliance_control);
+    if compliance.is_asset_paused(asset) {
+        return Err(OrderCommitPoolError::AssetPaused);
+    }
+    Ok(())
+}
+
 fn ensure_participant_not_frozen(
     env: &Env,
     participant_id_hash: &BytesN<32>,
@@ -584,6 +648,33 @@ fn ensure_participant_not_frozen(
         return Err(OrderCommitPoolError::ParticipantFrozen);
     }
     Ok(())
+}
+
+fn ensure_participant_trade_eligible(
+    env: &Env,
+    participant_id_hash: &BytesN<32>,
+    asset: &Address,
+) -> Result<(), OrderCommitPoolError> {
+    let registry_id: Address = env.storage().instance().get(&DataKey::ParticipantRegistry).unwrap();
+    let registry = ParticipantRegistryClient::new(env, &registry_id);
+    if !registry.is_participant_trade_eligible(participant_id_hash, asset) {
+        return Err(OrderCommitPoolError::ParticipantIneligible);
+    }
+    Ok(())
+}
+
+fn load_instrument_asset(
+    env: &Env,
+    instrument_id_hash: &BytesN<32>,
+) -> Result<Address, OrderCommitPoolError> {
+    let key = DataKey::InstrumentAsset(instrument_id_hash.clone());
+    let asset = env
+        .storage()
+        .persistent()
+        .get(&key)
+        .ok_or(OrderCommitPoolError::InstrumentAssetNotFound)?;
+    bump_persistent(env, &key);
+    Ok(asset)
 }
 
 fn load_order(env: &Env, order_id: &BytesN<32>) -> Result<OrderCommitmentRecord, OrderCommitPoolError> {

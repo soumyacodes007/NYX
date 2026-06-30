@@ -761,6 +761,31 @@
     ],
     [
       [
+        "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
+        {
+          "function": {
+            "contract_fn": {
+              "contract_address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4BV5",
+              "function_name": "set_instrument_asset",
+              "args": [
+                {
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4"
+                },
+                {
+                  "bytes": "3033444455556666777788889999aaaabbbbccccddddeeeeffff000011112222"
+                },
+                {
+                  "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM"
+                }
+              ]
+            }
+          },
+          "sub_invocations": []
+        }
+      ]
+    ],
+    [
+      [
         "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M",
         {
           "function": {
@@ -891,7 +916,7 @@
                   "i128": "1000000"
                 },
                 {
-                  "bytes": "0275cc40f881bdc5e4bccea9e8e7a348468b3fbf86c064ac1e17a07e42190f2118f2e2a77d2c3f4f3c55372e0be6154e45e209b8ac1b971de1cb455d3ee6018f02471bfeab87e9603dbd962d64c42bf0a5bcdf214a650541819707ab70d42a992403f42a1ebe322f184b04fa5fda8e443a43a944513d3009878506e213efe43a0af6c4e4508e297e6857c70c7a8817ac7075bb7ef499b08079416e4bd81a73f804b83521222fa4f4e05fde294cefedeeed37d3c587cee95344efda1f1e54d2e127bc84ac120e81d0f12264956dc0570408bba825f9bd3eea3da9c69c9b4a2ef0245a2d685c625eae82e252dee0d187a11aaa04c84e787266e2605558bdd06d8a00000006145e723ec518c29c7473c6e571dfcf52119902284587bef0fc6084ace04ad79e00e3c8e2a9c23092d4e42e3cf1cfcffbcc0d8728626cc571bab8e480626091343033444455556666777788889999aaaabbbbccccddddeeeeffff0000111122222d2fdb273b926014f0cb270075d8635ed3dba31806be0fe93f1eee94dde2111b000000000000000000000000000000002ac907296d5929e2847bd9f834d09e9e00000000000000000000000000000000deea29a8febffd667df8446b4d62d518"
+                  "bytes": "0f9873812956d38fe0ff4015bd3cc30a0374fbce7853f93cc13b5ecf519546210c5f379f848836f553173a6347f6628469e7c184867be48e735d8a074382b50112c36f191e52e27f8b916ea5488ab613515004c4333c024e61fe4805cee83d111b439abdf344f5693a34fc7febd4fda00d463268238d9e9ca3e55fcfd328d39c1c085222ab0bad851fd1a9485e5ed23e1106dd024355f26077a908bd9a234d7e221955faad0ab8c37a1bed62d632fd6071b818ff063bd30eff9c7e5a796dda810f262c84663cee21601909efbb9f6f5bb85050dbb9722d4b3b9f557432eb1daf11c8d605c5037b1d93586d4cfe2801a68e204ca18ea26248ea21ef09c30426ec00000006145e723ec518c29c7473c6e571dfcf52119902284587bef0fc6084ace04ad79e00e3c8e2a9c23092d4e42e3cf1cfcffbcc0d8728626cc571bab8e480626091343033444455556666777788889999aaaabbbbccccddddeeeeffff0000111122222d2fdb273b926014f0cb270075d8635ed3dba31806be0fe93f1eee94dde2111b000000000000000000000000000000002ac907296d5929e2847bd9f834d09e9e00000000000000000000000000000000deea29a8febffd667df8446b4d62d518"
                 }
               ]
             }
@@ -1247,6 +1272,26 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
               "key": {
                 "ledger_key_nonce": {
+                  "nonce": "5012940724606903311"
+                }
+              },
+              "durability": "temporary",
+              "val": "void"
+            }
+          },
+          "ext": "v0"
+        },
+        "live_until": 6311999
+      },
+      {
+        "entry": {
+          "last_modified_ledger_seq": 0,
+          "data": {
+            "contract_data": {
+              "ext": "v0",
+              "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFCT4",
+              "key": {
+                "ledger_key_nonce": {
                   "nonce": "5541220902715666415"
                 }
               },
@@ -1347,7 +1392,7 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M",
               "key": {
                 "ledger_key_nonce": {
-                  "nonce": "5012940724606903311"
+                  "nonce": "6391496069076573377"
                 }
               },
               "durability": "temporary",
@@ -1367,7 +1412,7 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHK3M",
               "key": {
                 "ledger_key_nonce": {
-                  "nonce": "6391496069076573377"
+                  "nonce": "8077058277077262192"
                 }
               },
               "durability": "temporary",
@@ -1407,7 +1452,7 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4",
               "key": {
                 "ledger_key_nonce": {
-                  "nonce": "4571470874178140630"
+                  "nonce": "3736142932239307322"
                 }
               },
               "durability": "temporary",
@@ -1427,7 +1472,7 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAITA4",
               "key": {
                 "ledger_key_nonce": {
-                  "nonce": "8077058277077262192"
+                  "nonce": "4571470874178140630"
                 }
               },
               "durability": "temporary",
@@ -1447,7 +1492,7 @@
               "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAK3IM",
               "key": {
                 "ledger_key_nonce": {
-                  "nonce": "3736142932239307322"
+                  "nonce": "2891388370666955040"
                 }
               },
               "durability": "temporary",
@@ -3920,6 +3965,33 @@
               "key": {
                 "vec": [
                   {
+                    "symbol": "InstrumentAsset"
+                  },
+                  {
+                    "bytes": "3033444455556666777788889999aaaabbbbccccddddeeeeffff000011112222"
+                  }
+                ]
+              },
+              "durability": "persistent",
+              "val": {
+                "address": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOLZM"
+              }
+            }
+          },
+          "ext": "v0"
+        },
+        "live_until": 518400
+      },
+      {
+        "entry": {
+          "last_modified_ledger_seq": 0,
+          "data": {
+            "contract_data": {
+              "ext": "v0",
+              "contract": "CAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4BV5",
+              "key": {
+                "vec": [
+                  {
                     "symbol": "Matcher"
                   },
                   {
@@ -4356,7 +4428,7 @@
                         ]
                       },
                       "val": {
-                        "bytes": "2d842797e75673dbf57004e5325ea26500735c97cb34e652ba6f9671932b72b725647c86bd4b61c12e8c8e042ef37aebb8d7fdc2501ea10524bcbc73f037fbe52310697f2adb35d85b7f2a10ba14b53ced520f4e9e1a61b7d1e8fd24a7dc31e8046728abde42b3107c6af28a741e8666c7b529181af229849493cf825f4da2511af7e7dea1f49cfb338f30398b6628cc0b5c587302ec635d54d0c8a243a6fb471ad5010786ab3f91020521420f7beadc9886a8175f624f3f73ef25889712e150198e9393920d483a7260bfb731fb5d25f1aa493335a9e71297e485b7aef312c21800deef121f1e76426a00665e5c4479674322d4f75edadd46debd5cd992f6ed090689d0585ff075ec9e99ad690c3395bc4b313370b38ef355acdadcd122975b12c85ea5db8c6deb4aab71808dcb408fe3d1e7690c43d37b4ce6cc0166fa7daa03cb23857c4bfc9c720d11f0b54ee9a28e48d3ec634d3f0142a681fd60d9471b07038532dd4e001278557ede8b8af38a53045567284c024ab62229806de60b160a749b547ecf703f2b5df5192955539ff20b643f70165af7aa109e6004c61b3703551df17f04fbd823578d7f988c9e69c53ff140e44352af6e66edf76b6c265f00000007123322363c673abd9d631a4adf4e64f6d527d7ad48d5416b00628295af0222642478f3e167c28c56cddbdff17991813ad8a178f6277b744fde16ef1c848b11211fe85704b3cd5a2318e674c2378bb400b4e8fb193b31593c1eeaffaa204c0ccb16b98603a30f45ed3225d880f9f9c8603b499570c695172970c2ee12b110346604955ce838048bc7990e7e27a5f83f06b73601c6d80740dc57807f44e75765de29714f60af9caf058e4a5253e2ed36dfb2304ca100928f7081ef94c793e4925105adf92a12b233b1135c2cc5026e456400dbf9c9087c67a48ecd1b20b41ded1004a74c636cda1cb7fe143681747ce836f6f9ed29da73f0f3fbae1f7781d36e3a15c60c31dc6bf746473e2628dc8ccf9651700827112540a278fa25e2921b7bbf2464e71e42268fb7f35c20baa930096ddc10fdda1f4e397b97512373bb05a793181373e7cfc13ee9ac3a7ab54afb0224967826a6a1809bb34fc9b88f20d153f62e978db3693fd21aa1491c00c1bc8b59c655410e9a6b00e7abf0a54bb2151e3b14106ac2dd923f96f349a726350b99d012071e63c2e8fab2e33c6f4d25e4050125c58430a70c35082df8d824cd4c954457e257dddd3089be1a62356afec632da"
+                        "bytes": "11a79af388038b8dc8b83314000e3e87b0a62b0532a5dd769593a0c01f85c56109c32a7ba04836f44ae13bb1eba1ad0e5ff21e35698d50e55068264787c8900222676af655b1fb2a200ddc59d1455b91355ba1ebed78ac77443741f52c2e473e0687d8dc03a5ccb3013e4928d131df60edb077bef6b26617feb5e49364f4a18719e444496a4463530b3d03bbb0448cd7cb316dd3acabc5d6052203c13369486728d0aa13f431e63f461124e319fc74f58a5e2c8f0f6cc8fabc034232277f9b2f198e9393920d483a7260bfb731fb5d25f1aa493335a9e71297e485b7aef312c21800deef121f1e76426a00665e5c4479674322d4f75edadd46debd5cd992f6ed090689d0585ff075ec9e99ad690c3395bc4b313370b38ef355acdadcd122975b12c85ea5db8c6deb4aab71808dcb408fe3d1e7690c43d37b4ce6cc0166fa7daa2c5beba32bd936ceb7684348d7ee83009f963938561b1c9bd25319338c60701b1c87f8cab527b665be6bb3f55ac756689b249a44d4f533b58444d9f2060b999a0ecf2dabeaf191434e1be4edc19acba38b909076bf8730056ac85567a557163326f85ac1b230372ef3ae5f28fc892ae7cc4846a1a9e3f28dcb9703d2d50ce3690000000702295111d433c474ecebc4542b32fcf43048925d438d8fc2ac886015fd14789f0368c6b472fb5d1b4a2ed49528c3ca44bf81ec40cbdc1950951ac12bde19a06e1d3ec90f2ff8e212833ab94a63298fd79a0d7aef4d3ed38586ff6e5d281562c22d76ee39143282a1bb2f7192d8d1c72422cc5c6713a9304469883845db3f7d142ed17b70667e3aaa55e861132ee6dffd32664f4e8703fb9ef8fc7436e9ad082605f308cae566aaa6209d03abdb8c011fd57a5fbbd16717c84b04ae9d8a48f2d8200a35d98db16f697356d0d87a72e2a20fb9714a4fe407237c55a6106f3ad6d323075871be9e6f907af636bef1fe71d257492c2b6c09606be5545ca4bfdb06b20c123f35db62067259c5ece88445852ca5ef14b0a5f416caec22895db7f426cb17d623cba631f27113a3994d5583866f2be49f2bdabdbb8bbe9604863ea845ca2c893ff6965c60b2e7fc4cff2df4b0aa6fe03c33c54424fce98db8e9e2d4635e0b8e758ea9938d5044626e486ccf78fc6ea655a034b24e93d7239fc5571fd4140360128891366ac7b4f2589bff7595861ef8c946bd055adc9b42c81a4960066f03e864f75a53d9116d3408e52c861bff22b289904cfd4bd70a7745cd5c1ef856"
                       }
                     }
                   ]

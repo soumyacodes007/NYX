@@ -302,6 +302,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "collateral-sufficiency-verifier"
+version = "0.1.0"
+dependencies = [
+ "serde_json",
+ "soroban-sdk",
+]
+
+[[package]]
 name = "compliance-control"
 version = "0.1.0"
 dependencies = [

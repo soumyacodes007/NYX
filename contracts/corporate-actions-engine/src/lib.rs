@@ -2,7 +2,7 @@
 
 use soroban_sdk::{
     contract, contractclient, contracterror, contractevent, contractimpl, contracttype, Address,
-    Bytes, BytesN, Env,
+    token::TokenClient, Bytes, BytesN, Env,
 };
 use zkdtcc_types::{
     CorporateActionClaimRecord, CorporateActionClaimStatus, CorporateActionEventRecord,
@@ -13,6 +13,7 @@ use zkdtcc_types::{
 #[contractclient(name = "AssetRegistryClient")]
 pub trait AssetRegistryContract {
     fn is_asset_corp_actions_enabled(env: Env, asset: Address) -> bool;
+    fn is_asset_settlement_enabled(env: Env, asset: Address) -> bool;
 }
 
 #[contractclient(name = "ComplianceControlClient")]
@@ -25,6 +26,7 @@ pub trait ComplianceControlContract {
 #[contractclient(name = "ParticipantRegistryClient")]
 pub trait ParticipantRegistryContract {
     fn is_wallet_registered(env: Env, wallet: Address) -> bool;
+    fn is_participant_trade_eligible(env: Env, participant_id_hash: BytesN<32>, asset: Address) -> bool;
     fn wallet_owner(env: Env, wallet: Address) -> BytesN<32>;
     fn get_participant(env: Env, participant_id_hash: BytesN<32>) -> zkdtcc_types::ParticipantRecord;
 }
@@ -86,6 +88,8 @@ pub enum CorporateActionsEngineError {
     ParticipantFrozen = 23,
     AssetPaused = 24,
     ClaimNotFound = 25,
+    InvalidClaimStatus = 26,
+    ParticipantIneligible = 27,
 }
 
 #[contractevent(topics = ["operator_set"])]
@@ -112,6 +116,13 @@ pub struct ClaimRecordedEvent {
     pub claim_id: BytesN<32>,
     pub event_id: BytesN<32>,
     pub claim_nullifier: BytesN<32>,
+}
+
+#[contractevent(topics = ["claim_paid_onchain"])]
+pub struct ClaimPaidOnchainEvent {
+    pub claim_id: BytesN<32>,
+    pub payment_batch_id: BytesN<32>,
+    pub payout_source: Address,
 }
 
 #[contract]
@@ -287,6 +298,7 @@ impl CorporateActionsEngine {
         if event.status != CorporateActionStatus::Active {
             return Err(CorporateActionsEngineError::EventNotActive);
         }
+        ensure_participant_trade_eligible(&env, &participant_id_hash, &event.asset)?;
         let ledger = env.ledger().sequence();
         if ledger < event.claim_start_ledger || ledger > event.claim_end_ledger {
             return Err(CorporateActionsEngineError::ClaimWindowClosed);
@@ -378,6 +390,44 @@ impl CorporateActionsEngine {
         claim.payment_batch_id = payment_batch_id;
         save_claim(&env, &claim);
         bump_instance(&env);
+        Ok(claim)
+    }
+
+    pub fn mark_claim_paid_with_transfer(
+        env: Env,
+        operator: Address,
+        claim_id: BytesN<32>,
+        payment_batch_id: BytesN<32>,
+        payout_source: Address,
+    ) -> Result<CorporateActionClaimRecord, CorporateActionsEngineError> {
+        require_operator_auth(&env, &operator)?;
+        let mut claim = load_claim(&env, &claim_id)?;
+        if claim.claim_status != CorporateActionClaimStatus::Recorded {
+            return Err(CorporateActionsEngineError::InvalidClaimStatus);
+        }
+
+        let event = load_event(&env, &claim.event_id)?;
+        ensure_assets_live(&env, &event.asset, &event.payout_asset)?;
+        ensure_participant_trade_eligible(&env, &claim.participant_id_hash, &event.asset)?;
+
+        let spender = env.current_contract_address();
+        TokenClient::new(&env, &event.payout_asset).transfer_from(
+            &spender,
+            &payout_source,
+            &claim.claimant,
+            &claim.disclosed_claim_amount,
+        );
+
+        claim.claim_status = CorporateActionClaimStatus::Paid;
+        claim.payment_batch_id = payment_batch_id.clone();
+        save_claim(&env, &claim);
+        bump_instance(&env);
+        ClaimPaidOnchainEvent {
+            claim_id,
+            payment_batch_id,
+            payout_source,
+        }
+        .publish(&env);
         Ok(claim)
     }
 
@@ -623,10 +673,25 @@ fn ensure_assets_live(
     }
     let asset_registry: Address = env.storage().instance().get(&DataKey::AssetRegistry).unwrap();
     let registry = AssetRegistryClient::new(env, &asset_registry);
-    if !registry.is_asset_corp_actions_enabled(asset)
-        || !registry.is_asset_corp_actions_enabled(payout_asset)
-    {
+    if !registry.is_asset_corp_actions_enabled(asset) || !registry.is_asset_settlement_enabled(payout_asset) {
         return Err(CorporateActionsEngineError::AssetActionsDisabled);
+    }
+    Ok(())
+}
+
+fn ensure_participant_trade_eligible(
+    env: &Env,
+    participant_id_hash: &BytesN<32>,
+    asset: &Address,
+) -> Result<(), CorporateActionsEngineError> {
+    let participant_registry: Address = env
+        .storage()
+        .instance()
+        .get(&DataKey::ParticipantRegistry)
+        .unwrap();
+    let registry = ParticipantRegistryClient::new(env, &participant_registry);
+    if !registry.is_participant_trade_eligible(participant_id_hash, asset) {
+        return Err(CorporateActionsEngineError::ParticipantIneligible);
     }
     Ok(())
 }

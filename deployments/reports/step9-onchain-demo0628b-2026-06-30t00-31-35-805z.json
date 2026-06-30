@@ -1,0 +1,69 @@
+{
+  "phase0Path": "/mnt/c/Users/soumy/Desktop/zk-dtcc/deployments/testnet-phase0-demo0628b.json",
+  "protocolPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/deployments/testnet-protocol-demo0628b.json",
+  "network": "testnet",
+  "namespace": "demo0628b",
+  "startedAt": "2026-06-30T00:22:44.625Z",
+  "contracts": {
+    "collateralPolicy": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
+    "proofGateway": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
+    "cctpIngressAdapter": "CD5GVM4HKFYNKQZBOOHFD5YJJJP3WSPQLDHQM7OBVDNKP4I5QJHU5D2J",
+    "encumbranceRegistry": "CBWQGD6HQ4KW54IKB7VKYSGUIAHDOHAL6IT3WPQVVI2QRQMPGCBV5OTB",
+    "orderCommitPool": "CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M",
+    "settlementNettingEngine": "CDXTDMXWYRFBWD4IU4KJTSQQYRPIDT5P3VEZFCZHPH7E2VBTLORIZETK",
+    "corporateActionsEngine": "CCIYXJDIC3HEOLGS7MBCH6XO4I2RBSXDPIZ3R262GHGGEVXNIOPXOEWB",
+    "auditDisclosureRegistry": "CAB2E2P3KUKFNCTBGSFFTUZFUZR2MAF2NYAGVTNLILJB2KPFZNOMZCOQ"
+  },
+  "verifiers": {
+    "collateralSufficiency": "CDDAU27576K52SSTRILXHZEDR6VE2Y3DHTOMNCHSWATINPSYCZ6KRCRI",
+    "unencumberedLot": "CBWVIJ5DJJBIOVUDV2FW3OOYZFVV6JCQGF5I3SCB44U6NBNKMW44E2RJ",
+    "privateMatch": "CAJU4WW6AJBOIDZWM3PITGEFPOONJS7AUDXYC6C3MITQXA45JZLBWPRD",
+    "batchNetting": "CCXFXDFM2V3CNZFW2JWXDSWJOKUPB5QQ4O63EJKXXEZO5K5BITQGCT6Z",
+    "entitlementClaim": "CA33LZIKSRYNCW4RV4W44GHBLQSTHDASKYUECNPSTJ6TENFKHEA4RZ7N"
+  },
+  "steps": {
+    "step8": {
+      "cancelledOrderId": "34eb61dbb55b306ce5891a1f81d0f74a3963a637ee89add2d7bc46784192bada",
+      "executionId": "23a7cb279873dfeddc25d200f9b5085b02d8d3134a85437d46d966473e7827b0",
+      "txHashes": {
+        "commitCancelledOrder": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+        "cancelOrder": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+        "commitBid": "9900a9fee2a41968f4e3fa85e0eca8af8a25950e782e912533db514cb9f93e86",
+        "commitAsk": "2f7013c26413a74053c10dbc90f82d9883711bb42127c6e8ba134f085c7763a0",
+        "matchOrders": "8dd38c8c63fd44e72f6fd263d9e3f3d0687a15b24bde2b968fe2121f3d8acd3b"
+      },
+      "expectedFailures": [
+        {
+          "name": "reused cancel nullifier rejection",
+          "ok": true,
+          "error": "❌ error: transaction simulation failed: HostError: Error(Contract, #6)\n\nEvent log (newest first):\n   0: [Diagnostic Event] contract:CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, topics:[error, Error(Contract, #6)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\"\n   1: [Diagnostic Event] topics:[fn_call, CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, cancel_order], data:[GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV, Bytes(34eb61dbb55b306ce5891a1f81d0f74a3963a637ee89add2d7bc46784192bada), Bytes(ef9221bc4ef5f26c2d57e4ef8ebf0028afd3eb69675f8afb8c923de22c62e0eb)]\n\n\ncontract invoke failed: cancel_order on CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M\n❌ error: transaction simulation failed: HostError: Error(Contract, #6)\n\nEvent log (newest first):\n   0: [Diagnostic Event] contract:CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, topics:[error, Error(Contract, #6)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\"\n   1: [Diagnostic Event] topics:[fn_call, CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, cancel_order], data:[GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV, Bytes(34eb61dbb55b306ce5891a1f81d0f74a3963a637ee89add2d7bc46784192bada), Bytes(ef9221bc4ef5f26c2d57e4ef8ebf0028afd3eb69675f8afb8c923de22c62e0eb)]\n\n\nCommand failed: stellar --no-cache contract invoke --id CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M --source zkdtcc-demo0628b-alpha --network testnet -- cancel_order --submitter GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV --order_id 34eb61dbb55b306ce5891a1f81d0f74a3963a637ee89add2d7bc46784192bada --cancel_nullifier ef9221bc4ef5f26c2d57e4ef8ebf0028afd3eb69675f8afb8c923de22c62e0eb\n❌ error: transaction simulation failed: HostError: Error(Contract, #6)\n\nEvent log (newest first):\n   0: [Diagnostic Event] contract:CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, topics:[error, Error(Contract, #6)], data:\"escalating Ok(ScErrorType::Contract) frame-exit to Err\"\n   1: [Diagnostic Event] topics:[fn_call, CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M, cancel_order], data:[GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV, Bytes(34eb61dbb55b306ce5891a1f81d0f74a3963a637ee89add2d7bc46784192bada), Bytes(ef9221bc4ef5f26c2d57e4ef8ebf0028afd3eb69675f8afb8c923de22c62e0eb)]\n\n"
+        }
+      ]
+    },
+    "step9": {
+      "settlementId": "5308e9f8c41ebdfb8c6a86d8f130014b0e7351ccb0781ae85a7030ec82ff3352",
+      "txHash": "46bb86d7a09ff84b1e73c09e3b2c20ff101c4584641d9ce2b94a9f64dc6b8b23",
+      "balancesBefore": {
+        "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV": {
+          "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA": 12000000,
+          "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5": 1000012000000
+        },
+        "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV": {
+          "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA": 11000000,
+          "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5": 499984000000
+        }
+      },
+      "balancesAfter": {
+        "GDMMIAOUU3L2LYMUZ7CG3O7KPOZVARJRIPNTJLQY5PJDINUOSSR2U6QV": {
+          "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA": 10000000,
+          "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5": 1000022000000
+        },
+        "GDYD2CIO3KOO3RPG7Z2BTYRUZXUBBJLMTLLJQ3EDH7WWMLTJXKKVOJIV": {
+          "CBIELTK6YBZJU5UP2WWQEUCYKLPU6AUNZ2BQ4WWFEIE3USCIHMXQDAMA": 13000000,
+          "CCNKHDFEYNERMDU44FZIHJJDZNZ2B5HQE744V3EMK2HS2QYVGW3JWRA5": 499974000000
+        }
+      }
+    }
+  },
+  "completedAt": "2026-06-30T00:31:35.805Z"
+}

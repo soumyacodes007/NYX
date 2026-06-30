@@ -87,7 +87,20 @@ export async function ensureCircuitBuild() {
   );
 }
 
+function groth16ArtifactsReady() {
+  return (
+    existsSync(path.join(buildDir, `${circuitName}.r1cs`)) &&
+    existsSync(path.join(buildDir, `${circuitName}_js`, `${circuitName}.wasm`)) &&
+    existsSync(path.join(artifactDir, `${circuitName}_final.zkey`)) &&
+    existsSync(path.join(artifactDir, "verification_key.json"))
+  );
+}
+
 export async function ensureGroth16Setup() {
+  if (groth16ArtifactsReady()) {
+    return;
+  }
+
   await ensureCircuitBuild();
   const snarkjs = ensureLocalTool("snarkjs");
 

@@ -1,7 +1,7 @@
 {
   "namespace": "demo0628b",
   "network": "testnet",
-  "deployedAt": "2026-06-28T23:09:17.606Z",
+  "deployedAt": "2026-06-29T15:23:14.618Z",
   "basedOnPhase0Manifest": "/mnt/c/Users/soumy/Desktop/zk-dtcc/deployments/testnet-phase0-demo0628b.json",
   "admin": {
     "name": "rosca-admin",
@@ -208,7 +208,7 @@
   "config": {
     "collateralPolicy": {
       "requiredMargin": "1000000",
-      "currentEpoch": 3334484,
+      "currentEpoch": 3346137,
       "assetPolicies": [
         {
           "key": "usdc",
@@ -216,7 +216,7 @@
           "decimals": 7,
           "haircutBps": 0,
           "price": "1000000",
-          "priceEpoch": 3334484,
+          "priceEpoch": 3346137,
           "enabled": true
         },
         {
@@ -225,7 +225,7 @@
           "decimals": 7,
           "haircutBps": 8000,
           "price": "125000",
-          "priceEpoch": 3334484,
+          "priceEpoch": 3346137,
           "enabled": true
         },
         {
@@ -234,19 +234,19 @@
           "decimals": 7,
           "haircutBps": 7500,
           "price": "525000",
-          "priceEpoch": 3334484,
+          "priceEpoch": 3346137,
           "enabled": true
         }
       ]
     },
     "proofGateway": {
-      "validFromLedger": 3334484,
-      "validUntilLedger": 4834484,
+      "validFromLedger": 3346137,
+      "validUntilLedger": 4846137,
       "verifiers": {
         "collateralSufficiency": {
           "verifierId": "c29383e1e06f46ebb87ec8bc259cb09a68141f1f537044cb86b38cb3f9b274bf",
           "proofType": 2,
-          "mode": "statement-hash-echo",
+          "mode": "circom-groth16",
           "policyCutoffHash": "17eb9863d836ae8f3846ed45015c28ba3494585024452a310928c07384187ec5"
         },
         "unencumberedLot": {
@@ -288,89 +288,89 @@
   },
   "verifiers": {
     "collateralSufficiency": {
-      "label": "mock-proof-verifier",
-      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/mock_proof_verifier.wasm",
-      "wasmHash": "f993805b9e9e2e1350670c052b16a060c42e38fa679343ccc47ea24513726216",
-      "contractId": "CDAKTBVHO3AABFEF3DHJ6HCB2XBNXQGPNHQKFILUBAEKJJG3EEDFG2R6"
+      "label": "collateral-sufficiency-verifier",
+      "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/collateral_sufficiency_verifier.wasm",
+      "wasmHash": "501a16b4cfc9f0b08380bfa21e1991519278630f93fdf931589a7b74f3888a41",
+      "contractId": "CDDAU27576K52SSTRILXHZEDR6VE2Y3DHTOMNCHSWATINPSYCZ6KRCRI"
     },
     "unencumberedLot": {
       "label": "unencumbered-lot-verifier",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/unencumbered_lot_verifier.wasm",
       "wasmHash": "146d33a87536e40f2e2c740fe33bce386444e24c1d53559db8504580ff09da58",
-      "contractId": "CBNTQ7BFW3XMM7W3U5KBW67MINWM3JUUTBZM55UDDAXONLFZ3EWK6K7D"
+      "contractId": "CBWVIJ5DJJBIOVUDV2FW3OOYZFVV6JCQGF5I3SCB44U6NBNKMW44E2RJ"
     },
     "privateMatch": {
       "label": "private-match-verifier",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/private_match_verifier.wasm",
       "wasmHash": "b7bc31fc70c4f4ab9a67a39230ef9c9cec17381e5ba037a31739561db27ce6cc",
-      "contractId": "CB7C3NFSCWTASFXUXSL4AOPMWO5CJVVGCRXKUKDFN233JSAJVAT2GSJY"
+      "contractId": "CAJU4WW6AJBOIDZWM3PITGEFPOONJS7AUDXYC6C3MITQXA45JZLBWPRD"
     },
     "batchNetting": {
       "label": "batch-netting-verifier",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/batch_netting_verifier.wasm",
       "wasmHash": "75a1f23a7aad7387e1f9b632872864feb9db49f7d424055f58399d297c39adae",
-      "contractId": "CAJRVZNIJOV5YIWRE2IV3X6XKJZZSNLMAU255LCKKGDEHLZULHLITKOK"
+      "contractId": "CCXFXDFM2V3CNZFW2JWXDSWJOKUPB5QQ4O63EJKXXEZO5K5BITQGCT6Z"
     },
     "entitlementClaim": {
       "label": "entitlement-claim-verifier",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/entitlement_claim_verifier.wasm",
       "wasmHash": "635123752fbc95ef32480df00f22371bb302b20a2f9bbf924029309efb55664c",
-      "contractId": "CCBQILYH6BWHXGCOV2ADBXQLVSNXCTC5EQNPGWLQYCDT26X2IX2C2QJV"
+      "contractId": "CA33LZIKSRYNCW4RV4W44GHBLQSTHDASKYUECNPSTJ6TENFKHEA4RZ7N"
     }
   },
   "contracts": {
     "collateralPolicy": {
       "label": "collateral-policy",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/collateral_policy.wasm",
-      "wasmHash": "29ed5195b077b4cb9f94168e4b5abd963bc8d26d1b7d1ace835fdb9d5816ce7b",
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL"
+      "wasmHash": "b10fe0b654a36f2881c50c3df0c03785cc4f39747269a5751cd7f2047e732810",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7"
     },
     "proofGateway": {
       "label": "proof-gateway",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/proof_gateway.wasm",
-      "wasmHash": "21b2d32976be6e772c37ae16fbc4c260d500c3fe72ffcfd52a568e2bcb3242dd",
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC"
+      "wasmHash": "da101da73b228b56d82dbc76b0d79c636b1f730b74e854aae77ffa1366ae6ccb",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP"
     },
     "cctpIngressAdapter": {
       "label": "cctp-ingress-adapter",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/cctp_ingress_adapter.wasm",
-      "wasmHash": "1c86fe8ed1743c17951877783d4440e0a14c181975712aafbc56312b68e3f595",
-      "contractId": "CB42HRITPIQFPVAZ43MI4RFAGT3JRIDLNTCXNXPHQ65T3VD7L27JO25W"
+      "wasmHash": "8bc5d6eed32450daa85e3724310cbcf91556030d2b240b643ebba484e9f026f1",
+      "contractId": "CD5GVM4HKFYNKQZBOOHFD5YJJJP3WSPQLDHQM7OBVDNKP4I5QJHU5D2J"
     },
     "encumbranceRegistry": {
       "label": "encumbrance-registry",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/encumbrance_registry.wasm",
-      "wasmHash": "38262cdb7b0c6c28d8cdd1df6a21a05cfdb98b0a35de6880c7f63f048037896c",
-      "contractId": "CCKXUILQ62YKNXAVDNKOZS2PKJUTQJQDDSJCBF6LCMORD4ZSBRGQYV34"
+      "wasmHash": "9baac7841c5b8bcbcb0acbd0891e4987400cb7d889b7e9bb9ebad74e7f5e781e",
+      "contractId": "CBWQGD6HQ4KW54IKB7VKYSGUIAHDOHAL6IT3WPQVVI2QRQMPGCBV5OTB"
     },
     "orderCommitPool": {
       "label": "order-commit-pool",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/order_commit_pool.wasm",
-      "wasmHash": "4a22f8bdc0796d8d4109a2991a7a2016a7bc50b0701328af9ff43d3ed3b28c79",
-      "contractId": "CBZNFYTRFZ7EKSIVW7SAZI4LNG5ENTERYUVAMXTQKHY3DB2WHOHYIYUX"
+      "wasmHash": "8cc2f666811e50229531cfec08abad490b67c12630b59c534df326aa54513c86",
+      "contractId": "CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M"
     },
     "settlementNettingEngine": {
       "label": "settlement-netting-engine",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/settlement_netting_engine.wasm",
-      "wasmHash": "1461febfc35524d13e60fa7df850aafaf7c0cd4b87a231222897017d38c13ee8",
-      "contractId": "CCGP6MIPMVF6NAZGSBYOZIXUHKG3P377BZH3O5TRTQQL3EOQCDME7MKK"
+      "wasmHash": "5275244bf1d929c40bc5cc1978e1efaa588a838c11f117ce2231bc66c31a919d",
+      "contractId": "CDXTDMXWYRFBWD4IU4KJTSQQYRPIDT5P3VEZFCZHPH7E2VBTLORIZETK"
     },
     "corporateActionsEngine": {
       "label": "corporate-actions-engine",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/corporate_actions_engine.wasm",
-      "wasmHash": "2674f3e46abc4f9e4c8748e4d9d690c0eca626055f04e38a761c755b67a804e8",
-      "contractId": "CD47MWIGFQC42EXEWLDO2VGO6MQOIFCV5VR7BAEOD4HVEAOVGBOEUEPQ"
+      "wasmHash": "abc7f589349db4f62e53fa77b157f242514422188236add65b54ce59c9fe2139",
+      "contractId": "CCIYXJDIC3HEOLGS7MBCH6XO4I2RBSXDPIZ3R262GHGGEVXNIOPXOEWB"
     },
     "auditDisclosureRegistry": {
       "label": "audit-disclosure-registry",
       "wasmPath": "/mnt/c/Users/soumy/Desktop/zk-dtcc/.stellar-artifacts/audit_disclosure_registry.wasm",
-      "wasmHash": "a060bc6a9e055a362d6dae679ce3d8abdf90d4af51daccf548843f86098dceea",
-      "contractId": "CC3TBPVFAWBK3HEUFBY5WOHLXGKE3KVDEOZ6T2E4YLD2RORQUAIIK7DK"
+      "wasmHash": "8971b1c3a9e6eade34e11c789add9ba235919489384a7a2db3d80d69c06f0ab6",
+      "contractId": "CAB2E2P3KUKFNCTBGSFFTUZFUZR2MAF2NYAGVTNLILJB2KPFZNOMZCOQ"
     }
   },
   "txLog": [
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "set_operator",
       "args": [
         "--admin",
@@ -384,7 +384,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_operator",
       "args": [
         "--admin",
@@ -398,7 +398,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CB42HRITPIQFPVAZ43MI4RFAGT3JRIDLNTCXNXPHQ65T3VD7L27JO25W",
+      "contractId": "CD5GVM4HKFYNKQZBOOHFD5YJJJP3WSPQLDHQM7OBVDNKP4I5QJHU5D2J",
       "functionName": "set_operator",
       "args": [
         "--admin",
@@ -412,7 +412,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCKXUILQ62YKNXAVDNKOZS2PKJUTQJQDDSJCBF6LCMORD4ZSBRGQYV34",
+      "contractId": "CBWQGD6HQ4KW54IKB7VKYSGUIAHDOHAL6IT3WPQVVI2QRQMPGCBV5OTB",
       "functionName": "set_operator",
       "args": [
         "--admin",
@@ -426,7 +426,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CBZNFYTRFZ7EKSIVW7SAZI4LNG5ENTERYUVAMXTQKHY3DB2WHOHYIYUX",
+      "contractId": "CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M",
       "functionName": "set_operator",
       "args": [
         "--admin",
@@ -440,7 +440,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCGP6MIPMVF6NAZGSBYOZIXUHKG3P377BZH3O5TRTQQL3EOQCDME7MKK",
+      "contractId": "CDXTDMXWYRFBWD4IU4KJTSQQYRPIDT5P3VEZFCZHPH7E2VBTLORIZETK",
       "functionName": "set_operator",
       "args": [
         "--admin",
@@ -454,7 +454,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CD47MWIGFQC42EXEWLDO2VGO6MQOIFCV5VR7BAEOD4HVEAOVGBOEUEPQ",
+      "contractId": "CCIYXJDIC3HEOLGS7MBCH6XO4I2RBSXDPIZ3R262GHGGEVXNIOPXOEWB",
       "functionName": "set_operator",
       "args": [
         "--admin",
@@ -468,7 +468,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CC3TBPVFAWBK3HEUFBY5WOHLXGKE3KVDEOZ6T2E4YLD2RORQUAIIK7DK",
+      "contractId": "CAB2E2P3KUKFNCTBGSFFTUZFUZR2MAF2NYAGVTNLILJB2KPFZNOMZCOQ",
       "functionName": "set_operator",
       "args": [
         "--admin",
@@ -482,7 +482,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "upsert_asset_policy",
       "args": [
         "--operator",
@@ -496,7 +496,7 @@
         "--price",
         "1000000",
         "--price_epoch",
-        "3334484",
+        "3346137",
         "--enabled",
         "true"
       ],
@@ -504,7 +504,7 @@
       "raw": "2"
     },
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "upsert_asset_policy",
       "args": [
         "--operator",
@@ -518,7 +518,7 @@
         "--price",
         "125000",
         "--price_epoch",
-        "3334484",
+        "3346137",
         "--enabled",
         "true"
       ],
@@ -526,7 +526,7 @@
       "raw": "3"
     },
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "upsert_asset_policy",
       "args": [
         "--operator",
@@ -540,7 +540,7 @@
         "--price",
         "525000",
         "--price_epoch",
-        "3334484",
+        "3346137",
         "--enabled",
         "true"
       ],
@@ -548,7 +548,7 @@
       "raw": "4"
     },
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "set_accepted_verifier",
       "args": [
         "--operator",
@@ -564,7 +564,7 @@
       "raw": "5"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_route",
       "args": [
         "--operator",
@@ -572,7 +572,7 @@
         "--verifier_id",
         "c29383e1e06f46ebb87ec8bc259cb09a68141f1f537044cb86b38cb3f9b274bf",
         "--verifier",
-        "CDAKTBVHO3AABFEF3DHJ6HCB2XBNXQGPNHQKFILUBAEKJJG3EEDFG2R6",
+        "CD45AZOYD24BRZL3GUPXWJE2QAELPEJHCQKCBAEEHR46IRWXIIZJWT47",
         "--enabled",
         "true"
       ],
@@ -580,7 +580,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_policy",
       "args": [
         "--operator",
@@ -590,9 +590,9 @@
         "--enabled",
         "true",
         "--valid_from_ledger",
-        "3334484",
+        "3346137",
         "--valid_until_ledger",
-        "4834484",
+        "4846137",
         "--policy_cutoff_hash",
         "17eb9863d836ae8f3846ed45015c28ba3494585024452a310928c07384187ec5"
       ],
@@ -600,7 +600,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "set_accepted_verifier",
       "args": [
         "--operator",
@@ -616,7 +616,7 @@
       "raw": "6"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_route",
       "args": [
         "--operator",
@@ -624,7 +624,7 @@
         "--verifier_id",
         "52dbfa289ff128becae2a9eca832a3ad7d6913e437f9e6018c248e407fc14a88",
         "--verifier",
-        "CBNTQ7BFW3XMM7W3U5KBW67MINWM3JUUTBZM55UDDAXONLFZ3EWK6K7D",
+        "CAW2E7OEWO4BJCLRMYPN22WPL4PEXTQHCVDKK6VOV7LNYCHHJSU43IRX",
         "--enabled",
         "true"
       ],
@@ -632,7 +632,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_policy",
       "args": [
         "--operator",
@@ -642,9 +642,9 @@
         "--enabled",
         "true",
         "--valid_from_ledger",
-        "3334484",
+        "3346137",
         "--valid_until_ledger",
-        "4834484",
+        "4846137",
         "--policy_cutoff_hash",
         "0c2e17e5215e06cd038a1e7860c879f051b564ec5e0446f1a90afd4f3f11fefd"
       ],
@@ -652,7 +652,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "set_accepted_verifier",
       "args": [
         "--operator",
@@ -668,7 +668,7 @@
       "raw": "7"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_route",
       "args": [
         "--operator",
@@ -676,7 +676,7 @@
         "--verifier_id",
         "8dd38c8c63fd44e72f6fd263d9e3f3d0687a15b24bde2b968fe2121f3d8acd3b",
         "--verifier",
-        "CB7C3NFSCWTASFXUXSL4AOPMWO5CJVVGCRXKUKDFN233JSAJVAT2GSJY",
+        "CAJU4WW6AJBOIDZWM3PITGEFPOONJS7AUDXYC6C3MITQXA45JZLBWPRD",
         "--enabled",
         "true"
       ],
@@ -684,7 +684,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_policy",
       "args": [
         "--operator",
@@ -694,9 +694,9 @@
         "--enabled",
         "true",
         "--valid_from_ledger",
-        "3334484",
+        "3346137",
         "--valid_until_ledger",
-        "4834484",
+        "4846137",
         "--policy_cutoff_hash",
         "e7682ed2ea08255b1e299929f4ffdb951796a8372ed16945ba1b34960bd7f603"
       ],
@@ -704,7 +704,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "set_accepted_verifier",
       "args": [
         "--operator",
@@ -720,7 +720,7 @@
       "raw": "8"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_route",
       "args": [
         "--operator",
@@ -728,7 +728,7 @@
         "--verifier_id",
         "8ffdf338738bc9c8c51e6ff5285c1ec7530dfd0537e0a548c9c4c28d92d84d06",
         "--verifier",
-        "CAJRVZNIJOV5YIWRE2IV3X6XKJZZSNLMAU255LCKKGDEHLZULHLITKOK",
+        "CCXFXDFM2V3CNZFW2JWXDSWJOKUPB5QQ4O63EJKXXEZO5K5BITQGCT6Z",
         "--enabled",
         "true"
       ],
@@ -736,7 +736,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_policy",
       "args": [
         "--operator",
@@ -746,9 +746,9 @@
         "--enabled",
         "true",
         "--valid_from_ledger",
-        "3334484",
+        "3346137",
         "--valid_until_ledger",
-        "4834484",
+        "4846137",
         "--policy_cutoff_hash",
         "f52a7d9d4d155e6a1c16cc737720728ca119c9f4614e5d33f0886e7007e7e2c3"
       ],
@@ -756,7 +756,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CDKWL7S6DV77637QS5PWX5V7S5QHSCUB54VGLOUCIZUVRO7NMNI56IOL",
+      "contractId": "CBMPT7AUMD45VFXSEOJ6C4BNQPGAWB3ZNMC2O3GTDQVWCQIFOB2AB4T7",
       "functionName": "set_accepted_verifier",
       "args": [
         "--operator",
@@ -772,7 +772,7 @@
       "raw": "9"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_route",
       "args": [
         "--operator",
@@ -780,7 +780,7 @@
         "--verifier_id",
         "a6f4efdc3c04007ee12541a15b100397e1992289310e0da69b98a466cdccd897",
         "--verifier",
-        "CCBQILYH6BWHXGCOV2ADBXQLVSNXCTC5EQNPGWLQYCDT26X2IX2C2QJV",
+        "CA33LZIKSRYNCW4RV4W44GHBLQSTHDASKYUECNPSTJ6TENFKHEA4RZ7N",
         "--enabled",
         "true"
       ],
@@ -788,7 +788,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCPQUMGNAXCLCOBJIXYBPYP47CBCFEQ5CDZHUGUJZOTVQZ4T5LY5LWQC",
+      "contractId": "CBPO5UGY3MIEBQHIIC3U2TCXOWQ6HWREBGG3CM5TL2WSY5VKPZMDGGFP",
       "functionName": "set_verifier_policy",
       "args": [
         "--operator",
@@ -798,9 +798,9 @@
         "--enabled",
         "true",
         "--valid_from_ledger",
-        "3334484",
+        "3346137",
         "--valid_until_ledger",
-        "4834484",
+        "4846137",
         "--policy_cutoff_hash",
         "c3ec0740a31882a7a0bf63b354cffbdf0a7cb1c1dd6484c00e7be9b93f2ae676"
       ],
@@ -808,7 +808,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCKXUILQ62YKNXAVDNKOZS2PKJUTQJQDDSJCBF6LCMORD4ZSBRGQYV34",
+      "contractId": "CBWQGD6HQ4KW54IKB7VKYSGUIAHDOHAL6IT3WPQVVI2QRQMPGCBV5OTB",
       "functionName": "set_attestor",
       "args": [
         "--operator",
@@ -824,7 +824,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CBZNFYTRFZ7EKSIVW7SAZI4LNG5ENTERYUVAMXTQKHY3DB2WHOHYIYUX",
+      "contractId": "CDL4A5JJTZBFG3465NE53AHQZUJ7PBC7PISKWDH3I7ZNV7OLDRNV2S6M",
       "functionName": "set_matcher",
       "args": [
         "--operator",
@@ -838,7 +838,7 @@
       "raw": "null"
     },
     {
-      "contractId": "CCGP6MIPMVF6NAZGSBYOZIXUHKG3P377BZH3O5TRTQQL3EOQCDME7MKK",
+      "contractId": "CDXTDMXWYRFBWD4IU4KJTSQQYRPIDT5P3VEZFCZHPH7E2VBTLORIZETK",
       "functionName": "set_settler",
       "args": [
         "--operator",
@@ -853,10 +853,10 @@
     }
   ],
   "verification": {
-    "verifiedAt": "2026-06-28T23:09:15.384Z",
-    "latestLedger": 3334484,
+    "verifiedAt": "2026-06-29T15:23:10.007Z",
+    "latestLedger": 3346137,
     "policySummary": {
-      "current_epoch": 3334484,
+      "current_epoch": 3346137,
       "policy_version": 9,
       "required_margin": "1000000"
     },
@@ -870,8 +870,8 @@
           "enabled": true,
           "haircut_bps": 0,
           "price": "1000000",
-          "price_epoch": 3334484,
-          "updated_ledger": 3334640
+          "price_epoch": 3346137,
+          "updated_ledger": 3346312
         }
       },
       {
@@ -883,8 +883,8 @@
           "enabled": true,
           "haircut_bps": 8000,
           "price": "125000",
-          "price_epoch": 3334484,
-          "updated_ledger": 3334643
+          "price_epoch": 3346137,
+          "updated_ledger": 3346319
         }
       },
       {
@@ -896,8 +896,8 @@
           "enabled": true,
           "haircut_bps": 7500,
           "price": "525000",
-          "price_epoch": 3334484,
-          "updated_ledger": 3334656
+          "price_epoch": 3346137,
+          "updated_ledger": 3346321
         }
       }
     ],
@@ -912,10 +912,10 @@
       "attestor_id": "f974e6d0bc7a3a5c3e7a9157a88a7b3b090433abc20e9c5a40454a43b858bf65",
       "enabled": true,
       "public_key": "f477922a4c46581467b6651fc043ace160060e10d3451baaa018108027441c44",
-      "updated_ledger": 3334736
+      "updated_ledger": 3346394
     },
     "callSmoke": {
-      "statementHashPreview": "19a61f7275a19872648bed883345d2b3da88dd292f7ea49e77f7b481ed5090a5"
+      "statementHashPreview": "090cc80f4118de1fcab1599a6c1b306758ba87dc7bf88f96852a15b0f4b6d9e7"
     }
   }
 }
